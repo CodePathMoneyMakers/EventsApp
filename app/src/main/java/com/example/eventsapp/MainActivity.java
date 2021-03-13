@@ -19,7 +19,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-
     public static final String TAG = "MainActivity";
     private BottomNavigationView bottomNavigationView;
     public  FragmentManager fragmentManager = getSupportFragmentManager();
@@ -36,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
-                int problem = 10;
                 Fragment fragment;
                 switch (menuItem.getItemId()) {
                     case R.id.action_compose:
@@ -98,9 +95,6 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             };*/
-
-
-
 
 
 }
