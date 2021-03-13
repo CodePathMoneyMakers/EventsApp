@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         int efgfgd;
         int efggd;
         int dinner;
+        int problem = 20;
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
