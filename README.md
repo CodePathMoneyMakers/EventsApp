@@ -25,7 +25,7 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 
 ### 1. User Stories (Required and Optional)
 
-**Required Must-have Stories**
+**Required**
 
 * Account Signup - users should be able to create an account using their email and password. Users should create a username.
 * Account Sign In - Users should have the ability to sign in with their credentials.
@@ -34,7 +34,7 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 * User profile - users can post a picture and bio 
 * Search by event type 
 
-**Optional Nice-to-have Stories**
+**Additional**
 
 * Users can select the distance to which their event will be broadcas (ex. available to users 3 miles from me)
 * Users can set range in which they find events (ex. search 5 miles near me)
