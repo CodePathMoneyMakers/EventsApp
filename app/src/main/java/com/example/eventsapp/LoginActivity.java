@@ -13,6 +13,7 @@ import android.widget.TextView;
 public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG ="Login Activity";
+    int test;
     EditText etUsername;
     EditText etPassword;
     TextView tvUsername;
