@@ -1,4 +1,4 @@
-Original App Design Project - README Template
+Original App Design Project
 ===
 
 # LANDMARK
@@ -92,6 +92,7 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 <img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/5.png" width=200>
 
 ### [BONUS] Interactive Prototype
+<img src="walkthrough.gif" title='Video Walkthrough' width='250' alt='Video Walkthrough' />  
 
 ## Schema 
 [This section will be completed in Unit 9]
