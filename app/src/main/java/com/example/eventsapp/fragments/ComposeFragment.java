@@ -52,6 +52,7 @@ import java.util.TimeZone;
 
 public class ComposeFragment extends Fragment  {
 
+    int chickenDinner;
     public int counter;
     public static final String TAG = "ComposeFragment";
     private TextView tvDate;
