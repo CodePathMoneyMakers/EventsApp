@@ -82,8 +82,7 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
     * => Home Feed
 
 ## Wireframes
-[Add picture of your hand sketched wireframes in this section]
-<img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
+<img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/WhatsApp%20Image%202021-03-13%20at%203.23.31%20PM.jpeg" width=600>
 
 ### [BONUS] Digital Wireframes & Mockups
 
