@@ -16,7 +16,7 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 ### App Evaluation
 - **Category:** Events.
 - **Mobile:** For the time being, this application is mobile only.
-- **Story**: Home feed, search for events, create event, profile view.
+- **Story: What's the main functions??**
 - **Market:** This app are for any people looking to join, search, and create events in their local area.
 - **Habit:** This app can be used approximately 1-2 times a week or when you want to go to a new event.
 - **Scope:** This app aims to become global! Being able to search and find events from all around the world will open greater opportunities for the user!
@@ -27,11 +27,11 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 
 **Required**
 
-* Account Signup - Users should be able to create an account using their email and password. Users should create a username.
+* Account Signup - users should be able to create an account using their email and password. Users should create a username.
 * Account Sign In - Users should have the ability to sign in with their credentials.
 * Events Creation - Users will have the ability to create an event with event name, type, description, date, and time. Events should also be able to be made private or public.
 * Events Feed - Scrolling view of events occuring in your area
-* User profile - Users can post a picture and bio 
+* User profile - users can post a picture and bio 
 * Search by event type 
 
 **Additional**
@@ -85,6 +85,11 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 <img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/WhatsApp%20Image%202021-03-13%20at%203.23.31%20PM.jpeg" width=600>
 
 ### [BONUS] Digital Wireframes & Mockups
+<img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/1.png" width=600>
+<img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/2.png" width=600>
+<img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/3.png" width=600>
+<img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/4.png" width=600>
+<img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/5.png" width=600>
 
 ### [BONUS] Interactive Prototype
 
