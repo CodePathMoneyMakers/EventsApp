@@ -95,10 +95,44 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 <img src="walkthrough.gif" title='Video Walkthrough' width='250' alt='Video Walkthrough' />  
 
 ## Schema 
-[This section will be completed in Unit 9]
+**Post / Event Creation**
+| Property          |   Type           | Description                     |
+| --------------    | --------         | -----------                     |
+|eventId            |String            |Text                             |
+|author             |Pointer to User   |Image author                     |
+|eventImage         |File              |Image that user posts            |
+|description        |String            |Details on event                 |
+|createdAt          |DateTime          |Date when post is created        |
+|updatedAt          |DateTime          |Date when post is last updated   |
+|eventTime          |DateTime          |Time of event                    |
+|eventDate          |DateTime          |Date of event                    |
+|userAttending      |Boolean           |Search if other user is attending|
+|eventPrivacy       |Boolean           |Is event public or private?      |
+|eventLocation      |Google Maps API   |Location of event                |
+|numberOfAttendees  |String            |Number of users attending event  |
+  
 ### Models
-[Add table of models]
+  **User**
+| Property         | Type     | Description               |
+| --------         | -------- | --------                  |
+|userName          |String    |Stores username            |
+|password          |String    |Stores password            |
+|email             |String    |Stores user email          |
+|profilePicture    |File      |Picture of user            |
+|bio               |String    |Brief personal description |
+
 ### Networking
-- [Add list of network requests by screen ]
-- [Create basic snippets for each Parse network request]
-- [OPTIONAL: List endpoints if using existing API such as Yelp]
+**Home Feed Screen**
+* (Read/GET) Query all posts 
+* (Create/POST) Create a new event
+* (Delete) Delete event
+* (Create/POST) Attending or not? 
+* (Delete) Delete attending if user is attending
+Create Post Screen
+*  (Create/POST) Create a new post object
+Details Screen 
+* (Read/GET) Event object details 
+* (Create/Post) Purchase Ticket
+Profile Screen
+* (Read/GET) Query logged in user object
+* (Update/PUT) Update user profile image
