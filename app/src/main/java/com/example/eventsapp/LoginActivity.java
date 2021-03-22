@@ -13,11 +13,11 @@ import android.widget.TextView;
 public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG ="Login Activity";
-    int test;
-    EditText etUsername;
+    EditText etEmail;
     EditText etPassword;
-    TextView tvUsername;
+    TextView tvEmail;
     TextView tvPassword;
+    TextView tvCreateAccount, tvForgotPassword;
     Button btnLogin;
 
     @Override
@@ -25,8 +25,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        etUsername = findViewById(R.id.etUsername);
+        etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
+        tvCreateAccount = findViewById(R.id.tvCreateAccount);
+        tvForgotPassword = findViewById(R.id.tvForgotPassword);
         btnLogin = findViewById(R.id.btnLogin);
 
 
@@ -40,11 +42,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        tvCreateAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG, "check create account");
 
-
-
-
-
+                Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
 
