@@ -98,7 +98,7 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 **Post / Event Creation**
 | Property          |   Type           | Description                     |
 | --------------    | --------         | -----------                     |
-|eventId            |String            |Text                             |
+|eventId            |String            |Unique identifier                |
 |author             |Pointer to User   |Image author                     |
 |eventImage         |File              |Image that user posts            |
 |description        |String            |Details on event                 |
@@ -111,6 +111,8 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 |eventPrivacy       |Boolean           |Is event public or private?      |
 |eventLocation      |Google Maps API   |Location of event                |
 |numberOfAttendees  |String            |Number of users attending event  |
+|eventName          |String            |Name of event                    |
+|eventGenre         |String            |Event genre                      |
   
 ### Models
   **User**
