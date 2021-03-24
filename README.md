@@ -106,6 +106,7 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 |updatedAt          |DateTime          |Date when post is last updated   |
 |eventTime          |DateTime          |Time of event                    |
 |eventDate          |DateTime          |Date of event                    |
+|eventGenre         |String            |Genre of event                   |
 |userAttending      |Boolean           |Search if other user is attending|
 |eventPrivacy       |Boolean           |Is event public or private?      |
 |eventLocation      |Google Maps API   |Location of event                |
