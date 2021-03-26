@@ -7,48 +7,114 @@
     tools:context=".RegisterActivity"
     android:background="@drawable/login_bg">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Landmark📍"
+        android:textSize="64sp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-black"
+        android:textColor="#BEF3F3F3"
+        android:shadowRadius="100"
+        android:shadowColor="@color/teal_700"
+        android:layout_marginTop="56dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="8dp"
+        />
+
+    <TextView
+        android:id="@+id/tvFullName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/banner"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Full Name"
+        android:textColor="#B8B8B8" />
 
     <EditText
-        android:id="@+id/etEmail"
+        android:id="@+id/etFullName"
         android:layout_width="295dp"
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="41dp"
-        android:layout_marginTop="291dp"
-        android:layout_marginEnd="39dp"
-        android:background="@drawable/login_et_background"
-        android:ems="10"
-        android:paddingLeft="10dp"
-        android:singleLine="true"/>
-
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="295dp"
-        android:layout_height="40dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="42dp"
-        android:layout_marginTop="384dp"
-        android:layout_marginEnd="38dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="42dp"
+        android:layout_below="@+id/tvFullName"
         android:background="@drawable/login_et_background"
         android:ems="10"
-        android:inputType="textPassword"
         android:paddingLeft="10dp"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/tvAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etFullName"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Age"
+        android:textColor="#B8B8B8" />
+
+    <EditText
+        android:id="@+id/etAge"
+        android:layout_width="295dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="42dp"
+        android:layout_below="@+id/tvAge"
+        android:background="@drawable/login_et_background"
+        android:ems="10"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:textColor="#FFFFFF" />
 
     <TextView
         android:id="@+id/tvEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_marginStart="42dp"
-        android:layout_marginTop="256dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/etAge"
         android:fontFamily="sans-serif-medium"
         android:text="Email"
+        android:textColor="#B8B8B8" />
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="295dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="42dp"
+        android:layout_below="@+id/tvEmail"
+        android:background="@drawable/login_et_background"
+        android:ems="10"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
         android:textColor="#FFFFFF" />
 
     <TextView
@@ -56,26 +122,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_marginStart="42dp"
-        android:layout_marginTop="353dp"
+        android:layout_below="@+id/etEmail"
+        android:layout_marginTop="20dp"
         android:fontFamily="sans-serif-medium"
         android:text="@string/password"
+        android:textColor="#B8B8B8" />
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="295dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/tvPassword"
+        android:background="@drawable/login_et_background"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
         android:textColor="#FFFFFF" />
 
     <Button
         android:id="@+id/btnRegister"
         android:layout_width="169dp"
         android:layout_height="45dp"
+        android:layout_below="@+id/etPassword"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="104dp"
-        android:layout_marginTop="477dp"
-        android:layout_marginEnd="102dp"
+        android:layout_marginEnd="104dp"
+        android:layout_marginTop="64dp"
+        android:background="@drawable/login_btn_background"
         android:includeFontPadding="false"
         android:text="Create Account"
-        android:background="@drawable/login_btn_background"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white" />
 
 </RelativeLayout>
