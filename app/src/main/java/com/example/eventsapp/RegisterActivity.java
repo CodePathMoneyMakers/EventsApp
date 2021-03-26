@@ -5,13 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,9 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
@@ -30,7 +26,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseAuth mAuth;
 
     private TextView banner, registerUser;
-    private EditText editTextFullName, editTextAge, editTextEmail, editTextPassword;
+    private EditText editTextUsername, editTextAge, editTextEmail, editTextPassword;
     private ProgressBar progressBar;
 
     Button btnRegister;
@@ -51,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         btnRegister.setOnClickListener(this);
 
         // Initialize the edit text view variables
-        editTextFullName = (EditText) findViewById(R.id.etFullName);
+        editTextUsername = (EditText) findViewById(R.id.etUsername);
         editTextAge = (EditText) findViewById(R.id.etAge);
         editTextEmail = (EditText) findViewById(R.id.etEmail);
         editTextPassword = (EditText) findViewById(R.id.etPassword);
@@ -79,14 +75,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
-        String fullName = editTextFullName.getText().toString().trim();
+        String fullName = editTextUsername.getText().toString().trim();
         String age = editTextAge.getText().toString().trim();
 
 
         if (fullName.isEmpty()) {
-            editTextFullName.setError("Full name is required.");
+            editTextUsername.setError("Full name is required.");
             // refocus on the field
-            editTextFullName.requestFocus();
+            editTextUsername.requestFocus();
             return;
         }
         else if (age.isEmpty()) {
@@ -117,8 +113,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 // check if user is registered
                 if (task.isSuccessful()) {
 
-                    // create a user object
+                    // create an android studio User object
                     User user = new User(fullName, age, email);
+
+                    // create a firebase User Object
+                    FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
 
                     // send user object to real time database
                     FirebaseDatabase.getInstance().getReference("Users")
@@ -127,9 +126,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
+                                progressBar.setVisibility(View.VISIBLE);
+                                fbUser.sendEmailVerification();
                                 Toast.makeText(RegisterActivity.this,
                                         "You have been registered Successfully!", Toast.LENGTH_LONG).show();
-                                progressBar.setVisibility(View.VISIBLE);
+                                Toast.makeText(RegisterActivity.this,
+                                        "Please check your email to complete sign up!", Toast.LENGTH_LONG).show();
+                                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                             } else {
                                 Toast.makeText(RegisterActivity.this,
                                         "Failed to register :( Please try again.", Toast.LENGTH_LONG).show();

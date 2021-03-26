@@ -1,7 +1,6 @@
 package com.example.eventsapp;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -9,11 +8,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.eventsapp.fragments.ComposeFragment;
 import com.example.eventsapp.fragments.HomeFragment;
-import com.example.eventsapp.fragments.PendingEventsFragment;
+import com.example.eventsapp.fragments.UserProfileFragment;
 import com.example.eventsapp.fragments.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -38,17 +36,17 @@ public class MainActivity extends AppCompatActivity {
                 Fragment fragment;
                 switch (menuItem.getItemId()) {
                     case R.id.action_compose:
-
                         fragment = new ComposeFragment();
                         break;
-                    case R.id.action_home:
 
+                    case R.id.action_home:
                         fragment = new HomeFragment();
                         break;
-                    case R.id.action_pendingevents:
 
-                        fragment = new PendingEventsFragment();
+                    case R.id.action_pendingevents:
+                        fragment = new UserProfileFragment();
                         break;
+
                     case R.id.action_search:
                     default:
                         fragment = new SearchFragment();

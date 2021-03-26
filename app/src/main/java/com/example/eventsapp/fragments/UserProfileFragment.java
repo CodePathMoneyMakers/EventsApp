@@ -13,18 +13,18 @@ import androidx.fragment.app.Fragment;
 
 import com.example.eventsapp.R;
 
-public class PendingEventsFragment extends Fragment {
+public class UserProfileFragment extends Fragment {
 
     TextView textView;
     public static final String TAG = "PendingEventsFragment";
 
-    public PendingEventsFragment() {
+    public UserProfileFragment() {
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragments_pendingvents, container,false);
+        return inflater.inflate(R.layout.activity_profile, container,false);
 
     }
 
@@ -34,4 +34,6 @@ public class PendingEventsFragment extends Fragment {
 
         textView = view.findViewById(R.id.textView2);
     }
+
+
 }
