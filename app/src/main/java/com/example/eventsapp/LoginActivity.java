@@ -18,6 +18,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView tvUsername;
     TextView tvPassword;
     Button btnLogin;
+    Button btnCreate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

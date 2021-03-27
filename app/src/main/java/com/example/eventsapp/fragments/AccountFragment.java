@@ -13,12 +13,12 @@ import androidx.fragment.app.Fragment;
 
 import com.example.eventsapp.R;
 
-public class PendingEventsFragment extends Fragment {
+public class AccountFragment extends Fragment {
 
     TextView textView;
-    public static final String TAG = "PendingEventsFragment";
+    public static final String TAG = "AccountFragment";
 
-    public PendingEventsFragment() {
+    public AccountFragment() {
     }
 
     @Nullable
