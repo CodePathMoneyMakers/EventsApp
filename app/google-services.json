@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "133864493986",
+    "project_id": "landmark-d0e1d",
+    "storage_bucket": "landmark-d0e1d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133864493986:android:e174328d46ff9e2db218fb",
+        "android_client_info": {
+          "package_name": "com.example.eventsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "133864493986-ju41jiv8a66tjil0fh0o41kts1g3ccmm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-TOc4swzSGkTyflob9y0gbQL8BjquBi8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "133864493986-ju41jiv8a66tjil0fh0o41kts1g3ccmm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

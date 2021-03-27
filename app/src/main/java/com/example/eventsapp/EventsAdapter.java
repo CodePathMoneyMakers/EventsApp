@@ -15,7 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-
+/*
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
     private Context context;
     private list<Event> events;
@@ -80,7 +80,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                 @Override
                 public void onClick(View v) {
                     // 2. Navigate to a new activity on tap
-                    Intent i = new Intent(context, ******/*ACTIVITY_NAME*/******.class);
+                    Intent i = new Intent(context, .class);
                     i.putExtra("event", Parcels.wrap(event));
                     context.startActivity(i);
                 }
@@ -91,3 +91,4 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
 
 }
+ */
