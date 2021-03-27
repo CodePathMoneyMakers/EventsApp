@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.eventsapp.fragments.ComposeFragment;
 import com.example.eventsapp.fragments.HomeFragment;
-import com.example.eventsapp.fragments.AccountFragment;
+    import com.example.eventsapp.fragments.AccountFragment;
 import com.example.eventsapp.fragments.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setItemIconTintList(null);
 //      bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                         case R.layout.fragments_pendingvents:
                             Log.e(TAG, "pending events fragment");
 
-                            selectedFragment = new AccountFragment();
+                            selectedFragment = new PendingEventsFragment();
                             break;
                         case R.layout.fragments_compose:
                             Log.e(TAG, "compose fragment");
