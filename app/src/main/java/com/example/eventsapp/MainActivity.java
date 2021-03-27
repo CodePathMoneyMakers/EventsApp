@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.eventsapp.fragments.ComposeFragment;
 import com.example.eventsapp.fragments.HomeFragment;
-import com.example.eventsapp.fragments.PendingEventsFragment;
+import com.example.eventsapp.fragments.UserProfileFragment;
 import com.example.eventsapp.fragments.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -32,10 +32,6 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setItemIconTintList(null);
 //      bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
-        int efgfgdfgd;
-        int efgfgdd;
-        int efgfgd;
-        int efggd;
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -49,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
                         fragment = new HomeFragment();
                         break;
-                    case R.id.action_pendingevents:
+                    case R.id.action_userProfile:
 
-                        fragment = new PendingEventsFragment();
+                        fragment = new UserProfileFragment();
                         break;
                     case R.id.action_search:
                     default:
