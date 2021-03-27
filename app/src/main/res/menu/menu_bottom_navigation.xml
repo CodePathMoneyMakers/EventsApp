@@ -18,7 +18,7 @@
         android:title=""
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_pendingevents"
+        android:id="@+id/action_userProfile"
         android:icon="@drawable/pending_selector"
         android:title=""
         app:showAsAction="always" />

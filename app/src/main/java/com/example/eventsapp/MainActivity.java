@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new HomeFragment();
                         break;
 
-                    case R.id.action_pendingevents:
+                    case R.id.action_userProfile:
                         fragment = new UserProfileFragment();
                         break;
 
