@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/eventDate"
+        android:layout_width="75dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="false"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="100dp"
+        android:layout_weight="1"
+        android:ems="10"
+        android:inputType="date"
+        tools:text="Sep 12" />
+
+    <ImageView
+        android:id="@+id/eventImage"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="16dp"
+        android:layout_toEndOf="@+id/eventDate"
+        app:srcCompat="@drawable/partyevent" />
+
+    <TextView
+        android:id="@+id/eventName"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="165dp"
+        android:layout_marginEnd="46dp"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="Saturday Nights at Danny's" />
+
+    <TextView
+        android:id="@+id/eventGenre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="109dp"
+        android:layout_marginTop="199dp"
+        android:textColor="#FFFFFF"
+        tools:text="Indie Rock" />
+</RelativeLayout>
