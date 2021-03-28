@@ -40,7 +40,7 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 - [] Users can set range in which they find events (ex. search 5 miles near me)
 - [] Users can determine the area they want to search for events in (ex. search events in Boston, Massachussetts)
 - [] Max user limit - stop accepting rsvps after x users
-- [] Integrate pictures within post (ex. photo of house, garage sale, etc.)
+-[] Integrate pictures within post (ex. photo of house, garage sale, etc.)
 
 ### 2. Screen Archetypes
 
