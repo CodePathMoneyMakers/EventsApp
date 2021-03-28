@@ -27,20 +27,20 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 
 **Required**
 
-* Account Signup - Users should be able to create an account using their email and password. Users should create a username.
-* Account Sign In - Users should have the ability to sign in with their credentials.
-* Events Creation - Users will have the ability to create an event with event name, type, description, date, and time. Events should also be able to be made private or public.
-* Events Feed - Scrolling view of events occuring in your area
-* User profile - Users can post a picture and bio 
-* Search by event type 
+- [x] Account Signup - Users should be able to create an account using their email and password. Users should create a username.
+- [x] Account Sign In - Users should have the ability to sign in with their credentials.
+- [] Events Creation - Users will have the ability to create an event with event name, type, description, date, and time. Events should also be able to be made private or public.
+- [] Events Feed - Scrolling view of events occuring in your area
+- [] User profile - Users can post a picture and bio 
+- [] Search by event type 
 
 **Additional**
 
-* Users can select the distance to which their event will be broadcas (ex. available to users 3 miles from me)
-* Users can set range in which they find events (ex. search 5 miles near me)
-* Users can determine the area they want to search for events in (ex. search events in Boston, Massachussetts)
-* Max user limit - stop accepting rsvps after x users
-* Integrate pictures within post (ex. photo of house, garage sale, etc.)
+- [] Users can select the distance to which their event will be broadcas (ex. available to users 3 miles from me)
+- [] Users can set range in which they find events (ex. search 5 miles near me)
+- [] Users can determine the area they want to search for events in (ex. search events in Boston, Massachussetts)
+- [] Max user limit - stop accepting rsvps after x users
+- [] Integrate pictures within post (ex. photo of house, garage sale, etc.)
 
 ### 2. Screen Archetypes
 
