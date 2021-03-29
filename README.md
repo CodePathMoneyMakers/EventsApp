@@ -43,6 +43,7 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 - Integrate pictures within post (ex. photo of house, garage sale, etc.)
 
 Unit 10 Update - 
+
 <img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/eventsapp_update1.gif" width=200>
 ### 2. Screen Archetypes
 
