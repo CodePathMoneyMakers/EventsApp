@@ -57,8 +57,6 @@ import java.util.TimeZone;
 import static android.app.Activity.RESULT_OK;
 
 public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
-
-
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
     public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
