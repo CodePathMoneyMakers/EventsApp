@@ -32,24 +32,35 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.eventsapp.Event;
 import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.R;
+import com.example.eventsapp.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
@@ -65,6 +76,9 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     public Boolean switchState;
     private GoogleMap mMap;
     private MapView mapView;
+    private FirebaseAuth mAuth;
+    private DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
+    private String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, eventName;
     private TextView tvDate;
     private ImageButton calendar_btn;
     private ImageButton time_btn;
@@ -128,6 +142,22 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
+
+        post_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateEvent();
+            }
+        });
+
+
+
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         calendar.clear();
 
@@ -149,6 +179,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 materialDatePicker.show(getFragmentManager(), "DatePicker");
             }
         });
+
 
 
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
@@ -287,7 +318,29 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         post_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CreateEvent();
+            }
+        });
+    }
 
+    private void CreateEvent() {
+        eventName = etMultiline.getText().toString().trim();
+
+
+        HashMap<String, String> profileMap = new HashMap<>();
+        profileMap.put("eventName", eventName);
+
+        EventsRef.child(currentUserID).setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getContext(),
+                            "Profile updated.", Toast.LENGTH_LONG).show();
+                } else {
+                    String message = task.getException().toString();
+                    Toast.makeText(getContext(), "Error" + message, Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
