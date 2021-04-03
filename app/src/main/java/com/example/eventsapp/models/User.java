@@ -1,4 +1,4 @@
-package com.example.eventsapp;
+package com.example.eventsapp.models;
 
 public class User {
 

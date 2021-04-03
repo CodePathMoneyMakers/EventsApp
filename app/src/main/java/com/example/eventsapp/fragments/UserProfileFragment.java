@@ -10,13 +10,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.eventsapp.LoginActivity;
-import com.example.eventsapp.ProfileActivity;
 import com.example.eventsapp.R;
-import com.example.eventsapp.User;
+import com.example.eventsapp.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
