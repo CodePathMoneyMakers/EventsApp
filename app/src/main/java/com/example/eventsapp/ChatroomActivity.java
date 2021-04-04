@@ -40,8 +40,7 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-public class ChatroomActivity extends AppCompatActivity implements View.OnClickListener
-{
+public class ChatroomActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "ChatroomActivity";
 
@@ -58,7 +57,6 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
     private Set<String> mMessageIds = new HashSet<>();
     private ArrayList<User> mUserList = new ArrayList<>();
     private UserListFragment mUserListFragment;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,29 +84,29 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
         mChatMessageEventListener = messagesRef
                 .orderBy("timestamp", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.e(TAG, "onEvent: Listen failed.", e);
-                    return;
-                }
-
-                if(queryDocumentSnapshots != null){
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-
-                        ChatMessage message = doc.toObject(ChatMessage.class);
-                        if(!mMessageIds.contains(message.getMessage_id())){
-                            mMessageIds.add(message.getMessage_id());
-                            mMessages.add(message);
-                            mChatMessageRecyclerView.smoothScrollToPosition(mMessages.size() - 1);
+                    @Override
+                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.e(TAG, "onEvent: Listen failed.", e);
+                            return;
                         }
 
-                    }
-                    mChatMessageRecyclerAdapter.notifyDataSetChanged();
+                        if(queryDocumentSnapshots != null){
+                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
 
-                }
-            }
-        });
+                                ChatMessage message = doc.toObject(ChatMessage.class);
+                                if(!mMessageIds.contains(message.getMessage_id())){
+                                    mMessageIds.add(message.getMessage_id());
+                                    mMessages.add(message);
+                                    mChatMessageRecyclerView.smoothScrollToPosition(mMessages.size() - 1);
+                                }
+
+                            }
+                            mChatMessageRecyclerAdapter.notifyDataSetChanged();
+
+                        }
+                    }
+                });
     }
 
     private void getChatroomUsers(){
@@ -211,7 +209,7 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
 
     private void inflateUserListFragment(){
         hideSoftKeyboard();
-        
+
         UserListFragment fragment = UserListFragment.newInstance();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(getString(R.string.intent_user_list), mUserList);

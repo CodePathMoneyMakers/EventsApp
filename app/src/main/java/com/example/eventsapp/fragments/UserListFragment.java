@@ -56,6 +56,7 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
         mUserListRecyclerView = view.findViewById(R.id.user_list_recycler_view);
         mMapView = (MapView) view.findViewById(R.id.user_list_map);
         initUserListRecyclerView();
+        initGoogleMap(savedInstanceState);
 
         return view;
     }
@@ -133,22 +134,3 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
