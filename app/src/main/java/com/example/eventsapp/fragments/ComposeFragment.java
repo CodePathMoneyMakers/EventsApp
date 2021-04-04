@@ -78,7 +78,8 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private MapView mapView;
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
-    private String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, eventName;
+    private String currentGroupName, currentUserID, currentUserName, currentDate, currentTime,
+            eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic;
     private TextView tvDate;
     private ImageButton calendar_btn;
     private ImageButton time_btn;
@@ -98,7 +99,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private ImageView selectedImage;
     private ImageButton picture_btn;
     private ImageButton post_btn;
-    private EditText etMultiline;
+    private EditText etMultiline, etEventTitle;
 
 
     int t1Hour, t1Minute, t2Hour, t2Minute;
@@ -137,15 +138,18 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         selectedImage = view.findViewById(R.id.selectedImage);
         post_btn = view.findViewById(R.id.post_btn);
         etMultiline = view.findViewById(R.id.etMultiline);
+        etEventTitle = view.findViewById(R.id.etEventTitle);
 
         mapView = view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
+
         mAuth = FirebaseAuth.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
+
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
 
@@ -199,6 +203,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 }
                 tvDate.setText(dayOfTheWeek + " " + day + " " + month);
 
+               eventDate = tvDate.getText().toString().trim(); //save event date as string
             }
         });
 
@@ -229,6 +234,9 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                         if (counter % 2 == 0) {
                             tvTime1.setText(DateFormat.format("hh:mm aa", c));
                             till.setText("till");
+
+                            eventTimeStart = tvTime.getText().toString().trim(); // saves event time start as a string
+                            eventTimeEnd = tvTime1.getText().toString().trim(); // saves event end time as a string
                         } else {
                             tvTime.setText(DateFormat.format("hh:mm aa", c));
                             from.setText("from");
@@ -259,6 +267,8 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                         String str = etMusicType.getText().toString();
                         tvMusic.setText(str);
                         dialog.dismiss();
+
+                        eventMusic = etMusicType.getText().toString(); // saves music as a string
                     }
                 });
 
@@ -282,6 +292,8 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                     String str = etFee.getText().toString();
                     tvFee.setText(str);
                     dialog.dismiss();
+
+                    eventFee = etFee.getText().toString();
                 }
             });
 
@@ -312,6 +324,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                     visibility.setImageDrawable(getResources().getDrawable(R.drawable.ic_visibility));
                     switchState = false;
                 }
+                eventPrivacy = switchState.toString();
             }
         });
 
@@ -324,13 +337,20 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     }
 
     private void CreateEvent() {
-        eventName = etMultiline.getText().toString().trim();
-
+        eventDescription = etMultiline.getText().toString().trim();
+        eventTitle = etEventTitle.getText().toString().trim();
 
         HashMap<String, String> profileMap = new HashMap<>();
-        profileMap.put("eventName", eventName);
+        profileMap.put("eventTitle", eventTitle);
+        profileMap.put("eventDescription", eventDescription);
+        profileMap.put("eventDate", String.valueOf(eventDate));
+        profileMap.put("eventTimeStart", String.valueOf(eventTimeStart));
+        profileMap.put("eventTimeEnd", String.valueOf(eventTimeEnd));
+        profileMap.put("eventPrivacy", eventPrivacy);
+        profileMap.put("eventFee", String.valueOf(eventFee));
+        profileMap.put("eventMusic", eventMusic);
 
-        EventsRef.child(currentUserID).setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+        EventsRef.child(currentUserID).child(eventTitle).setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
 
             @Override
             public void onComplete(@NonNull Task<Void> task) {

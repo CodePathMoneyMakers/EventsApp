@@ -228,6 +228,8 @@ public class UserProfileFragment extends Fragment {
 
                 reference.child(userID).setValue(profileMap)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
+
+
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
@@ -260,7 +262,7 @@ public class UserProfileFragment extends Fragment {
             imageUri = data.getData(); // gets file
 
             // start picker to get image for cropping and then use the image in cropping activity
-            CropImage.activity()
+          /*  CropImage.activity()
                     .setGuidelines(CropImageView.Guidelines.ON)
                     .setAspectRatio(1,1)
                     .start((Activity) getContext());
@@ -288,10 +290,11 @@ public class UserProfileFragment extends Fragment {
                     });
                 }
             }
+                 */
 
+            ivProfileImage.setImageURI(imageUri);
+            uploadPicture();
 
-          // ivProfileImage.setImageURI(imageUri);
-            //uploadPicture();
         }
     }
 
@@ -303,12 +306,14 @@ public class UserProfileFragment extends Fragment {
 
         final String randomKey = UUID.randomUUID().toString();
        StorageReference riversRef = storageReference.child("images/" + randomKey);
+       StorageReference filePath = storageReference.child(userID + ".jpg");
 
-       riversRef.putFile(imageUri)
-               .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
+       filePath.putFile(imageUri)
+               .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 
                    @Override
                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
                        pd.dismiss();
                        Snackbar.make(getView().findViewById(android.R.id.content), "Image Uploaded.", Snackbar.LENGTH_LONG).show();
                    }
