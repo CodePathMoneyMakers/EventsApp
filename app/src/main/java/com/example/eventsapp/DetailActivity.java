@@ -1,5 +1,5 @@
 package com.example.eventsapp;
 
-public class ActivityDetail {
+public class DetailActivity {
 
 }

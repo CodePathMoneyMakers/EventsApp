@@ -106,22 +106,22 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         super.onViewCreated(view, savedInstanceState);
 
         tvDate = view.findViewById(R.id.tvDate);
-        calendar_btn = view.findViewById(R.id.calender_btn);
-        time_btn = view.findViewById(R.id.time_btn);
+        calendar_btn = view.findViewById(R.id.calender_logo);
+        time_btn = view.findViewById(R.id.time_logo);
         tvTime = view.findViewById(R.id.tvTime);
         tvTime1 = view.findViewById(R.id.tvTime1);
         till = view.findViewById(R.id.till);
         from = view.findViewById(R.id.from);
-        music_btn = view.findViewById(R.id.music_btn);
-        fee_btn = view.findViewById(R.id.fee_btn);
+        music_btn = view.findViewById(R.id.music_logo);
+        fee_btn = view.findViewById(R.id.fee_logo);
         tvMusic = view.findViewById(R.id.tvMusic);
         tvFee = view.findViewById(R.id.tvFee);
         visibility = view.findViewById(R.id.visibility);
         aSwitch = view.findViewById(R.id.switch1);
         etOrganization = view.findViewById(R.id.etOrganization);
-        location_btn = view.findViewById(R.id.set_btn);
+        location_btn = view.findViewById(R.id.set_image);
         etLocation = view.findViewById(R.id.etLocation);
-        picture_btn = view.findViewById(R.id.picture_btn);
+        picture_btn = view.findViewById(R.id.picture_image);
         selectedImage = view.findViewById(R.id.selectedImage);
         post_btn = view.findViewById(R.id.post_btn);
         etMultiline = view.findViewById(R.id.etMultiline);
