@@ -31,8 +31,8 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 - [x] Account Sign In - Users should have the ability to sign in with their credentials.
 - Events Creation - Users will have the ability to create an event with event name, type, description, date, and time. Events should also be able to be made private or public.
 - Events Feed - Scrolling view of events occuring in your area
-- User profile - Users can post a picture and bio 
-- Search by event type 
+- [x] User profile - Users can post a picture and bio 
+- [ ] Search by event type 
 
 **Additional**
 
