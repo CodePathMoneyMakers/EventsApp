@@ -13,6 +13,7 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,7 +22,7 @@
         android:layout_margin="20dp"
         android:elevation="6dp"
         android:src="@drawable/ic_add_white_24dp"
-        android:id="@+id/fab_create_chatroom" />
+        android:id="@+id/create_chatroom" />
 
     <ProgressBar
         android:layout_width="wrap_content"
