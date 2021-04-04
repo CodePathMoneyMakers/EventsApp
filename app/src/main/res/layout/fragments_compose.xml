@@ -64,7 +64,8 @@
             android:layout_marginStart="39dp"
             android:layout_marginTop="285dp"
             app:cardCornerRadius="35dp"
-            app:cardElevation="10dp">
+            app:cardElevation="10dp"
+            >
 
             <ImageButton
                 android:id="@+id/calender_btn"

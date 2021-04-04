@@ -1,9 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+
+
+    <Button
+        android:id="@+id/btnSignOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvAge"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="159dp"
+        android:text="Sign Out" />
+
+    <Button
+        android:id="@+id/btnEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnSignOut"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="159dp"
+        android:text="Edit" />
 
     <TextView
         android:id="@+id/welcome"
@@ -22,14 +46,16 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="24dp"
         android:text="Email Address: " />
+
     <TextView
         android:id="@+id/tvFullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvEmail"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="25dp"
         android:text="Full Name" />
+
     <TextView
         android:id="@+id/tvAge"
         android:layout_width="wrap_content"
@@ -39,13 +65,18 @@
         android:layout_marginTop="24dp"
         android:text="Age:" />
 
-    <Button
-        android:id="@+id/btnSignOut"
+    <EditText
+        android:id="@+id/etBio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvAge"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="64dp"
-        android:text="Sign Out" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:inputType="textMultiLine"
+        android:hint="Tell us about yourself!"
+        ></EditText>
+
+
+
 
 </RelativeLayout>

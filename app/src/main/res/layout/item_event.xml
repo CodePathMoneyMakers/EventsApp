@@ -18,6 +18,7 @@
         android:inputType="date"
         tools:text="Sep 12" />
 
+
     <ImageView
         android:id="@+id/eventImage"
         android:layout_width="300dp"
