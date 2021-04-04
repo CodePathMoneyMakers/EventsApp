@@ -44,12 +44,14 @@ import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
@@ -64,6 +66,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     public static final String TAG = "ComposeFragment";
     public int counter;
+    private FirebaseAuth mAuth;
     public Boolean switchState;
     private GoogleMap mMap;
     private MapView mapView;
@@ -147,7 +150,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         calendar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity main = new MainActivity();
+               // MainActivity main = new MainActivity();
                 materialDatePicker.show(getFragmentManager(), "DatePicker");
             }
         });
@@ -289,7 +292,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         post_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+               // HashMap<> string = new HashMap();
             }
         });
     }
