@@ -291,9 +291,9 @@ public class UserProfileFragment extends Fragment {
                 }
             }
                  */
-
-            ivProfileImage.setImageURI(imageUri);
             uploadPicture();
+          //  ivProfileImage.setImageURI(imageUri);
+
 
         }
     }
@@ -315,7 +315,8 @@ public class UserProfileFragment extends Fragment {
                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                        pd.dismiss();
-                       Snackbar.make(getView().findViewById(android.R.id.content), "Image Uploaded.", Snackbar.LENGTH_LONG).show();
+                       Toast.makeText(getContext(), "Image Uploaded", Toast.LENGTH_LONG).show();
+                    //   Snackbar.make(getView().findViewById(android.R.id.content), "Image Uploaded.", Snackbar.LENGTH_LONG).show();
                    }
                })
                .addOnFailureListener(new OnFailureListener() {

@@ -15,10 +15,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-/*
+
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
     private Context context;
-    private list<Event> events;
+    private List<Event> events;
+
 
     public EventsAdapter(Context context, List<Event> events) {
         this.context = context;
@@ -71,18 +72,18 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         }
 
         public void bind(Event event) {
-            eventName.setText(event.getName());
-            eventDate.setText(event.getDate());
-            eventGenre.setText(event.getGenre());
+         //   eventName.setText(event.getName());
+         //   eventDate.setText(event.getDate());
+         //   eventGenre.setText(event.getGenre());
 
             // 1. Register click listener on the whole row
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // 2. Navigate to a new activity on tap
-                    Intent i = new Intent(context, .class);
-                    i.putExtra("event", Parcels.wrap(event));
-                    context.startActivity(i);
+                 //   Intent i = new Intent(context, .class);
+                //    i.putExtra("event", Parcels.wrap(event));
+                //    context.startActivity(i);
                 }
             });
         }
@@ -91,4 +92,3 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
 
 }
- */
