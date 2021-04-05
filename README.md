@@ -42,6 +42,11 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 - Max user limit - stop accepting rsvps after x users
 - Integrate pictures within post (ex. photo of house, garage sale, etc.)
 
+
+Unit 11 Update - 
+
+<img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/4-04-21.gif" width=200>
+
 Unit 10 Update - 
 
 <img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/eventsapp_update1.gif" width=200>
