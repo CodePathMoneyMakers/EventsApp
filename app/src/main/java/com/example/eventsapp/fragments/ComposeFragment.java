@@ -35,7 +35,6 @@ import androidx.fragment.app.FragmentManager;
 import com.example.eventsapp.Event;
 import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.R;
-import com.example.eventsapp.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -157,6 +156,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             @Override
             public void onClick(View v) {
                 CreateEvent();
+                startActivity(new Intent(getContext(), HomeFragment.class));
             }
         });
 

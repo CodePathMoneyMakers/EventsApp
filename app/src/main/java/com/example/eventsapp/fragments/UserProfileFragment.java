@@ -27,7 +27,7 @@ import com.example.eventsapp.LoginActivity;
 import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.ProfileActivity;
 import com.example.eventsapp.R;
-import com.example.eventsapp.User;
+import com.example.eventsapp.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -66,7 +66,6 @@ public class UserProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
     private StorageReference storageReference;
     private Button btnEdit;
-    private CircleImageView userProfileImage;
     private EditText etBio;
     private String fullName, email, age, bio;
 
