@@ -20,6 +20,27 @@ public class User implements Parcelable {
         this.email = email;
     }
 
+    protected User(Parcel in) {
+        fullName = in.readString();
+        age = in.readString();
+        email = in.readString();
+        user_id = in.readString();
+        username = in.readString();
+        avatar = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
     public String getUser_id() {
         return user_id;
     }

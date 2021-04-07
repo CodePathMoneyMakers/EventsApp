@@ -1,11 +1,9 @@
 package com.example.eventsapp.fragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,15 +15,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.eventsapp.LoginActivity;
-import com.example.eventsapp.MainActivity;
-import com.example.eventsapp.ProfileActivity;
 import com.example.eventsapp.R;
 import com.example.eventsapp.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,8 +39,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -66,6 +59,7 @@ public class UserProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
     private StorageReference storageReference;
     private Button btnEdit;
+    private CircleImageView userProfileImage;
     private EditText etBio;
     private String fullName, email, age, bio;
 
@@ -143,10 +137,8 @@ public class UserProfileFragment extends Fragment {
         
         RetrieveUserInfo();
 
-       // storage = FirebaseStorage.getInstance();
-       // storageReference = storage.getReference().child("Profile Images");
-
-        storageReference = FirebaseStorage.getInstance().getReference().child("Profile Images");
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
         ivProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,12 +189,10 @@ public class UserProfileFragment extends Fragment {
                     String retrieveUserName = snapshot.child("bio").getValue().toString();
                     String retrieveProfileImage = snapshot.child("image").getValue().toString();
 
-                    etBio.setHint(retrieveUserName);
+                    etBio.setText(retrieveUserName);
                 }
                 else if(snapshot.exists()  && (snapshot.hasChild("bio"))){
                     String retrieveUserName = snapshot.child("bio").getValue().toString();
-
-                    etBio.setHint(retrieveUserName);
                 }
                 else{
                     Toast.makeText(getContext(), "Update profile here", Toast.LENGTH_LONG).show();
@@ -227,8 +217,6 @@ public class UserProfileFragment extends Fragment {
 
                 reference.child(userID).setValue(profileMap)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
-
-
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
@@ -259,41 +247,8 @@ public class UserProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==1 && resultCode==RESULT_OK && data!=null && data.getData()!=null){
             imageUri = data.getData(); // gets file
-
-            // start picker to get image for cropping and then use the image in cropping activity
-          /*  CropImage.activity()
-                    .setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(1,1)
-                    .start((Activity) getContext());
-
-
-            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-                CropImage.ActivityResult result = CropImage.getActivityResult(data);
-
-                if (resultCode == RESULT_OK){
-                    Uri resultUri = result.getUri();
-
-                    StorageReference filePath = storageReference.child(userID + ".jpg");
-
-                    filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            if(task.isSuccessful()){
-                                Toast.makeText(getContext(), "Image Uploaded Successfully.", Toast.LENGTH_LONG).show();
-                            }
-                            else{
-                               String message= task.getException().toString();
-                                Toast.makeText(getContext(), "Error: " + message, Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                }
-            }
-                 */
-
             ivProfileImage.setImageURI(imageUri);
             uploadPicture();
-
         }
     }
 
@@ -305,14 +260,12 @@ public class UserProfileFragment extends Fragment {
 
         final String randomKey = UUID.randomUUID().toString();
        StorageReference riversRef = storageReference.child("images/" + randomKey);
-       StorageReference filePath = storageReference.child(userID + ".jpg");
 
-       filePath.putFile(imageUri)
-               .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+       riversRef.putFile(imageUri)
+               .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
 
                    @Override
                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
                        pd.dismiss();
                        Snackbar.make(getView().findViewById(android.R.id.content), "Image Uploaded.", Snackbar.LENGTH_LONG).show();
                    }
