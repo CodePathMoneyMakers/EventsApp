@@ -20,12 +20,14 @@ import com.example.eventsapp.fragments.UserListFragment;
 import com.example.eventsapp.models.ChatMessage;
 import com.example.eventsapp.models.Chatroom;
 import com.example.eventsapp.models.User;
+import com.example.eventsapp.models.UserLocation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -33,6 +35,8 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -57,7 +61,7 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
     private ArrayList<ChatMessage> mMessages = new ArrayList<>();
     private Set<String> mMessageIds = new HashSet<>();
     private ArrayList<User> mUserList = new ArrayList<>();
-    private UserListFragment mUserListFragment;
+    private ArrayList<UserLocation> mUserLocations = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,7 +115,7 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
                 });
     }
 
-    private void getChatroomUsers(){
+    private void getChatroomUsers() {
 
         CollectionReference usersRef = mDb
                 .collection(getString(R.string.collection_chatrooms))
@@ -119,29 +123,41 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
                 .collection(getString(R.string.collection_chatroom_user_list));
 
         mUserListEventListener = usersRef
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.e(TAG, "onEvent: Listen failed.", e);
-                            return;
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        Log.e(TAG, "onEvent: Listen failed.", e);
+                        return;
+                    }
+
+                    if(queryDocumentSnapshots != null){
+
+                        // Clear the list and add all the users again
+                        mUserList.clear();
+                        mUserList = new ArrayList<>();
+
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            User user = doc.toObject(User.class);
+                            mUserList.add(user);
+                            getUserLocation(user);
                         }
 
-                        if(queryDocumentSnapshots != null){
-
-                            // Clear the list and add all the users again
-                            mUserList.clear();
-                            mUserList = new ArrayList<>();
-
-                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                User user = doc.toObject(User.class);
-                                mUserList.add(user);
-                            }
-
-                            Log.d(TAG, "onEvent: user list size: " + mUserList.size());
-                        }
+                        Log.d(TAG, "onEvent: user list size: " + mUserList.size());
                     }
                 });
+    }
+
+    // get geopoints for each user
+    private void getUserLocation(User user) {
+        DocumentReference locationRef = mDb.collection(getString(R.string.collection_user_locations))
+                .document(user.getUser_id());
+
+        locationRef.get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                if(task.getResult().toObject(UserLocation.class) != null){
+                    mUserLocations.add(task.getResult().toObject(UserLocation.class));
+                }
+            }
+        });
     }
 
     private void initChatroomRecyclerView(){
@@ -212,6 +228,7 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
         UserListFragment fragment = UserListFragment.newInstance();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(getString(R.string.intent_user_list), mUserList);
+        bundle.putParcelableArrayList(getString(R.string.intent_user_locations),mUserLocations);
         fragment.setArguments(bundle);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

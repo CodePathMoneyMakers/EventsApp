@@ -24,8 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eventsapp.ChatroomActivity;
 import com.example.eventsapp.R;
+import com.example.eventsapp.UserClient;
 import com.example.eventsapp.adapters.ChatroomRecyclerAdapter;
 import com.example.eventsapp.models.Chatroom;
+import com.example.eventsapp.models.User;
+import com.example.eventsapp.models.UserLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,27 +37,22 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Nullable;
-
 import static com.example.eventsapp.fragments.ComposeFragment.MAPVIEW_BUNDLE_KEY;
 
-public class SearchFragment extends Fragment
-        implements ChatroomRecyclerAdapter.ChatroomRecyclerClickListener, OnMapReadyCallback {
+public class SearchFragment extends Fragment implements ChatroomRecyclerAdapter.ChatroomRecyclerClickListener, OnMapReadyCallback {
 
     public static final String TAG = "SearchFragment";
 
@@ -70,6 +68,9 @@ public class SearchFragment extends Fragment
     private ListenerRegistration mChatroomEventListener;
     private FirebaseFirestore mDb;
     private FloatingActionButton createNewChatroom;
+
+    //user location object
+    UserLocation mUserLocation;
 
 
     // device location
@@ -108,10 +109,52 @@ public class SearchFragment extends Fragment
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
     }
 
+    // retrieve user details to set to user location object
+    private void getUserDetails(){
+        if (mUserLocation == null) {
+            mUserLocation = new UserLocation();
+
+            DocumentReference userRef = mDb.collection("Users")
+                    .document(FirebaseAuth.getInstance().getUid());
+
+            userRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Log.d(TAG,"onComplete: successfully got the user details.");
+
+                    User user = task.getResult().toObject(User.class);
+                    mUserLocation.setUser(user);
+                    ((UserClient)(getActivity().getApplicationContext())).setUser(user);
+                    getLastKnownLocation();
+                }
+            });
+        } else {
+            getLastKnownLocation();
+        }
+    }
+
+    private void saveUserLocation(){
+        if (mUserLocation != null){
+            DocumentReference locationRef = mDb
+                    .collection("User Locations")
+                    .document(FirebaseAuth.getInstance().getUid());
+
+            locationRef.set(mUserLocation).addOnCompleteListener(task -> {
+                if(task.isSuccessful()){
+                    Log.d(TAG, "saveUserLocation: \ninserted user location into database." +
+                            "\n latitude: " + mUserLocation.getGeoPoint().getLatitude() +
+                            "\n longitude: " + mUserLocation.getGeoPoint().getLongitude());
+                }
+            });
+        }
+    }
+
     private void getLastKnownLocation() {
         Log.d(TAG, "getLastKnownLocation: called");
 
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -121,15 +164,16 @@ public class SearchFragment extends Fragment
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if(task.isSuccessful()) {
-                    Location location = task.getResult();
-                    GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-                    Log.d(TAG, "onComplete: lattitude: " + geoPoint.getLatitude());
-                    Log.d(TAG, "onComplete: longitude: " + geoPoint.getLongitude());
-                }
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+            if(task.isSuccessful()) {
+                Location location = task.getResult();
+                GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+                Log.d(TAG, "onComplete: lattitude: " + geoPoint.getLatitude());
+                Log.d(TAG, "onComplete: longitude: " + geoPoint.getLongitude());
+
+                mUserLocation.setGeoPoint(geoPoint);
+                mUserLocation.setTimestamp(null);
+                saveUserLocation();
             }
         });
     }
@@ -216,7 +260,7 @@ public class SearchFragment extends Fragment
     public void onResume() {
         super.onResume();
         getChatrooms();
-        getLastKnownLocation();
+        getUserDetails();
         mMapView.onResume();
     }
 
@@ -229,30 +273,27 @@ public class SearchFragment extends Fragment
         CollectionReference chatroomsCollection = mDb
                 .collection(getString(R.string.collection_chatrooms));
 
-        mChatroomEventListener = chatroomsCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                Log.d(TAG, "onEvent: called.");
+        mChatroomEventListener = chatroomsCollection.addSnapshotListener((queryDocumentSnapshots, e) -> {
+            Log.d(TAG, "onEvent: called.");
 
-                if (e != null) {
-                    Log.e(TAG, "onEvent: Listen failed.", e);
-                    return;
-                }
-
-                if (queryDocumentSnapshots != null) {
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-
-                        Chatroom chatroom = doc.toObject(Chatroom.class);
-                        if (!mChatroomIds.contains(chatroom.getChatroom_id())) {
-                            mChatroomIds.add(chatroom.getChatroom_id());
-                            mChatrooms.add(chatroom);
-                        }
-                    }
-                    Log.d(TAG, "onEvent: number of chatrooms: " + mChatrooms.size());
-                    mChatroomRecyclerAdapter.notifyDataSetChanged();
-                }
-
+            if (e != null) {
+                Log.e(TAG, "onEvent: Listen failed.", e);
+                return;
             }
+
+            if (queryDocumentSnapshots != null) {
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+
+                    Chatroom chatroom = doc.toObject(Chatroom.class);
+                    if (!mChatroomIds.contains(chatroom.getChatroom_id())) {
+                        mChatroomIds.add(chatroom.getChatroom_id());
+                        mChatrooms.add(chatroom);
+                    }
+                }
+                Log.d(TAG, "onEvent: number of chatrooms: " + mChatrooms.size());
+                mChatroomRecyclerAdapter.notifyDataSetChanged();
+            }
+
         });
     }
 
@@ -290,13 +331,7 @@ public class SearchFragment extends Fragment
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
             return;
         }
         map.setMyLocationEnabled(true);
