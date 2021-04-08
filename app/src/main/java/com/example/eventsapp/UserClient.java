@@ -16,5 +16,4 @@ public class UserClient extends Application {
     public void setUser(User user) {
         this.user = user;
     }
-
 }

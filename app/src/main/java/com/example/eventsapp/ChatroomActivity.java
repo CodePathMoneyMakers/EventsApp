@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,6 +47,7 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
     //widgets
     private Chatroom mChatroom;
     private EditText mMessage;
+    private TextView mChatTitle;
 
     //vars
     private ListenerRegistration mChatMessageEventListener, mUserListEventListener;
@@ -63,6 +65,7 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_chatroom);
         mMessage = findViewById(R.id.input_message);
         mChatMessageRecyclerView = findViewById(R.id.chatmessage_recycler_view);
+        mChatTitle = findViewById(R.id.tvChatTitle);
 
         findViewById(R.id.checkmark).setOnClickListener(this);
 
@@ -188,15 +191,12 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
             Log.d(TAG, "insertNewMessage: retrieved user client: " + user.toString());
             newChatMessage.setUser(user);
 
-            newMessageDoc.set(newChatMessage).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful()){
-                        clearMessage();
-                    }else{
-                        View parentLayout = findViewById(android.R.id.content);
-                        Snackbar.make(parentLayout, "Something went wrong.", Snackbar.LENGTH_SHORT).show();
-                    }
+            newMessageDoc.set(newChatMessage).addOnCompleteListener(task -> {
+                if(task.isSuccessful()){
+                    clearMessage();
+                }else{
+                    View parentLayout = findViewById(android.R.id.content);
+                    Snackbar.make(parentLayout, "Something went wrong.", Snackbar.LENGTH_SHORT).show();
                 }
             });
         }
@@ -257,9 +257,10 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void setChatroomName(){
-        getSupportActionBar().setTitle(mChatroom.getTitle());
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        //getSupportActionBar().setTitle(mChatroom.getTitle());
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setHomeButtonEnabled(true);
+        mChatTitle.setText(mChatroom.getTitle().toString());
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class UserRecyclerAdapter extends RecyclerView.Adapter<com.example.eventsapp.adapters.UserRecyclerAdapter.ViewHolder>{
 
-    private ArrayList<User> mUsers = new ArrayList<>();
+    private ArrayList<User> mUsers;
 
 
     public UserRecyclerAdapter(ArrayList<User> users) {

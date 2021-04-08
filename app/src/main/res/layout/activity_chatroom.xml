@@ -6,10 +6,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/White">
 
+    <TextView
+        android:id="@+id/tvChatTitle"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:hint="Chat Title"
+        android:textAlignment="center"
+        android:textSize="32sp"
+        />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="40dp"
+        android:layout_below="@id/tvChatTitle"
         >
 
         <androidx.recyclerview.widget.RecyclerView
