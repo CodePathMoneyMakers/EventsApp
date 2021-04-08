@@ -19,7 +19,6 @@ import com.example.eventsapp.fragments.UserListFragment;
 import com.example.eventsapp.models.ChatMessage;
 import com.example.eventsapp.models.Chatroom;
 import com.example.eventsapp.models.User;
-import com.example.eventsapp.util.UserClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;

@@ -61,7 +61,7 @@ public class UserProfileFragment extends Fragment {
     private Button btnEdit;
     private CircleImageView userProfileImage;
     private EditText etBio;
-    private String fullName, email, age, bio;
+    private String email, age, bio;
 
     // Required empty public constructor
     public UserProfileFragment() {
@@ -158,14 +158,13 @@ public class UserProfileFragment extends Fragment {
 
                 if (userProfile != null) {
                     // a user has these attributes
-                    fullName = userProfile.fullName;
-                    email = userProfile.email;
-                    age = userProfile.age;
+                    email = userProfile.getEmail();
+                    //age = userProfile.age;
 
 
                     // set information to the layout
-                    greetingTextView.setText("Welcome, " + fullName + "!");
-                    fullNameTextView.setText(fullName);
+                    greetingTextView.setText("Welcome");
+                    //fullNameTextView.setText(fullName);
                     emailTextView.setText(email);
                     ageTextView.setText(age);
                 }
@@ -211,7 +210,7 @@ public class UserProfileFragment extends Fragment {
 
             HashMap<String, String> profileMap = new HashMap<>();
                 profileMap.put("bio", bio);
-                profileMap.put("fullName", String.valueOf(fullName));
+                //profileMap.put("fullName", String.valueOf(fullName));
                 profileMap.put("email", String.valueOf(email));
                 profileMap.put("age", String.valueOf(age));
 

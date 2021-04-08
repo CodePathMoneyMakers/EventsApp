@@ -1,4 +1,4 @@
-package com.example.eventsapp.util;
+package com.example.eventsapp;
 
 public class Constants {
 

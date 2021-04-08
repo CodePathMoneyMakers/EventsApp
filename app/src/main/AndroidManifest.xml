@@ -41,7 +41,8 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".ForgotPassword"></activity>
+        <activity android:name=".ChatroomActivity"/>
+        <activity android:name=".ForgotPassword"/>
         <activity android:name=".ProfileActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity">

@@ -1,62 +1,89 @@
 package com.example.eventsapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.example.eventsapp.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+
+import static android.text.TextUtils.isEmpty;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String TAG ="Login Activity";
 
-    private TextView register, forgotPassword;
-    private EditText editTextEmail, editTextPassword;
-    private Button signIn;
+    // Firebase Auth Listener (auto login)
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    //private FirebaseAuth mAuth;
 
-    private FirebaseAuth mAuth;
+    private EditText editTextEmail, editTextPassword;
     private ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        forgotPassword = (TextView) findViewById(R.id.tvForgotPassword);
-        forgotPassword.setOnClickListener(this);
-
-        // Create Account button is pressed
-        register = (TextView) findViewById(R.id.tvCreateAccount);
-        register.setOnClickListener(this);
-
-        signIn = (Button) findViewById(R.id.btnLogin);
-        signIn.setOnClickListener(this);
-
         editTextEmail = (EditText) findViewById(R.id.etEmail);
         editTextPassword = (EditText) findViewById(R.id.etPassword);
-
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        mAuth = FirebaseAuth.getInstance();
+        //mAuth = FirebaseAuth.getInstance();
+        setupFirebaseAuth();
+        findViewById(R.id.tvForgotPassword).setOnClickListener(this);
+        findViewById(R.id.tvCreateAccount).setOnClickListener(this);
+        findViewById(R.id.btnLogin).setOnClickListener(this);
     }
 
-    // Method to handle all on click listeners for the Login Activity
+    // Firebase Setup
+    private void setupFirebaseAuth(){
+
+        Log.d(TAG, "setupFirebaseAuth: started.");
+
+        mAuthListener = firebaseAuth -> {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if (user != null) {
+                Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                Toast.makeText(LoginActivity.this, "Authenticated with: " + user.getEmail(), Toast.LENGTH_SHORT).show();
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().build();
+                db.setFirestoreSettings(settings);
+
+                DocumentReference userRef = db.collection(getString(R.string.collection_users)).document(user.getUid());
+
+                userRef.get().addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        Log.d(TAG, "onComplete: successfully set the user client.");
+                        User user1 = task.getResult().toObject(User.class);
+                        //((UserClient)(getApplicationContext())).setUser(user1);
+                    }
+                });
+
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+
+            } else {
+                // User is signed out
+                Log.d(TAG, "onAuthStateChanged:signed_out");
+            }
+        };
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -66,16 +93,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(new Intent(this, RegisterActivity.class));
                 break;
 
-            case R.id.btnLogin:
-                userLogin();
-                break;
-
             case R.id.tvForgotPassword:
                 startActivity(new Intent(this, ForgotPassword.class));
+                break;
+
+            case R.id.btnLogin:
+                //userLogin();
+                signIn();
                 break;
         }
     }
 
+    private void showDialog(){
+        progressBar.setVisibility(View.VISIBLE);
+
+    }
+    private void hideDialog(){
+        if(progressBar.getVisibility() == View.VISIBLE){
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    //previous userLogin()
+    /*
     private void userLogin() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
@@ -123,5 +163,38 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
         });
+    }
+     */
+
+    private void signIn(){
+        //check if the fields are filled out
+        if(!isEmpty(editTextEmail.getText().toString()) && !isEmpty(editTextPassword.getText().toString())){
+            Log.d(TAG, "onClick: attempting to authenticate.");
+
+            showDialog();
+
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(editTextEmail.getText().toString(),
+                    editTextPassword.getText().toString())
+                    .addOnCompleteListener(task -> hideDialog()).addOnFailureListener(e -> {
+                        Toast.makeText(LoginActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
+                        hideDialog();
+                    });
+        }else{
+            Toast.makeText(LoginActivity.this, "Please ensure no fields are empty.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
+        }
     }
 }

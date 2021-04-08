@@ -28,9 +28,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import static com.example.eventsapp.util.Constants.ERROR_DIALOG_REQUEST;
-import static com.example.eventsapp.util.Constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
-import static com.example.eventsapp.util.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
+import static com.example.eventsapp.Constants.ERROR_DIALOG_REQUEST;
+import static com.example.eventsapp.Constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
+import static com.example.eventsapp.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
 
 public class MainActivity extends AppCompatActivity {
 
