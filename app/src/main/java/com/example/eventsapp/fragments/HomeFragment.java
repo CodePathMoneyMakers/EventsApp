@@ -51,8 +51,7 @@ public class HomeFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
-        DataRef =   FirebaseDatabase.getInstance().getReference().child("Events").child(currentUserID);
-        inputSearch = view.findViewById(R.id.inputSearch);
+        DataRef =   FirebaseDatabase.getInstance().getReference().child("Events");
         recyclerView = view.findViewById(R.id.recylerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
@@ -65,7 +64,10 @@ public class HomeFragment extends Fragment {
         adapter = new FirebaseRecyclerAdapter<Event, EventsAdapter>(options) {
             @Override
             protected void onBindViewHolder(@NonNull EventsAdapter eventsAdapter, int i, @NonNull Event event) {
-                eventsAdapter.eventDate.setText(event.getEventDate());
+                eventsAdapter.eventTitle.setText(event.getEventTitle());
+                eventsAdapter.eventGenre.setText(event.getEventGenre());
+                eventsAdapter.eventFee.setText(event.getEventFee());
+              //  eventsAdapter.eventDate.setText(event.getEventDate());
                 Picasso.get().load(event.getEventImage()).into(eventsAdapter.eventImage);
             }
 

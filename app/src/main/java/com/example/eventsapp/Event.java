@@ -2,18 +2,34 @@ package com.example.eventsapp;
 
 public class Event {
 
-    public String eventTitle, eventDate, eventDescription, eventImage;
+    public String eventTitle, eventDate, eventDescription, eventImage, eventGenre, eventFee;
 
     // if we create an empty object of this class
     // we have access to the variables via a
     // default empty constructor.
     public Event(){}
 
-    public Event(String eventTitle, String eventDate, String eventDescription, String eventImage) {
+    public Event(String eventTitle, String eventDate, String eventDescription, String eventImage, String eventGenre, String eventFee) {
         this.eventTitle = eventTitle;
         this.eventDate = eventDate;
         this.eventDescription = eventDescription;
         this.eventImage = eventImage;
+        this.eventGenre = eventGenre;
+        this.eventFee = eventFee;
+    }
+
+    public String getEventFee(){
+        return  "$ " + eventFee;
+    }
+
+    public void setEventFee(){
+        this.eventFee = eventFee;
+    }
+
+    public String getEventGenre(){ return eventGenre;}
+
+    public void setEventGenre(){
+        this.eventGenre = eventGenre;
     }
 
     public String getEventTitle() {

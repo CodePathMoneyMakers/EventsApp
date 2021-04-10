@@ -356,8 +356,9 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         profileMap.put("eventFee", String.valueOf(eventFee));
         profileMap.put("eventMusic", eventMusic);
         profileMap.put("eventImage", eventImage);
+        profileMap.put("userID", currentUserID);
 
-        EventsRef.child(currentUserID).child(eventTitle).setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+        EventsRef.push().setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
 
             @Override
             public void onComplete(@NonNull Task<Void> task) {
