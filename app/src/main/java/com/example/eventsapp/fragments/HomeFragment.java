@@ -1,5 +1,6 @@
 package com.example.eventsapp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.eventsapp.DetailsActivity;
 import com.example.eventsapp.Event;
 import com.example.eventsapp.EventsAdapter;
 import com.example.eventsapp.R;
@@ -69,6 +71,15 @@ public class HomeFragment extends Fragment {
                 eventsAdapter.eventFee.setText(event.getEventFee());
               //  eventsAdapter.eventDate.setText(event.getEventDate());
                 Picasso.get().load(event.getEventImage()).into(eventsAdapter.eventImage);
+
+                eventsAdapter.view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent (getContext(), DetailsActivity.class);
+                        intent.putExtra("EventID", getRef(i).getKey());
+                        startActivity(intent);
+                    }
+                });
             }
 
             @NonNull

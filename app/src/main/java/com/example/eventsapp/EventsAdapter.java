@@ -13,6 +13,7 @@ public class EventsAdapter extends RecyclerView.ViewHolder {
     public TextView eventTitle;
     public TextView eventGenre;
     public TextView eventFee;
+    public View view;
 
     public EventsAdapter(@NonNull View itemView) {
         super(itemView);
@@ -22,6 +23,8 @@ public class EventsAdapter extends RecyclerView.ViewHolder {
         eventTitle = itemView.findViewById(R.id.eventTitle);
         eventGenre = itemView.findViewById(R.id.eventGenre);
         eventFee = itemView.findViewById(R.id.eventFee);
+
+        view = itemView;
     }
 }
   /*  private Context context;
