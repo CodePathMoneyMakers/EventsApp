@@ -3,43 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.HomeFragment">
-    <ImageView
-        android:layout_height="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/inputSearch"
         android:layout_width="match_parent"
-        android:background="@drawable/home_bg_1"
-        android:scaleType="fitCenter"/>
-
-    <TextView
-        android:id="@+id/banner"
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Landmark📍"
-        android:textAlignment="center"
-        android:textSize="64sp"
-        android:textStyle="bold"
-        android:fontFamily="sans-serif-black"
-        android:textColor="#BEF3F3F3"
-        android:shadowRadius="50"
-        android:shadowColor="@color/black"
-        android:layout_marginTop="100dp" />
+        android:hint="Search data here ..."
+        android:layout_margin="20dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:drawableRight="@drawable/ic_search1"
+        android:paddingRight="10dp"
+        android:background="@drawable/input_search"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@+id/inputSearch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recylerView"
+        />
 
-    <TextView
-        android:id="@+id/welcome"
-        android:layout_below="@+id/banner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome to the landmark homepage"
-        android:textAlignment="center"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        android:fontFamily="sans-serif-black"
-        android:textColor="#BEF3F3F3"
-        android:shadowRadius="50"
-        android:shadowColor="@color/black"
-        android:layout_marginTop="100dp"
-        android:padding="16dp"/>
+
 
 </RelativeLayout>

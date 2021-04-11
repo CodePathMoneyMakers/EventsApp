@@ -12,8 +12,7 @@
         android:layout_below="@+id/dateCard"
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/ic_path"/>
+        android:layout_marginTop="10dp" />
 
     <View
         android:id="@+id/path_2"
@@ -22,8 +21,7 @@
         android:layout_below="@+id/dateCard"
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
-        android:layout_marginTop="39dp"
-        android:background="@drawable/ic_path"/>
+        android:layout_marginTop="39dp" />
 
     <View
         android:id="@+id/path_3"
@@ -32,8 +30,7 @@
         android:layout_below="@+id/dateCard"
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
-        android:layout_marginTop="67dp"
-        android:background="@drawable/ic_path"/>
+        android:layout_marginTop="67dp" />
 
     <View
         android:id="@+id/path_4"
@@ -42,8 +39,7 @@
         android:layout_below="@+id/dateCard"
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
-        android:layout_marginTop="95dp"
-        android:background="@drawable/ic_path"/>
+        android:layout_marginTop="95dp" />
 
     <View
         android:id="@+id/path_5"
@@ -52,8 +48,7 @@
         android:layout_below="@+id/dateCard"
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
-        android:layout_marginTop="123dp"
-        android:background="@drawable/ic_path"/>
+        android:layout_marginTop="123dp" />
 
 
     <androidx.cardview.widget.CardView
@@ -107,7 +102,6 @@
             android:layout_height="172dp"
             android:adjustViewBounds="false"
             android:cropToPadding="true"
-            android:foreground="@drawable/recycler_transparent"
             android:scaleType="centerCrop"
             tools:srcCompat="@drawable/partyevent">
 
@@ -123,7 +117,6 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="98dp"
             android:layout_marginTop="140dp"
-            android:drawableLeft="@drawable/ic_ticket_recycler"
             android:fontFamily="sans-serif-condensed-medium"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
@@ -133,7 +126,7 @@
             android:alpha="0.7"/>
 
         <TextView
-            android:id="@+id/eventName"
+            android:id="@+id/eventTitle"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
@@ -144,12 +137,11 @@
             android:layout_marginStart="16dp"/>
 
         <TextView
-            android:id="@+id/eventMusic"
+            android:id="@+id/eventGenre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="140dp"
-            android:drawableLeft="@drawable/ic_music_recycler"
             android:drawablePadding="5dp"
             android:fontFamily="sans-serif-condensed-medium"
             android:textColor="#FFFFFF"
