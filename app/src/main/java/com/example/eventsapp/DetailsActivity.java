@@ -29,7 +29,7 @@ public class DetailsActivity extends AppCompatActivity {
         tvEventTitle = findViewById(R.id.eventTitle);
         ivEventImage = findViewById(R.id.eventImage);
 
-        reference = FirebaseDatabase.getInstance().getReference().child("EventID");
+        reference = FirebaseDatabase.getInstance().getReference().child("Events");
 
         String EventID = getIntent().getStringExtra("EventID");
 
