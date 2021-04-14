@@ -185,11 +185,10 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         calendar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity main = new MainActivity();
+               // MainActivity main = new MainActivity();
                 materialDatePicker.show(getFragmentManager(), "DatePicker");
             }
         });
-
 
 
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
@@ -440,6 +439,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+            //mMap.animateCamera(CameraUpdateFactory.newLatLng());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }
     }
