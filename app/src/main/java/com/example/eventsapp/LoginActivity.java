@@ -39,6 +39,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        /*if(mAuth.getCurrentUser().getUid() != null) {
+            goMainActivity();
+        }*/
+
         forgotPassword = (TextView) findViewById(R.id.tvForgotPassword);
         forgotPassword.setOnClickListener(this);
 
@@ -110,6 +114,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         // redirect to user profile
                         Toast.makeText(LoginActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
                     } else {
                         // send an email notification link
                         user.sendEmailVerification();
@@ -125,4 +130,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
+
+    /*private void goMainActivity() {
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+    }*/
 }
