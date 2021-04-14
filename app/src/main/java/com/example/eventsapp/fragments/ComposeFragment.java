@@ -32,7 +32,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -298,7 +297,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                     tvFee.setText(str);
                     dialog.dismiss();
 
-                    eventFee = etFee.getText().toString();
+                    eventFee = etFee.getText().toString(); // save everthing from edit text as a string eventFee
                 }
             });
 
@@ -345,6 +344,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         eventDescription = etMultiline.getText().toString().trim();
         eventTitle = etEventTitle.getText().toString().trim();
 
+        // save all event details in a hashmap
         HashMap<String, String> profileMap = new HashMap<>();
         profileMap.put("eventTitle", eventTitle);
         profileMap.put("eventDescription", eventDescription);
@@ -357,6 +357,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         profileMap.put("eventImage", eventImage);
         profileMap.put("userID", currentUserID);
 
+        // push everything to firebase through eventsref
         EventsRef.push().setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
 
             @Override
