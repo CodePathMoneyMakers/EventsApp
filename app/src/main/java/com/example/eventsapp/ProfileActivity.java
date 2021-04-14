@@ -30,7 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragments_profile);
 
-        logOut = (Button) findViewById(R.id.btnSignOut);
+       // logOut = (Button) findViewById(R.id.btnSignOut);
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,7 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
         reference = FirebaseDatabase.getInstance().getReference("Users");
         userID = user.getUid();
 
-        final TextView greetingTextView = (TextView) findViewById(R.id.welcome);
+        //final TextView greetingTextView = (TextView) findViewById(R.id.welcome);
         final TextView fullNameTextView = (TextView) findViewById(R.id.tvFullName);
         final TextView emailTextView = (TextView) findViewById(R.id.tvEmail);
         final TextView ageTextView = (TextView) findViewById(R.id.tvAge);
@@ -63,7 +63,7 @@ public class ProfileActivity extends AppCompatActivity {
                     String age = userProfile.age;
 
                     // set information to the layout
-                    greetingTextView.setText("Welcome, " + fullName + "!");
+                    //greetingTextView.setText("Welcome, " + fullName + "!");
                     fullNameTextView.setText(fullName);
                     emailTextView.setText(email);
                     ageTextView.setText(age);

@@ -13,7 +13,8 @@
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/ic_path"/>
+        android:background="@drawable/ic_path"
+        android:alpha="0.3"/>
 
     <View
         android:id="@+id/path_2"
@@ -23,7 +24,8 @@
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
         android:layout_marginTop="39dp"
-        android:background="@drawable/ic_path"/>
+        android:background="@drawable/ic_path"
+        android:alpha="0.3"/>
 
     <View
         android:id="@+id/path_3"
@@ -33,7 +35,8 @@
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
         android:layout_marginTop="67dp"
-        android:background="@drawable/ic_path"/>
+        android:background="@drawable/ic_path"
+        android:alpha="0.3"/>
 
     <View
         android:id="@+id/path_4"
@@ -43,7 +46,8 @@
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
         android:layout_marginTop="95dp"
-        android:background="@drawable/ic_path"/>
+        android:background="@drawable/ic_path"
+        android:alpha="0.3"/>
 
     <View
         android:id="@+id/path_5"
@@ -53,7 +57,8 @@
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
         android:layout_marginTop="123dp"
-        android:background="@drawable/ic_path"/>
+        android:background="@drawable/ic_path"
+        android:alpha="0.3"/>
 
 
     <androidx.cardview.widget.CardView

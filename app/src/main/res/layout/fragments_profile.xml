@@ -6,93 +6,168 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar">
-    </include>
 
-    <Button
+    <ImageButton
         android:id="@+id/btnSignOut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvAge"
-        android:layout_alignParentEnd="true"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="68dp"
-        android:layout_marginEnd="159dp"
-        android:text="Sign Out" />
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="385dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="5dp"
+        android:background="#00FFFFFF"
+        android:elevation="10dp"
+        android:src="@drawable/ic_logout" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnSignOut"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="68dp"
-        android:layout_marginEnd="159dp"
-        android:text="Edit" />
-
-    <TextView
-        android:id="@+id/welcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="87dp"
-        android:layout_marginEnd="100dp"
-        android:text="Welcome to the User Profile Page" />
+        android:layout_marginTop="59dp"
+        android:layout_marginEnd="6dp"
+        android:background="@drawable/transparent_bg"
+        android:elevation="10dp"
+        android:src="@drawable/ic_edit" />
 
     <TextView
         android:id="@+id/tvEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/welcome"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Email Address: " />
+        android:layout_marginLeft="320dp"
+        android:layout_marginTop="10dp"
+        android:elevation="10dp"
+        android:text="Email Address: "
+        android:textSize="12dp" />
 
-    <TextView
-        android:id="@+id/tvFullName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvEmail"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="25dp"
-        android:text="Full Name" />
-
-    <TextView
-        android:id="@+id/tvAge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvFullName"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Age:" />
-
-    <EditText
-        android:id="@+id/etBio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvAge"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
-        android:inputType="textMultiLine"
-        android:hint="Tell us about yourself!"
-        ></EditText>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:adjustViewBounds="false"
+        android:cropToPadding="false"
+        android:scaleType="centerCrop"
+        android:src="@drawable/building"
+        android:foreground="@drawable/profile_gradient_overlay"/>
 
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/ivProfileImage"
-        android:src="@drawable/ic_person"
-        app:civ_border_width="2dp"
-        app:civ_border_color="#FF000000"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+    <androidx.cardview.widget.CardView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/cardProfileImage"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="60dp"
+        app:cardElevation="100dp"
+        app:cardCornerRadius="50dp"
+        >
+
+        <ImageView
+            android:id="@+id/ivProfileImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="350dp"
+        android:layout_height="220dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="257dp"
-        android:layout_marginTop="127dp"
-        android:layout_marginEnd="26dp"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="110dp"
+        android:layout_marginEnd="30dp"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="5dp"
+        android:id="@+id/profileCard"
+        android:fadingEdgeLength="@dimen/cardview_default_elevation">
+
+        <TextView
+            android:id="@+id/tvFullName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginEnd="50dp"
+            android:alpha="0.75"
+            android:elegantTextHeight="true"
+            android:fontFamily="@font/amaranth_bold"
+            android:lineSpacingExtra="10sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="18sp"
+            android:typeface="sans"
+            tools:text="Maria Elliott"
+            />
+
+        <TextView
+            android:id="@+id/tvAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="230dp"
+            android:layout_marginTop="77dp"
+            android:textStyle="bold"
+            tools:text="25" />
+
+        <EditText
+            android:id="@+id/etBio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="110dp"
+            android:layout_marginTop="90dp"
+            android:background="@drawable/login_et_background"
+            android:hint="Tell us about yourself!"
+            android:inputType="textMultiLine"
+            android:textSize="14sp">
+
+        </EditText>
+
+        <TextView
+            android:id="@+id/tvAttended"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="140dp"
+            android:alpha="0.90"
+            android:fontFamily="@font/amaranth_bold"
+            android:lineSpacingExtra="10sp"
+            android:text="ATTENDED"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textSize="12sp"
+            android:typeface="monospace" />
+
+        <TextView
+            android:id="@+id/tvEventsCreated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="135dp"
+            android:layout_marginTop="140dp"
+            android:alpha="0.90"
+            android:fontFamily="@font/amaranth_bold"
+            android:text="EVENTS CREATED"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvLikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="270dp"
+            android:layout_marginTop="140dp"
+            android:alpha="0.90"
+            android:fontFamily="@font/amaranth_bold"
+            android:text="LIKES"
+            android:textSize="12sp" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/profileRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@+id/profileCard"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="19dp"
+        android:layout_marginBottom="2dp" />
 
 </RelativeLayout>
