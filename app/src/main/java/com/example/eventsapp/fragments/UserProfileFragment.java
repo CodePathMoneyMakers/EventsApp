@@ -13,7 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -51,19 +53,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
 
-public class UserProfileFragment extends Fragment {
+public class UserProfileFragment extends Fragment  {
 
     private FirebaseUser user;
     private DatabaseReference reference;
     private String userID;
-    private Button logOut;
+    private ImageButton logOut;
     private ImageView ivProfileImage;
     private Uri imageUri;
     private FirebaseStorage storage;
     private FirebaseAuth mAuth;
     private StorageReference storageReference;
-    private Button btnEdit;
-    private CircleImageView userProfileImage;
+    private ImageButton btnEdit;
     private EditText etBio;
     private String fullName, email, age, bio;
 
@@ -77,18 +78,16 @@ public class UserProfileFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.options, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-
-    }
+//    @Override
+//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+//        inflater.inflate(R.menu.options, menu);
+//        super.onCreateOptionsMenu(menu, inflater);
+//
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-
         return super.onOptionsItemSelected(item);
     }
     // The onCreateView method is called when Fragment should create its View object hierarchy,
@@ -96,7 +95,7 @@ public class UserProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
-      //  setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragments_profile, container,false);
     }
 
@@ -106,7 +105,7 @@ public class UserProfileFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        logOut = (Button) view.findViewById(R.id.btnSignOut);
+        logOut = view.findViewById(R.id.btnSignOut);
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,16 +120,16 @@ public class UserProfileFragment extends Fragment {
         reference = FirebaseDatabase.getInstance().getReference("Users");
         userID = user.getUid();
 
-        final TextView greetingTextView = (TextView) view.findViewById(R.id.welcome);
+    //  final TextView greetingTextView = (TextView) view.findViewById(R.id.welcome);
         final TextView fullNameTextView = (TextView) view.findViewById(R.id.tvFullName);
         final TextView emailTextView = (TextView) view.findViewById(R.id.tvEmail);
         final TextView ageTextView = (TextView) view.findViewById(R.id.tvAge);
 
-        ivProfileImage = (ImageView) view.findViewById(R.id.ivProfileImage);
+        ivProfileImage = view.findViewById(R.id.ivProfileImage);
 
         etBio = (EditText) view.findViewById(R.id.etBio);
 
-        btnEdit = (Button) view.findViewById(R.id.btnEdit);
+        btnEdit = view.findViewById(R.id.btnEdit);
 
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,7 +167,7 @@ public class UserProfileFragment extends Fragment {
 
 
                     // set information to the layout
-                    greetingTextView.setText("Welcome, " + fullName + "!");
+                    //greetingTextView.setText("Welcome, " + fullName + "!");
                     fullNameTextView.setText(fullName);
                     emailTextView.setText(email);
                     ageTextView.setText(age);
@@ -183,6 +182,13 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
+    }
+
+    public void showPopup(View view){
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+        popupMenu.setOnMenuItemClickListener((PopupMenu.OnMenuItemClickListener) this);
+        popupMenu.inflate(R.menu.options);
+        popupMenu.show();
     }
 
     private void RetrieveUserInfo() {
@@ -271,7 +277,7 @@ public class UserProfileFragment extends Fragment {
                    @Override
                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                        pd.dismiss();
-                       Snackbar.make(getView().findViewById(android.R.id.content), "Image Uploaded.", Snackbar.LENGTH_LONG).show();
+                       Toast.makeText(getContext(), "Image Upload", Toast.LENGTH_SHORT).show();
                    }
                })
                .addOnFailureListener(new OnFailureListener() {
@@ -289,4 +295,21 @@ public class UserProfileFragment extends Fragment {
                    }
                });
     }
+
+//    @Override
+//    public boolean onMenuItemClick(MenuItem item) {
+//        switch (item.getItemId()){
+//            case R.id.itLogOut:
+//                Toast.makeText(getContext(), "Logged out", Toast.LENGTH_SHORT).show();
+//                FirebaseAuth.getInstance().signOut();
+//                startActivity(new Intent(getContext(), LoginActivity.class));
+//                return true;
+//            case R.id.itEdit:
+//                Toast.makeText(getContext(), "Edit profile", Toast.LENGTH_SHORT).show();
+//                UpdateSettings();
+//                return true;
+//            default:
+//                return false;
+//        }
+//    }
 }
