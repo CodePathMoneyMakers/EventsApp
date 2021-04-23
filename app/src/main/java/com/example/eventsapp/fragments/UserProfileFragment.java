@@ -3,6 +3,7 @@ package com.example.eventsapp.fragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -46,7 +47,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -65,9 +69,16 @@ public class UserProfileFragment extends Fragment  {
     private FirebaseStorage storage;
     private FirebaseAuth mAuth;
     private StorageReference storageReference;
+    public DatabaseReference UsersRef;
     private ImageButton btnEdit;
     private EditText etBio;
-    private String fullName, email, age, bio;
+    private String fullName, email, age, bio, userImage, currentUserID;
+    private static final int REQUEST_CODE_SELECT_IMAGE = 2;
+    boolean isImageAdded = false;
+
+    public StorageReference Storageref;
+
+    Uri selectedImageUri;
 
     // Required empty public constructor
     public UserProfileFragment() {
@@ -121,12 +132,16 @@ public class UserProfileFragment extends Fragment  {
         mAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         userID = user.getUid();
+        currentUserID = mAuth.getCurrentUser().getUid();
 
     //  final TextView greetingTextView = (TextView) view.findViewById(R.id.welcome);
         final TextView fullNameTextView = (TextView) view.findViewById(R.id.tvFullName);
         final TextView emailTextView = (TextView) view.findViewById(R.id.tvEmail);
         final TextView ageTextView = (TextView) view.findViewById(R.id.tvAge);
+
+        Storageref = FirebaseStorage.getInstance().getReference().child("UserImage");
 
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
 
@@ -151,7 +166,8 @@ public class UserProfileFragment extends Fragment  {
         ivProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                choosePicture();
+               // choosePicture();
+                openCamera(ivProfileImage);
             }
         });
 
@@ -197,21 +213,31 @@ public class UserProfileFragment extends Fragment  {
     }
 
     private void RetrieveUserInfo() {
-        reference.child(userID).addValueEventListener(new ValueEventListener() {
+        UsersRef.child(userID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()  && (snapshot.hasChild("bio")) && (snapshot.hasChild("image"))){
                     String retrieveUserName = snapshot.child("bio").getValue().toString();
                     String retrieveProfileImage = snapshot.child("image").getValue().toString();
+                    String userImage2 = snapshot.child("userImage").getValue().toString();
+
+                    Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);
+
 
                     etBio.setHint(retrieveUserName);
                 }
                 else if(snapshot.exists()  && (snapshot.hasChild("bio"))){
                     String retrieveUserName = snapshot.child("bio").getValue().toString();
 
+                    String userImage2 = snapshot.child("userImage").getValue().toString();
+                    Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);
+
                     etBio.setHint(retrieveUserName);
                 }
                 else{
+                    String userImage2 = snapshot.child("userImage").getValue().toString();
+                    Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);
+
                     Toast.makeText(getContext(), "Update profile here", Toast.LENGTH_LONG).show();
                 }
             }
@@ -231,6 +257,7 @@ public class UserProfileFragment extends Fragment  {
                 profileMap.put("fullName", String.valueOf(fullName));
                 profileMap.put("email", String.valueOf(email));
                 profileMap.put("age", String.valueOf(age));
+                profileMap.put("userImage", userImage);
 
                 reference.child(userID).setValue(profileMap)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -251,11 +278,56 @@ public class UserProfileFragment extends Fragment  {
       //  }
     }
 
-    private void choosePicture(){
+    public void openCamera(View view){
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SELECT_IMAGE) {
+            if(resultCode == RESULT_OK) {
+                selectedImageUri = data.getData();
+                InputStream inputStream = null;
+                try {
+                    assert selectedImageUri != null;
+                    inputStream = getActivity().getContentResolver().openInputStream(selectedImageUri);
+                    isImageAdded = true;
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                BitmapFactory.decodeStream(inputStream);
+                ivProfileImage.setImageURI(selectedImageUri);
+                Toast.makeText(getContext(), "Cover Image selected", Toast.LENGTH_SHORT).show();
+                uploadImage(currentUserID);
+            }
+        }
+    }
+
+    private void uploadImage(String currentUserID) {
+        final String key = UsersRef.push().getKey();
+
+        Storageref.child(key +".jpg").putFile(selectedImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Storageref.child(key +".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        userImage = uri.toString();
+
+                    }
+                });
+            }
+        });
+    }
+   /* private void choosePicture(){
         /*
         Create file variable, store image into file variable
          */
-        Intent intent = new Intent();
+      /*  Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, 1);
@@ -305,5 +377,5 @@ public class UserProfileFragment extends Fragment  {
                        pd.setMessage("Percentage: " + (int) progressPercent + "%");
                    }
                });
-    }
+    } */
 }
