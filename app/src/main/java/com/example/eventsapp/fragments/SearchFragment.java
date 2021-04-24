@@ -72,7 +72,6 @@ public class SearchFragment extends Fragment implements ChatroomRecyclerAdapter.
     //user location object
     UserLocation mUserLocation;
 
-
     // device location
     private FusedLocationProviderClient mFusedLocationClient;
 

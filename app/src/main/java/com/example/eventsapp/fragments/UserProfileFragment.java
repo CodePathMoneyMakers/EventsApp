@@ -103,13 +103,10 @@ public class UserProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         logOut = (Button) view.findViewById(R.id.btnSignOut);
-        logOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // get an instance of firebase auth
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getContext(), LoginActivity.class));
-            }
+        logOut.setOnClickListener(v -> {
+            // get an instance of firebase auth
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(getContext(), LoginActivity.class));
         });
 
         mAuth = FirebaseAuth.getInstance();
@@ -128,24 +125,14 @@ public class UserProfileFragment extends Fragment {
 
         btnEdit = (Button) view.findViewById(R.id.btnEdit);
 
-        btnEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UpdateSettings();
-            }
-        });
+        btnEdit.setOnClickListener(v -> UpdateSettings());
         
         RetrieveUserInfo();
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        ivProfileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                choosePicture();
-            }
-        });
+        ivProfileImage.setOnClickListener(v -> choosePicture());
 
 
 

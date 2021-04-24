@@ -32,10 +32,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.eventsapp.Event;
 import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.R;
-import com.example.eventsapp.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -43,17 +41,18 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -76,10 +75,10 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     public Boolean switchState;
     private GoogleMap mMap;
     private MapView mapView;
-    private FirebaseAuth mAuth;
-    private DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
-    private String currentGroupName, currentUserID, currentUserName, currentDate, currentTime,
-            eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic;
+    public FirebaseAuth mAuth;
+    public DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
+    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime,
+            eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage;
     private TextView tvDate;
     private ImageButton calendar_btn;
     private ImageButton time_btn;
@@ -101,6 +100,12 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private ImageButton post_btn;
     private EditText etMultiline, etEventTitle;
 
+    DatabaseReference Dayaref;
+    public StorageReference Storageref;
+
+
+    Uri selectedImageUri;
+    boolean isImageAdded = false;
 
     int t1Hour, t1Minute, t2Hour, t2Minute;
 
@@ -152,6 +157,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
 
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
+        Storageref = FirebaseStorage.getInstance().getReference().child("EventImage");
 
         post_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,7 +209,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 }
                 tvDate.setText(dayOfTheWeek + " " + day + " " + month);
 
-               eventDate = tvDate.getText().toString().trim(); //save event date as string
+                eventDate = tvDate.getText().toString().trim(); //save event date as string
             }
         });
 
@@ -349,8 +355,10 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         profileMap.put("eventPrivacy", eventPrivacy);
         profileMap.put("eventFee", String.valueOf(eventFee));
         profileMap.put("eventMusic", eventMusic);
+        profileMap.put("eventImage", eventImage);
+        profileMap.put("userID", currentUserID);
 
-        EventsRef.child(currentUserID).child(eventTitle).setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+        EventsRef.push().setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
 
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -376,11 +384,12 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SELECT_IMAGE) {
             if(resultCode == RESULT_OK) {
-                Uri selectedImageUri = data.getData();
+                selectedImageUri = data.getData();
                 InputStream inputStream = null;
                 try {
                     assert selectedImageUri != null;
                     inputStream = getActivity().getContentResolver().openInputStream(selectedImageUri);
+                    isImageAdded = true;
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -388,8 +397,26 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 BitmapFactory.decodeStream(inputStream);
                 selectedImage.setImageURI(selectedImageUri);
                 Toast.makeText(getContext(), "Cover Image selected", Toast.LENGTH_SHORT).show();
+                uploadImage(currentUserID);
             }
         }
+    }
+
+    private void uploadImage(String currentUserID) {
+        final String key = UsersRef.push().getKey();
+
+        Storageref.child(key +".jpg").putFile(selectedImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Storageref.child(key +".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        eventImage = uri.toString();
+
+                    }
+                });
+            }
+        });
     }
 
     public String getCallerFragment() {
@@ -413,7 +440,6 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-            //mMap.animateCamera(CameraUpdateFactory.newLatLng());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }
     }

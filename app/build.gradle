@@ -54,6 +54,7 @@ dependencies {
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 
     // Google Services
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.firebase:firebase-storage:19.2.2'
     implementation 'com.google.firebase:firebase-firestore:22.1.2'
@@ -64,4 +65,10 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
+
+    // Picaso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // cluster manager
+    implementation 'com.google.maps.android:android-maps-utils:2.2.2'
 }
