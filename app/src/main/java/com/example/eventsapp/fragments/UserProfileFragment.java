@@ -25,12 +25,19 @@ import android.widget.Toolbar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.eventsapp.DetailsActivity;
+import com.example.eventsapp.Event;
+import com.example.eventsapp.EventsAdapter;
 import com.example.eventsapp.LoginActivity;
 import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.ProfileActivity;
 import com.example.eventsapp.R;
 import com.example.eventsapp.User;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -61,19 +68,22 @@ import static android.app.Activity.RESULT_OK;
 public class UserProfileFragment extends Fragment  {
 
     private FirebaseUser user;
+    RecyclerView profileRecycler;
     private DatabaseReference reference;
-    private String userID;
+    private String userID, test;
     private ImageButton logOut;
     private ImageView ivProfileImage;
     private Uri imageUri;
     private FirebaseStorage storage;
     private FirebaseAuth mAuth;
     private StorageReference storageReference;
-    public DatabaseReference UsersRef;
+    public DatabaseReference UsersRef, DataRef, EventsRef;
     private ImageButton btnEdit;
     private EditText etBio;
-    private String fullName, email, age, bio, userImage, currentUserID;
+    private String fullName, email, age, bio, userImage, currentUserID, eventID;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
+    FirebaseRecyclerOptions<Event> options;
+    FirebaseRecyclerAdapter<Event, EventsAdapter> adapter;
     boolean isImageAdded = false;
 
     public StorageReference Storageref;
@@ -129,17 +139,25 @@ public class UserProfileFragment extends Fragment  {
             }
         });
 
+        eventID = getActivity().getIntent().getStringExtra("EventID");
         mAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+      //  EventsRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID).child("Attending");
+        DataRef = FirebaseDatabase.getInstance().getReference().child("Events");
         userID = user.getUid();
         currentUserID = mAuth.getCurrentUser().getUid();
+  //      test = "hello";
 
     //  final TextView greetingTextView = (TextView) view.findViewById(R.id.welcome);
         final TextView fullNameTextView = (TextView) view.findViewById(R.id.tvFullName);
         final TextView emailTextView = (TextView) view.findViewById(R.id.tvEmail);
         final TextView ageTextView = (TextView) view.findViewById(R.id.tvAge);
+        profileRecycler = view.findViewById(R.id.profileRecycler);
+        profileRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        profileRecycler.setHasFixedSize(true);
+
 
         Storageref = FirebaseStorage.getInstance().getReference().child("UserImage");
 
@@ -158,6 +176,7 @@ public class UserProfileFragment extends Fragment  {
         
         RetrieveUserInfo();
 
+        LoadData();
        // storage = FirebaseStorage.getInstance();
        // storageReference = storage.getReference().child("Profile Images");
 
@@ -204,6 +223,46 @@ public class UserProfileFragment extends Fragment  {
         });
 
     }
+
+    public void LoadData() {
+            options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(DataRef, Event.class).build();
+            adapter = new FirebaseRecyclerAdapter<Event, EventsAdapter>(options) {
+
+                @Override
+                protected void onBindViewHolder(@NonNull EventsAdapter eventsAdapter, int i, @NonNull Event event) {
+                    eventsAdapter.eventTitle.setText(event.getEventTitle());
+                    eventsAdapter.eventGenre.setText(event.getEventGenre());
+                    eventsAdapter.eventFee.setText(event.getEventFee());
+                    //  eventsAdapter.eventDate.setText(event.getEventDate());
+                    Picasso.get().load(event.getEventImage()).into(eventsAdapter.eventImage);
+
+                    eventsAdapter.view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getContext(), DetailsActivity.class);
+                            intent.putExtra("EventID", getRef(i).getKey());
+                            startActivity(intent);
+
+                        }
+                    });
+
+                }
+
+                @NonNull
+                @Override
+                public EventsAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+                    View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false);
+                    return new EventsAdapter(v);
+                }
+            }
+
+            ;
+
+
+            adapter.startListening();
+            profileRecycler.setAdapter(adapter);
+        }
 
     public void showPopup(View view){
         PopupMenu popupMenu = new PopupMenu(getContext(), view);
@@ -323,59 +382,5 @@ public class UserProfileFragment extends Fragment  {
             }
         });
     }
-   /* private void choosePicture(){
-        /*
-        Create file variable, store image into file variable
-         */
-      /*  Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, 1);
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==1 && resultCode==RESULT_OK && data!=null && data.getData()!=null){
-            imageUri = data.getData(); // gets file
-            ivProfileImage.setImageURI(imageUri);
-            uploadPicture();
-        }
-    }
-
-    private void uploadPicture() {
-
-        final ProgressDialog pd = new ProgressDialog(getActivity());
-        pd.setTitle("Uploading Image...");
-        pd.show();
-
-        final String randomKey = UUID.randomUUID().toString();
-       StorageReference riversRef = storageReference.child("images/" + randomKey);
-       StorageReference filePath = storageReference.child(userID + ".jpg");
-
-       filePath.putFile(imageUri)
-               .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-
-                   @Override
-                   public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                       pd.dismiss();
-                       Toast.makeText(getContext(), "Image Uploaded", Toast.LENGTH_LONG).show();
-                    //   Snackbar.make(getView().findViewById(android.R.id.content), "Image Uploaded.", Snackbar.LENGTH_LONG).show();
-                   }
-               })
-               .addOnFailureListener(new OnFailureListener() {
-                   @Override
-                   public void onFailure(@NonNull Exception e) {
-                       pd.dismiss();
-                       Toast.makeText(getContext(), "Failed to Upload.", Toast.LENGTH_LONG).show();
-                   }
-               })
-               .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                   @Override
-                   public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                       double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                       pd.setMessage("Percentage: " + (int) progressPercent + "%");
-                   }
-               });
-    } */
 }
