@@ -2,6 +2,8 @@ package com.example.eventsapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
 public class HomeFragment extends Fragment {
@@ -57,12 +60,37 @@ public class HomeFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recylerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
+        inputSearch = view.findViewById(R.id.inputSearch);
         
-        LoadData();
+        LoadData("");
+
+        inputSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString() != null){
+                    LoadData(s.toString());
+                }
+                else{
+                    LoadData(" ");
+                }
+            }
+        });
     }
 
-    public void LoadData() {
-        options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(DataRef, Event.class).build();
+    public void LoadData(String data) {
+        Query query = DataRef.orderByChild("eventTitle").startAt(data).endAt(data + "\uf8ff");
+
+        options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
         adapter = new FirebaseRecyclerAdapter<Event, EventsAdapter>(options) {
             @Override
             protected void onBindViewHolder(@NonNull EventsAdapter eventsAdapter, int i, @NonNull Event event) {
