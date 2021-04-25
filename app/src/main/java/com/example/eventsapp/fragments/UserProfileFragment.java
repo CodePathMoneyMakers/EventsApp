@@ -144,13 +144,13 @@ public class UserProfileFragment extends Fragment  {
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-      //  EventsRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID).child("Attending");
         DataRef = FirebaseDatabase.getInstance().getReference().child("Events");
         userID = user.getUid();
         currentUserID = mAuth.getCurrentUser().getUid();
-  //      test = "hello";
+        EventsRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID).child("Attending");
+        //      test = "hello";
 
-    //  final TextView greetingTextView = (TextView) view.findViewById(R.id.welcome);
+        //  final TextView greetingTextView = (TextView) view.findViewById(R.id.welcome);
         final TextView fullNameTextView = (TextView) view.findViewById(R.id.tvFullName);
         final TextView emailTextView = (TextView) view.findViewById(R.id.tvEmail);
         final TextView ageTextView = (TextView) view.findViewById(R.id.tvAge);
@@ -173,23 +173,22 @@ public class UserProfileFragment extends Fragment  {
                 UpdateSettings();
             }
         });
-        
+
         RetrieveUserInfo();
 
         LoadData();
-       // storage = FirebaseStorage.getInstance();
-       // storageReference = storage.getReference().child("Profile Images");
+        // storage = FirebaseStorage.getInstance();
+        // storageReference = storage.getReference().child("Profile Images");
 
         storageReference = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
         ivProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // choosePicture();
+                // choosePicture();
                 openCamera(ivProfileImage);
             }
         });
-
 
 
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -214,6 +213,7 @@ public class UserProfileFragment extends Fragment  {
                 }
             }
 
+
             // error handling
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -222,6 +222,24 @@ public class UserProfileFragment extends Fragment  {
             }
         });
 
+ /*       DataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot: snapshot.getChildren()){
+                        if(String.valueOf(dataSnapshot.child("Attendees")) == currentUserID){
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+
+        }); */
     }
 
     public void LoadData() {
@@ -264,6 +282,7 @@ public class UserProfileFragment extends Fragment  {
             profileRecycler.setAdapter(adapter);
         }
 
+
     public void showPopup(View view){
         PopupMenu popupMenu = new PopupMenu(getContext(), view);
         popupMenu.setOnMenuItemClickListener((PopupMenu.OnMenuItemClickListener) this);
@@ -285,17 +304,17 @@ public class UserProfileFragment extends Fragment  {
 
                     etBio.setHint(retrieveUserName);
                 }
-                else if(snapshot.exists()  && (snapshot.hasChild("bio"))){
-                    String retrieveUserName = snapshot.child("bio").getValue().toString();
+                else if(snapshot.exists()  && (snapshot.hasChild("userImage"))){
+                  //  String retrieveUserName = snapshot.child("bio").getValue().toString();
 
                     String userImage2 = snapshot.child("userImage").getValue().toString();
                     Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);
 
-                    etBio.setHint(retrieveUserName);
+                  //  etBio.setHint(retrieveUserName);
                 }
                 else{
-                    String userImage2 = snapshot.child("userImage").getValue().toString();
-                    Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);
+                  //  String userImage2 = snapshot.child("userImage").getValue().toString();
+                  //  Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);
 
                     Toast.makeText(getContext(), "Update profile here", Toast.LENGTH_LONG).show();
                 }

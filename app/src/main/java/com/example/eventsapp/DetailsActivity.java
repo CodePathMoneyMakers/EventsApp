@@ -48,10 +48,12 @@ public class DetailsActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     String eventTitle = snapshot.child("eventTitle").getValue().toString();
+                    String eventFee = snapshot.child("eventFee").getValue().toString();
                     String imageUrl = snapshot.child("eventImage").getValue().toString();
 
                     Picasso.get().load(imageUrl).into(ivEventImage);
                     tvEventTitle.setText(eventTitle);
+
 
                     bnBuyTicket.setOnClickListener(new View.OnClickListener() {
                         @Override
