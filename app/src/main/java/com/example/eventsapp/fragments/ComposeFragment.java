@@ -85,7 +85,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private MapView mapView;
     public FirebaseAuth mAuth;
     public DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
-    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime,
+    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, eventLocation,
             eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage;
     private TextView tvDate;
     private ImageButton calendar_btn;
@@ -108,7 +108,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private ImageButton post_btn;
     private EditText etMultiline, etEventTitle;
 
-    DatabaseReference Dayaref;
+    DatabaseReference Dayaref, LocationRef;
     public StorageReference Storageref;
 
 
@@ -167,6 +167,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
         Storageref = FirebaseStorage.getInstance().getReference().child("EventImage");
+        LocationRef = FirebaseDatabase.getInstance().getReference().child("User Locations");
 
         post_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -367,6 +368,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         profileMap.put("eventMusic", eventMusic);
         profileMap.put("eventImage", eventImage);
         profileMap.put("userID", currentUserID);
+        profileMap.put("eventLocation", eventLocation);
 
         // push everything to firebase through eventsref
         EventsRef.push().setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -530,6 +532,8 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
 
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
+
+            eventLocation = address.getLatitude() + ", " + address.getLongitude();
         }
     }
 
