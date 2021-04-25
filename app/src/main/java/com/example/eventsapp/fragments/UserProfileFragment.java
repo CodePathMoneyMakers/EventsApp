@@ -2,6 +2,7 @@ package com.example.eventsapp.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,16 +13,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.eventsapp.DetailsActivity;
+import com.example.eventsapp.Event;
+import com.example.eventsapp.EventsAdapter;
 import com.example.eventsapp.LoginActivity;
 import com.example.eventsapp.R;
 import com.example.eventsapp.models.User;
+import com.example.eventsapp.User;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,7 +48,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -45,21 +59,30 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
 
-public class UserProfileFragment extends Fragment {
+public class UserProfileFragment extends Fragment  {
 
     private FirebaseUser user;
+    RecyclerView profileRecycler;
     private DatabaseReference reference;
-    private String userID;
-    private Button logOut;
+    private String userID, test;
+    private ImageButton logOut;
     private ImageView ivProfileImage;
     private Uri imageUri;
     private FirebaseStorage storage;
     private FirebaseAuth mAuth;
     private StorageReference storageReference;
-    private Button btnEdit;
-    private CircleImageView userProfileImage;
+    public DatabaseReference UsersRef, DataRef, EventsRef;
+    private ImageButton btnEdit;
     private EditText etBio;
-    private String fullName, email, age, bio;
+    private String fullName, email, age, bio, userImage, currentUserID, eventID;
+    private static final int REQUEST_CODE_SELECT_IMAGE = 2;
+    FirebaseRecyclerOptions<Event> options;
+    FirebaseRecyclerAdapter<Event, EventsAdapter> adapter;
+    boolean isImageAdded = false;
+
+    public StorageReference Storageref;
+
+    Uri selectedImageUri;
 
     // Required empty public constructor
     public UserProfileFragment() {
@@ -71,12 +94,12 @@ public class UserProfileFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.options, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-
-    }
+//    @Override
+//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+//        inflater.inflate(R.menu.options, menu);
+//        super.onCreateOptionsMenu(menu, inflater);
+//
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -90,7 +113,7 @@ public class UserProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
-      //  setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragments_profile, container,false);
     }
 
@@ -100,7 +123,7 @@ public class UserProfileFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        logOut = (Button) view.findViewById(R.id.btnSignOut);
+        logOut = view.findViewById(R.id.btnSignOut);
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,21 +133,33 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
+        eventID = getActivity().getIntent().getStringExtra("EventID");
         mAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        DataRef = FirebaseDatabase.getInstance().getReference().child("Events");
         userID = user.getUid();
+        currentUserID = mAuth.getCurrentUser().getUid();
+        EventsRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID).child("Attending");
+        //      test = "hello";
 
-        final TextView greetingTextView = (TextView) view.findViewById(R.id.welcome);
+        //  final TextView greetingTextView = (TextView) view.findViewById(R.id.welcome);
         final TextView fullNameTextView = (TextView) view.findViewById(R.id.tvFullName);
         final TextView emailTextView = (TextView) view.findViewById(R.id.tvEmail);
         final TextView ageTextView = (TextView) view.findViewById(R.id.tvAge);
+        profileRecycler = view.findViewById(R.id.profileRecycler);
+        profileRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        profileRecycler.setHasFixedSize(true);
 
-        ivProfileImage = (ImageView) view.findViewById(R.id.ivProfileImage);
+
+        Storageref = FirebaseStorage.getInstance().getReference().child("UserImage");
+
+        ivProfileImage = view.findViewById(R.id.ivProfileImage);
 
         etBio = (EditText) view.findViewById(R.id.etBio);
 
-        btnEdit = (Button) view.findViewById(R.id.btnEdit);
+        btnEdit = view.findViewById(R.id.btnEdit);
 
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,18 +170,19 @@ public class UserProfileFragment extends Fragment {
 
         RetrieveUserInfo();
 
-       // storage = FirebaseStorage.getInstance();
-       // storageReference = storage.getReference().child("Profile Images");
+        LoadData();
+        // storage = FirebaseStorage.getInstance();
+        // storageReference = storage.getReference().child("Profile Images");
 
         storageReference = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
         ivProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                choosePicture();
+                // choosePicture();
+                openCamera(ivProfileImage);
             }
         });
-
 
 
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -164,12 +200,13 @@ public class UserProfileFragment extends Fragment {
 
 
                     // set information to the layout
-                    greetingTextView.setText("Welcome, " + fullName + "!");
+                    //greetingTextView.setText("Welcome, " + fullName + "!");
                     fullNameTextView.setText(fullName);
                     emailTextView.setText(email);
                     ageTextView.setText(age);
                 }
             }
+
 
             // error handling
             @Override
@@ -179,24 +216,100 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
+ /*       DataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot: snapshot.getChildren()){
+                        if(String.valueOf(dataSnapshot.child("Attendees")) == currentUserID){
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+
+        }); */
+    }
+
+    public void LoadData() {
+            options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(DataRef, Event.class).build();
+            adapter = new FirebaseRecyclerAdapter<Event, EventsAdapter>(options) {
+
+                @Override
+                protected void onBindViewHolder(@NonNull EventsAdapter eventsAdapter, int i, @NonNull Event event) {
+                    eventsAdapter.eventTitle.setText(event.getEventTitle());
+                    eventsAdapter.eventGenre.setText(event.getEventGenre());
+                    eventsAdapter.eventFee.setText(event.getEventFee());
+                    //  eventsAdapter.eventDate.setText(event.getEventDate());
+                    Picasso.get().load(event.getEventImage()).into(eventsAdapter.eventImage);
+
+                    eventsAdapter.view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getContext(), DetailsActivity.class);
+                            intent.putExtra("EventID", getRef(i).getKey());
+                            startActivity(intent);
+
+                        }
+                    });
+
+                }
+
+                @NonNull
+                @Override
+                public EventsAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+                    View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false);
+                    return new EventsAdapter(v);
+                }
+            }
+
+            ;
+
+
+            adapter.startListening();
+            profileRecycler.setAdapter(adapter);
+        }
+
+
+    public void showPopup(View view){
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+        popupMenu.setOnMenuItemClickListener((PopupMenu.OnMenuItemClickListener) this);
+        popupMenu.inflate(R.menu.options);
+        popupMenu.show();
     }
 
     private void RetrieveUserInfo() {
-        reference.child(userID).addValueEventListener(new ValueEventListener() {
+        UsersRef.child(userID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()  && (snapshot.hasChild("bio")) && (snapshot.hasChild("image"))){
                     String retrieveUserName = snapshot.child("bio").getValue().toString();
                     String retrieveProfileImage = snapshot.child("image").getValue().toString();
+                    String userImage2 = snapshot.child("userImage").getValue().toString();
+
+                    Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);
+
 
                     etBio.setHint(retrieveUserName);
                 }
-                else if(snapshot.exists()  && (snapshot.hasChild("bio"))){
-                    String retrieveUserName = snapshot.child("bio").getValue().toString();
+                else if(snapshot.exists()  && (snapshot.hasChild("userImage"))){
+                  //  String retrieveUserName = snapshot.child("bio").getValue().toString();
 
-                    etBio.setHint(retrieveUserName);
+                    String userImage2 = snapshot.child("userImage").getValue().toString();
+                    Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);
+
+                  //  etBio.setHint(retrieveUserName);
                 }
                 else{
+                  //  String userImage2 = snapshot.child("userImage").getValue().toString();
+                  //  Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);
+
                     Toast.makeText(getContext(), "Update profile here", Toast.LENGTH_LONG).show();
                 }
             }
@@ -216,6 +329,7 @@ public class UserProfileFragment extends Fragment {
                 profileMap.put("fullName", String.valueOf(fullName));
                 profileMap.put("email", String.valueOf(email));
                 profileMap.put("age", String.valueOf(age));
+                profileMap.put("userImage", userImage);
 
                 reference.child(userID).setValue(profileMap)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -236,93 +350,50 @@ public class UserProfileFragment extends Fragment {
       //  }
     }
 
-    private void choosePicture(){
-        /*
-        Create file variable, store image into file variable
-         */
-        Intent intent = new Intent();
+    public void openCamera(View view){
+        Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==1 && resultCode==RESULT_OK && data!=null && data.getData()!=null){
-            imageUri = data.getData(); // gets file
+        if (requestCode == REQUEST_CODE_SELECT_IMAGE) {
+            if(resultCode == RESULT_OK) {
+                selectedImageUri = data.getData();
+                InputStream inputStream = null;
+                try {
+                    assert selectedImageUri != null;
+                    inputStream = getActivity().getContentResolver().openInputStream(selectedImageUri);
+                    isImageAdded = true;
 
-            // start picker to get image for cropping and then use the image in cropping activity
-          /*  CropImage.activity()
-                    .setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(1,1)
-                    .start((Activity) getContext());
-
-
-            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-                CropImage.ActivityResult result = CropImage.getActivityResult(data);
-
-                if (resultCode == RESULT_OK){
-                    Uri resultUri = result.getUri();
-
-                    StorageReference filePath = storageReference.child(userID + ".jpg");
-
-                    filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            if(task.isSuccessful()){
-                                Toast.makeText(getContext(), "Image Uploaded Successfully.", Toast.LENGTH_LONG).show();
-                            }
-                            else{
-                               String message= task.getException().toString();
-                                Toast.makeText(getContext(), "Error: " + message, Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
+                BitmapFactory.decodeStream(inputStream);
+                ivProfileImage.setImageURI(selectedImageUri);
+                Toast.makeText(getContext(), "Cover Image selected", Toast.LENGTH_SHORT).show();
+                uploadImage(currentUserID);
             }
-                 */
-            uploadPicture();
-          //  ivProfileImage.setImageURI(imageUri);
-
-
         }
     }
 
-    private void uploadPicture() {
+    private void uploadImage(String currentUserID) {
+        final String key = UsersRef.push().getKey();
 
-        final ProgressDialog pd = new ProgressDialog(getActivity());
-        pd.setTitle("Uploading Image...");
-        pd.show();
+        Storageref.child(key +".jpg").putFile(selectedImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Storageref.child(key +".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        userImage = uri.toString();
 
-        final String randomKey = UUID.randomUUID().toString();
-       StorageReference riversRef = storageReference.child("images/" + randomKey);
-       StorageReference filePath = storageReference.child(userID + ".jpg");
-
-       filePath.putFile(imageUri)
-               .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-
-                   @Override
-                   public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                       pd.dismiss();
-                       Toast.makeText(getContext(), "Image Uploaded", Toast.LENGTH_LONG).show();
-                    //   Snackbar.make(getView().findViewById(android.R.id.content), "Image Uploaded.", Snackbar.LENGTH_LONG).show();
-                   }
-               })
-               .addOnFailureListener(new OnFailureListener() {
-                   @Override
-                   public void onFailure(@NonNull Exception e) {
-                       pd.dismiss();
-                       Toast.makeText(getContext(), "Failed to Upload.", Toast.LENGTH_LONG).show();
-                   }
-               })
-               .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                   @Override
-                   public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                       double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                       pd.setMessage("Percentage: " + (int) progressPercent + "%");
-                   }
-               });
+                    }
+                });
+            }
+        });
     }
+
 }

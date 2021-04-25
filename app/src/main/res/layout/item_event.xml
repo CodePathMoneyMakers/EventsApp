@@ -7,13 +7,15 @@
     android:layout_height="232dp">
 
     <View
-        android:id="@+id/path_1"
+        android:id="@+id/path_10"
         android:layout_width="27dp"
         android:layout_height="32dp"
         android:layout_below="@+id/dateCard"
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ic_path"
+        android:alpha="0.3"/>
 
     <View
         android:id="@+id/path_2"
@@ -22,7 +24,9 @@
         android:layout_below="@+id/dateCard"
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
-        android:layout_marginTop="39dp" />
+        android:layout_marginTop="39dp"
+        android:background="@drawable/ic_path"
+        android:alpha="0.3"/>
 
     <View
         android:id="@+id/path_3"
@@ -31,7 +35,9 @@
         android:layout_below="@+id/dateCard"
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
-        android:layout_marginTop="67dp" />
+        android:layout_marginTop="67dp"
+        android:background="@drawable/ic_path"
+        android:alpha="0.3"/>
 
     <View
         android:id="@+id/path_4"
@@ -40,7 +46,9 @@
         android:layout_below="@+id/dateCard"
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
-        android:layout_marginTop="95dp" />
+        android:layout_marginTop="95dp"
+        android:background="@drawable/ic_path"
+        android:alpha="0.3"/>
 
     <View
         android:id="@+id/path_5"
@@ -49,7 +57,9 @@
         android:layout_below="@+id/dateCard"
         android:layout_toLeftOf="@+id/recyclerCard"
         android:layout_marginEnd="12dp"
-        android:layout_marginTop="123dp" />
+        android:layout_marginTop="123dp"
+        android:background="@drawable/ic_path"
+        android:alpha="0.3"/>
 
 
     <androidx.cardview.widget.CardView
@@ -103,6 +113,7 @@
             android:layout_height="172dp"
             android:adjustViewBounds="false"
             android:cropToPadding="true"
+            android:foreground="@drawable/recycler_transparent"
             android:scaleType="centerCrop"
             tools:srcCompat="@drawable/partyevent">
 
@@ -118,6 +129,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="98dp"
             android:layout_marginTop="140dp"
+            android:drawableLeft="@drawable/ic_ticket_recycler"
             android:fontFamily="sans-serif-condensed-medium"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
@@ -143,6 +155,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="140dp"
+            android:drawableLeft="@drawable/ic_music_recycler"
             android:drawablePadding="5dp"
             android:fontFamily="sans-serif-condensed-medium"
             android:textColor="#FFFFFF"

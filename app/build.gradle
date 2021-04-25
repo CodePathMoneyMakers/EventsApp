@@ -70,4 +70,6 @@ dependencies {
 
     // Firestore Firestore
     implementation 'com.google.firebase:firebase-firestore:22.1.2'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
 }

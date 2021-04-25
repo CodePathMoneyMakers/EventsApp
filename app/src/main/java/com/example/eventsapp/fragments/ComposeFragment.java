@@ -10,13 +10,17 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -33,6 +37,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.eventsapp.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -56,6 +62,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -68,10 +75,11 @@ import static android.app.Activity.RESULT_OK;
 public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private static final float DEFAULT_ZOOM = 15f;
     public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     public static final String TAG = "ComposeFragment";
     public int counter;
-    private FirebaseAuth mAuth;
     public Boolean switchState;
     private GoogleMap mMap;
     private MapView mapView;
@@ -93,7 +101,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private Switch aSwitch;
     private EditText etOrganization;
     private ImageButton location_btn;
-    private EditText etLocation;
+    private EditText etLocation1, etLocationTitle;
     private ImageView selectedImage;
     private ImageButton picture_btn;
     private ImageButton post_btn;
@@ -136,9 +144,10 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         visibility = view.findViewById(R.id.visibility);
         aSwitch = view.findViewById(R.id.switch1);
         etOrganization = view.findViewById(R.id.etOrganization);
-        location_btn = view.findViewById(R.id.set_image);
-        etLocation = view.findViewById(R.id.etLocation);
-        picture_btn = view.findViewById(R.id.picture_image);
+        location_btn = view.findViewById(R.id.set_btn);
+       // etLocation1 = view.findViewById(R.id.etLocation);
+        etLocationTitle = view.findViewById(R.id.etLocationTitle);
+        picture_btn = view.findViewById(R.id.picture_btn);
         selectedImage = view.findViewById(R.id.selectedImage);
         post_btn = view.findViewById(R.id.post_btn);
         etMultiline = view.findViewById(R.id.etMultiline);
@@ -188,7 +197,6 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 materialDatePicker.show(getFragmentManager(), "DatePicker");
             }
         });
-
 
 
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
@@ -302,19 +310,20 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                     tvFee.setText(str);
                     dialog.dismiss();
 
-                    eventFee = etFee.getText().toString();
+                    eventFee = etFee.getText().toString(); // save everthing from edit text as a string eventFee
                 }
             });
 
             dialog.show();
         });
 
-        location_btn.setOnClickListener(new View.OnClickListener() {
+
+      /*  location_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onMapReady(location_btn);
             }
-        });
+        }); */
 
         picture_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,6 +358,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         eventDescription = etMultiline.getText().toString().trim();
         eventTitle = etEventTitle.getText().toString().trim();
 
+        // save all event details in a hashmap
         HashMap<String, String> profileMap = new HashMap<>();
         profileMap.put("eventTitle", eventTitle);
         profileMap.put("eventDescription", eventDescription);
@@ -364,6 +374,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         profileMap.put("eventDay", eventDay);
         profileMap.put("eventWeekDay", eventWeekDay);
 
+        // push everything to firebase through eventsref
         EventsRef.push().setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
 
             @Override
@@ -432,7 +443,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         return fm.getBackStackEntryAt(count - 2).getName();
     }
 
-    public void onMapReady(View view) {
+ /*   public void onMapReady(View view) {
         String location = etLocation.getText().toString();
         List<Address> addressList = null;
 
@@ -447,16 +458,100 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+            //mMap.animateCamera(CameraUpdateFactory.newLatLng());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }
-    }
+    } */
 
     @Override
     public void onResume() {
         super.onResume();
         mapView.onResume();
     }
+    public void getDeviceLocation(){
+        Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+
+        try{
+          //  if(mLocationPermissionsGranted){
+
+                final Task location = mFusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if(task.isSuccessful()){
+                            Log.d(TAG, "onComplete: found location!");
+                            Location currentLocation = (Location) task.getResult();
+
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                    DEFAULT_ZOOM, "My Location");
+
+                        }else{
+                            Log.d(TAG, "onComplete: current location is null");
+                            Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+          //  }
+        }catch (SecurityException e){
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+        }
+    }
+    public void init(){
+        Log.d(TAG, "init: initializing");
+
+        etLocationTitle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || keyEvent.getAction() == KeyEvent.ACTION_DOWN
+                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
+
+                    //execute our method for searching
+                    geoLocate();
+                }
+
+                return false;
+            }
+        });
+    }
+    public void geoLocate(){
+        Log.d(TAG, "geoLocate: geolocating");
+
+        String searchString = etLocationTitle.getText().toString();
+
+        Geocoder geocoder = new Geocoder(getActivity());
+        List<Address> list = new ArrayList<>();
+        try{
+            list = geocoder.getFromLocationName(searchString, 1);
+        }catch (IOException e){
+            Log.e(TAG, "geoLocate: IOException: " + e.getMessage() );
+        }
+
+        if(list.size() > 0){
+            Address address = list.get(0);
+
+            Log.d(TAG, "geoLocate: found a location: " + address.toString());
+            //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
+
+            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
+        }
+    }
+
+    public void moveCamera(LatLng latLng, float zoom, String title){
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+
+
+       // if(!title.equals("My Location")){
+            MarkerOptions options = new MarkerOptions()
+                    .position(latLng)
+                    .title(title);
+            mMap.addMarker(options);
+     //   }
+    }
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -485,7 +580,9 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        getDeviceLocation();
         mMap.setMyLocationEnabled(true);
+        init();
     }
 
 }
