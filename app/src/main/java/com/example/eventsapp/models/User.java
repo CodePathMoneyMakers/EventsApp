@@ -10,6 +10,7 @@ public class User implements Parcelable {
     private String username;
     private String avatar;
 
+
     // Default empty constructor
     public User() {
 

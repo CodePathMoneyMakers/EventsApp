@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eventsapp.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -58,16 +59,16 @@ public class ProfileActivity extends AppCompatActivity {
 
                 if(userProfile != null){
                     // a user has these attributes
-                    String fullName = userProfile.fullName;
-                    String email = userProfile.email;
-                    String age = userProfile.age;
+                    //String fullName = userProfile.fullName;
+                    //String email = userProfile.email;
+                    //String age = userProfile.age;
 
                     // set information to the layout
                    //greetingTextView.setText("Welcome!");
                     //fullNameTextView.setText(fullName);
                     //greetingTextView.setText("Welcome, " + fullName + "!");
-                    fullNameTextView.setText(fullName);
-                    emailTextView.setText(email);
+                    //fullNameTextView.setText(fullName);
+                    //emailTextView.setText(email);
                     //ageTextView.setText(age);
                 }
             }

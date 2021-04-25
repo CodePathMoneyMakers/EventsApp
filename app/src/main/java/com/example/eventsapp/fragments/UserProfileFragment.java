@@ -30,7 +30,7 @@ import com.example.eventsapp.LoginActivity;
 import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.ProfileActivity;
 import com.example.eventsapp.R;
-import com.example.eventsapp.User;
+import com.example.eventsapp.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -182,9 +182,9 @@ public class UserProfileFragment extends Fragment  {
 
                 if (userProfile != null) {
                     // a user has these attributes
-                    fullName = userProfile.fullName;
-                    email = userProfile.email;
-                    age = userProfile.age;
+                    //fullName = userProfile.fullName;
+                    //email = userProfile.email;
+                    //age = userProfile.age;
 
 
                     // set information to the layout
