@@ -50,8 +50,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Nullable;
-
 import static com.example.eventsapp.fragments.ComposeFragment.MAPVIEW_BUNDLE_KEY;
 
 public class SearchFragment extends Fragment
@@ -258,7 +256,6 @@ public class SearchFragment extends Fragment
             }
         });
     }
-}
 
     @Override
     public void onChatroomSelected(int position) {

@@ -9,17 +9,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class EventsAdapter extends RecyclerView.ViewHolder {
     public ImageView eventImage;
-    public TextView eventDate;
     public TextView eventTitle;
     public TextView eventGenre;
     public TextView eventFee;
+    public TextView eventMonth;
+    public TextView eventDay;
     public View view;
 
     public EventsAdapter(@NonNull View itemView) {
         super(itemView);
 
         eventImage = itemView.findViewById(R.id.eventImage);
-     //   eventDate = itemView.findViewById(R.id.eventDateDay);
+        eventMonth = itemView.findViewById(R.id.eventMonth);
+        eventDay = itemView.findViewById(R.id.eventDay);
         eventTitle = itemView.findViewById(R.id.eventTitle);
         eventGenre = itemView.findViewById(R.id.eventGenre);
         eventFee = itemView.findViewById(R.id.eventFee);

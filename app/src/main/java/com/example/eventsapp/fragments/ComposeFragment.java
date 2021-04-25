@@ -32,7 +32,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -53,7 +52,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -79,7 +77,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private MapView mapView;
     public DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
     public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime,
-            eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage;
+            eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage, eventDay, eventMonth, eventWeekDay;
     private TextView tvDate;
     private ImageButton calendar_btn;
     private ImageButton time_btn;
@@ -210,7 +208,11 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 }
                 tvDate.setText(dayOfTheWeek + " " + day + " " + month);
 
-               eventDate = tvDate.getText().toString().trim(); //save event date as string
+                eventDate = tvDate.getText().toString().trim(); //save event date as string
+                String[] dateArray = tvDate.getText().toString().trim().split("[ ,]+");
+                eventWeekDay = dateArray[0];
+                eventDay = dateArray[1];
+                eventMonth = dateArray[2];
             }
         });
 
@@ -358,6 +360,9 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         profileMap.put("eventMusic", eventMusic);
         profileMap.put("eventImage", eventImage);
         profileMap.put("userID", currentUserID);
+        profileMap.put("eventMonth", eventMonth);
+        profileMap.put("eventDay", eventDay);
+        profileMap.put("eventWeekDay", eventWeekDay);
 
         EventsRef.push().setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
 

@@ -12,7 +12,7 @@
         android:layout_height="1200dp">
 
         <EditText
-            android:id="@+id/tvEventTitle"
+            android:id="@+id/etEventTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
