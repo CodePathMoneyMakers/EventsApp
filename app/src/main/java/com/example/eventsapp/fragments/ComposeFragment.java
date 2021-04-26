@@ -36,6 +36,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -83,10 +84,9 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     public Boolean switchState;
     private GoogleMap mMap;
     private MapView mapView;
-    public FirebaseAuth mAuth;
     public DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
-    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, eventLocation,
-            eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage;
+    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime,
+            eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage, eventDay, eventMonth, eventWeekDay;
     private TextView tvDate;
     private ImageButton calendar_btn;
     private ImageButton time_btn;
@@ -132,14 +132,14 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         super.onViewCreated(view, savedInstanceState);
 
         tvDate = view.findViewById(R.id.tvDate);
-        calendar_btn = view.findViewById(R.id.calender_btn);
-        time_btn = view.findViewById(R.id.time_btn);
+        calendar_btn = view.findViewById(R.id.calender_logo);
+        time_btn = view.findViewById(R.id.time_logo);
         tvTime = view.findViewById(R.id.tvTime);
         tvTime1 = view.findViewById(R.id.tvTime1);
         till = view.findViewById(R.id.till);
         from = view.findViewById(R.id.from);
-        music_btn = view.findViewById(R.id.music_btn);
-        fee_btn = view.findViewById(R.id.fee_btn);
+        music_btn = view.findViewById(R.id.music_logo);
+        fee_btn = view.findViewById(R.id.fee_logo);
         tvMusic = view.findViewById(R.id.tvMusic);
         tvFee = view.findViewById(R.id.tvFee);
         visibility = view.findViewById(R.id.visibility);
@@ -201,6 +201,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         });
 
 
+
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
             @Override
             public void onPositiveButtonClick(Object selection) {
@@ -218,7 +219,11 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 }
                 tvDate.setText(dayOfTheWeek + " " + day + " " + month);
 
-               eventDate = tvDate.getText().toString().trim(); //save event date as string
+                eventDate = tvDate.getText().toString().trim(); //save event date as string
+                String[] dateArray = tvDate.getText().toString().trim().split("[ ,]+");
+                eventWeekDay = dateArray[0];
+                eventDay = dateArray[1];
+                eventMonth = dateArray[2];
             }
         });
 
@@ -315,13 +320,12 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             dialog.show();
         });
 
-
-      /*  location_btn.setOnClickListener(new View.OnClickListener() {
+        location_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onMapReady(location_btn);
             }
-        }); */
+        });
 
         picture_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -356,7 +360,6 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         eventDescription = etMultiline.getText().toString().trim();
         eventTitle = etEventTitle.getText().toString().trim();
 
-        // save all event details in a hashmap
         HashMap<String, String> profileMap = new HashMap<>();
         profileMap.put("eventTitle", eventTitle);
         profileMap.put("eventDescription", eventDescription);
@@ -368,9 +371,11 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         profileMap.put("eventMusic", eventMusic);
         profileMap.put("eventImage", eventImage);
         profileMap.put("userID", currentUserID);
+        profileMap.put("eventMonth", eventMonth);
+        profileMap.put("eventDay", eventDay);
+        profileMap.put("eventWeekDay", eventWeekDay);
         profileMap.put("eventLocation", eventLocation);
 
-        // push everything to firebase through eventsref
         EventsRef.push().setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
 
             @Override
@@ -382,6 +387,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                     String message = task.getException().toString();
                     Toast.makeText(getContext(), "Error" + message, Toast.LENGTH_LONG).show();
                 }
+               // HashMap<> string = new HashMap();
             }
         });
     }
@@ -438,7 +444,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         return fm.getBackStackEntryAt(count - 2).getName();
     }
 
- /*   public void onMapReady(View view) {
+    public void onMapReady(View view) {
         String location = etLocation.getText().toString();
         List<Address> addressList = null;
 
@@ -453,102 +459,16 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-            //mMap.animateCamera(CameraUpdateFactory.newLatLng());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }
-    } */
+    }
 
     @Override
     public void onResume() {
         super.onResume();
         mapView.onResume();
     }
-    public void getDeviceLocation(){
-        Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
-
-        try{
-          //  if(mLocationPermissionsGranted){
-
-                final Task location = mFusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful()){
-                            Log.d(TAG, "onComplete: found location!");
-                            Location currentLocation = (Location) task.getResult();
-
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    DEFAULT_ZOOM, "My Location");
-
-                        }else{
-                            Log.d(TAG, "onComplete: current location is null");
-                            Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-          //  }
-        }catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
-        }
-    }
-    public void init(){
-        Log.d(TAG, "init: initializing");
-
-        etLocationTitle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH
-                        || actionId == EditorInfo.IME_ACTION_DONE
-                        || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
-
-                    //execute our method for searching
-                    geoLocate();
-                }
-
-                return false;
-            }
-        });
-    }
-    public void geoLocate(){
-        Log.d(TAG, "geoLocate: geolocating");
-
-        String searchString = etLocationTitle.getText().toString();
-
-        Geocoder geocoder = new Geocoder(getActivity());
-        List<Address> list = new ArrayList<>();
-        try{
-            list = geocoder.getFromLocationName(searchString, 1);
-        }catch (IOException e){
-            Log.e(TAG, "geoLocate: IOException: " + e.getMessage() );
-        }
-
-        if(list.size() > 0){
-            Address address = list.get(0);
-
-            Log.d(TAG, "geoLocate: found a location: " + address.toString());
-            //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
-
-            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
-
-            eventLocation = address.getLatitude() + ", " + address.getLongitude();
-        }
-    }
-
-    public void moveCamera(LatLng latLng, float zoom, String title){
-        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-
-
-       // if(!title.equals("My Location")){
-            MarkerOptions options = new MarkerOptions()
-                    .position(latLng)
-                    .title(title);
-            mMap.addMarker(options);
-     //   }
-    }
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -577,9 +497,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        getDeviceLocation();
         mMap.setMyLocationEnabled(true);
-        init();
     }
 
 }

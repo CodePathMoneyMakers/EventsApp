@@ -67,7 +67,7 @@
             app:cardElevation="10dp">
 
             <ImageButton
-                android:id="@+id/calender_btn"
+                android:id="@+id/calender_logo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"
@@ -111,7 +111,7 @@
             app:cardElevation="10dp">
 
             <ImageButton
-                android:id="@+id/music_btn"
+                android:id="@+id/music_logo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"
@@ -155,7 +155,7 @@
             app:cardElevation="10dp">
 
             <ImageButton
-                android:id="@+id/time_btn"
+                android:id="@+id/time_logo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"
@@ -210,7 +210,7 @@
             app:cardElevation="10dp">
 
             <ImageButton
-                android:id="@+id/fee_btn"
+                android:id="@+id/fee_logo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"
@@ -254,7 +254,7 @@
             app:cardElevation="10dp">
 
             <ImageButton
-                android:id="@+id/picture_btn"
+                android:id="@+id/picture_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"
@@ -360,7 +360,7 @@
             app:cardElevation="10dp">
 
             <ImageButton
-                android:id="@+id/set_btn"
+                android:id="@+id/set_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"

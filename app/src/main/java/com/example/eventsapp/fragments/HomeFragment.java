@@ -97,7 +97,8 @@ public class HomeFragment extends Fragment {
                 eventsAdapter.eventTitle.setText(event.getEventTitle());
                 eventsAdapter.eventGenre.setText(event.getEventGenre());
                 eventsAdapter.eventFee.setText(event.getEventFee());
-              //  eventsAdapter.eventDate.setText(event.getEventDate());
+                eventsAdapter.eventDay.setText(event.getEventDay());
+                eventsAdapter.eventMonth.setText(event.getEventMonth());
                 Picasso.get().load(event.getEventImage()).into(eventsAdapter.eventImage);
 
                 eventsAdapter.view.setOnClickListener(new View.OnClickListener() {

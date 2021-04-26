@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@android:style/Widget.Material.ScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbarStyle="insideOverlay">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="1200dp">
+
+        <TextView
+            android:id="@+id/etEventTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/transparent_bg"
+            android:ems="10"
+            android:fontFamily="sans-serif-medium"
+            android:inputType="textPersonName"
+            android:text="Title"
+            android:textColor="#373A42"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="265dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Details"
+            android:textColor="#373A42"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="361dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Date"
+            android:textColor="#373A42"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/calendar_card"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="396dp"
+            app:cardCornerRadius="35dp"
+            app:cardElevation="10dp">
+
+            <ImageView
+                android:id="@+id/calender_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
+                android:backgroundTint="#00FFFFFF"
+                app:srcCompat="@drawable/ic_calendar" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="406dp"
+            android:layout_toEndOf="@+id/calendar_card"
+            android:textColor="#616368"
+            tools:text="Friday, 24 Aug" />
+
+        <TextView
+            android:id="@+id/Music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="43dp"
+            android:layout_marginTop="457dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Music"
+            android:textColor="#373A42"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/music_card"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="492dp"
+            app:cardCornerRadius="35dp"
+            app:cardElevation="10dp">
+
+            <ImageView
+                android:id="@+id/music_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
+                android:backgroundTint="#00FFFFFF"
+                app:srcCompat="@drawable/ic_music" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/tvMusic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="500dp"
+            android:layout_toEndOf="@+id/music_card"
+            android:textColor="#616368"
+            tools:text="Hip Hop" />
+
+        <TextView
+            android:id="@+id/Time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="245dp"
+            android:layout_marginTop="361dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Time"
+            android:textColor="#373A42"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/time_card"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="245dp"
+            android:layout_marginTop="396dp"
+            app:cardCornerRadius="35dp"
+            app:cardElevation="10dp">
+
+            <ImageView
+                android:id="@+id/time_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
+                android:backgroundTint="#00FFFFFF"
+                app:srcCompat="@drawable/ic_clock_" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="53dp"
+            android:layout_marginTop="393dp"
+            android:layout_toEndOf="@+id/time_card"
+            android:textColor="#616368"
+            tools:text="6:30PM" />
+
+        <TextView
+            android:id="@+id/tvTime1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="53dp"
+            android:layout_marginTop="420dp"
+            android:layout_toEndOf="@+id/time_card"
+            android:textColor="#616368"
+            tools:text="6:30PM" />
+
+        <TextView
+            android:id="@+id/Fee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="245dp"
+            android:layout_marginTop="457dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Entrence"
+            android:textColor="#373A42"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/fee_card"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="245dp"
+            android:layout_marginTop="492dp"
+            app:cardCornerRadius="35dp"
+            app:cardElevation="10dp">
+
+            <ImageView
+                android:id="@+id/fee_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
+                android:backgroundTint="#00FFFFFF"
+                app:srcCompat="@drawable/ic_ticket" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/tvFee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="500dp"
+            android:layout_toEndOf="@+id/fee_card"
+            android:textColor="#616368"
+            tools:text="Free" />
+
+        <TextView
+            android:id="@+id/till"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="300dp"
+            android:layout_marginTop="420dp"
+            android:text="till"
+            android:textColor="#FC1055" />
+
+        <TextView
+            android:id="@+id/from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="300dp"
+            android:layout_marginTop="394dp"
+            android:text="from"
+            android:textColor="#FC1055" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="54dp"
+            android:layout_marginTop="302dp"
+            android:layout_marginEnd="51dp"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="5dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="false"
+            app:contentPadding="5dp">
+
+            <EditText
+                android:id="@+id/etMultiline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/tvOrganization"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="540dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Organization"
+            android:textColor="#373A42"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/organization_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="577dp"
+            android:layout_marginEnd="67dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="5dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="false"
+            app:contentPadding="5dp"
+            app:contentPaddingLeft="10dp">
+
+            <EditText
+                android:id="@+id/etOrganization"
+                android:layout_width="295dp"
+                android:layout_height="40dp"
+                android:autofillHints=""
+                android:background="@drawable/transparent_bg"
+                android:drawableLeft="@drawable/ic_organization"
+                android:drawablePadding="5dp"
+                android:elevation="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:inputType="textPersonName"
+                android:textColor="#616368"
+                android:textSize="18dp"
+                tools:text="Club Lit" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="680dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Location"
+            android:textColor="#373A42"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/location_card"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="720dp"
+            app:cardCornerRadius="35dp"
+            app:cardElevation="10dp">
+
+            <ImageView
+                android:id="@+id/set_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="#00FFFFFF"
+                app:srcCompat="@drawable/ic_location" />
+
+        </androidx.cardview.widget.CardView>
+
+        <EditText
+            android:id="@+id/etLocationTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="710dp"
+            android:layout_toEndOf="@+id/location_card"
+            android:background="@drawable/transparent_bg"
+            android:ems="10"
+            android:fontFamily="sans-serif-medium"
+            android:hint="Location Name"
+            android:inputType="textPersonName"
+            android:textColor="#373A42"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/etLocationTitle"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="69dp"
+            android:layout_marginTop="730dp"
+            android:layout_toEndOf="@+id/location_card"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#373A42"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="5530 S Unversity Dr, Davie, FL 33328" />
+
+        <TextView
+            android:id="@+id/tvPrivacy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="170dp"
+            android:layout_marginTop="1002dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Privacy"
+            android:textColor="#373A42"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <Switch
+            android:id="@+id/switch1"
+            android:layout_width="70dp"
+            android:layout_height="56dp"
+            android:layout_below="@+id/tvPrivacy"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="345dp"
+            android:text=""
+            android:textColor="#616368"
+            tools:ignore="UseSwitchCompatOrMaterialXml"
+            />
+
+
+        <ImageView
+            android:id="@+id/visibility"
+            android:layout_width="63dp"
+            android:layout_height="59dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="327dp"
+            android:layout_marginTop="1025dp"
+            app:srcCompat="@drawable/ic_visibility" />
+
+        <androidx.cardview.widget.CardView
+            app:cardCornerRadius="20dp"
+            app:cardElevation="10dp"
+            android:layout_width="362dp"
+            android:layout_height="144dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_marginStart="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="790dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@+id/etAddress">
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </androidx.cardview.widget.CardView>
+
+        <ImageView
+            android:id="@+id/selectedImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="258dp"
+            android:layout_marginTop="434dp"
+            tools:srcCompat="@tools:sample/avatars"
+            android:visibility="invisible"/>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="268dp"
+            android:layout_height="216dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="74dp"
+            android:layout_marginTop="49dp"
+            app:srcCompat="@drawable/partyevent" />
+
+    </RelativeLayout>
+
+
+</ScrollView>
