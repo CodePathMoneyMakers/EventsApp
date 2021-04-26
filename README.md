@@ -44,6 +44,8 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 
 Unit 14 Update - 
 https://youtu.be/9i3rRujR8LQ
+<img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/Unit14DemoGif2.gif" width=800>
+
 
 Unit 13 Update -
 <img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/4-18-21update.gif" width=200>
