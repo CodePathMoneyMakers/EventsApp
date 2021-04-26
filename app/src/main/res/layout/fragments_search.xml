@@ -13,7 +13,7 @@
             android:shadowRadius="100"
             android:shadowColor="@color/black"
             android:textColor="#BE000000"
-            android:id="@+id/inputSearch"
+            android:id="@+id/etLocationTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Search data here ..."
