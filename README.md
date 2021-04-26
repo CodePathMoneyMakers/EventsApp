@@ -41,6 +41,17 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 - Users can determine the area they want to search for events in (ex. search events in Boston, Massachussetts)
 - Max user limit - stop accepting rsvps after x users
 - Integrate pictures within post (ex. photo of house, garage sale, etc.)
+
+Unit 14 Update - 
+
+<object width="425" height="350">
+  <param name="movie" value="https://youtu.be/9i3rRujR8LQ" />
+  <param name="wmode" value="transparent" />
+  <embed src="http://www.youtube.com/user/wwwLoveWatercom?v=BTRN1YETpyg"
+         type="application/x-shockwave-flash"
+         wmode="transparent" width="425" height="350" />
+</object>
+
 Unit 13 Update -
 <img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/4-18-21update.gif" width=200>
 
