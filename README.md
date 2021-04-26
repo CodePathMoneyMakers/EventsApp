@@ -43,14 +43,7 @@ This app allows the user to create and search for local events. (Ex: Yard sale, 
 - Integrate pictures within post (ex. photo of house, garage sale, etc.)
 
 Unit 14 Update - 
-
-<object width="425" height="350">
-  <param name="movie" value="https://youtu.be/9i3rRujR8LQ" />
-  <param name="wmode" value="transparent" />
-  <embed src="https://www.youtube.com/watch?v=lnfI-qN4xA4"
-         type="application/x-shockwave-flash"
-         wmode="transparent" width="425" height="350" />
-</object>
+https://youtu.be/9i3rRujR8LQ
 
 Unit 13 Update -
 <img src="https://github.com/CodePathMoneyMakers/EventsApp/blob/master/4-18-21update.gif" width=200>
