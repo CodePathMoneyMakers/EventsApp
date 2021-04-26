@@ -85,7 +85,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private GoogleMap mMap;
     private MapView mapView;
     public DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
-    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime,
+    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, eventLocation,
             eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage, eventDay, eventMonth, eventWeekDay;
     private TextView tvDate;
     private ImageButton calendar_btn;
@@ -107,6 +107,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private ImageButton picture_btn;
     private ImageButton post_btn;
     private EditText etMultiline, etEventTitle;
+    public FirebaseAuth mAuth;
 
     DatabaseReference Dayaref, LocationRef;
     public StorageReference Storageref;
@@ -145,10 +146,10 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         visibility = view.findViewById(R.id.visibility);
         aSwitch = view.findViewById(R.id.switch1);
         etOrganization = view.findViewById(R.id.etOrganization);
-        location_btn = view.findViewById(R.id.set_btn);
+        location_btn = view.findViewById(R.id.set_image);
        // etLocation1 = view.findViewById(R.id.etLocation);
         etLocationTitle = view.findViewById(R.id.etLocationTitle);
-        picture_btn = view.findViewById(R.id.picture_btn);
+        picture_btn = view.findViewById(R.id.picture_image);
         selectedImage = view.findViewById(R.id.selectedImage);
         post_btn = view.findViewById(R.id.post_btn);
         etMultiline = view.findViewById(R.id.etMultiline);
@@ -387,7 +388,6 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                     String message = task.getException().toString();
                     Toast.makeText(getContext(), "Error" + message, Toast.LENGTH_LONG).show();
                 }
-               // HashMap<> string = new HashMap();
             }
         });
     }
@@ -445,10 +445,10 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     }
 
     public void onMapReady(View view) {
-        String location = etLocation.getText().toString();
+        String location = etLocationTitle.getText().toString();
         List<Address> addressList = null;
 
-        if(etLocation != null || !etLocation.equals("")){
+        if(etLocationTitle != null || !etLocationTitle.equals("")){
             Geocoder geocoder = new Geocoder(getContext());
             try{
                 addressList = geocoder.getFromLocationName(location, 1);
@@ -458,6 +458,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             }
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+            eventLocation = address.getLatitude() + ", " + address.getLongitude();
             mMap.addMarker(new MarkerOptions().position(latLng).title(location));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }

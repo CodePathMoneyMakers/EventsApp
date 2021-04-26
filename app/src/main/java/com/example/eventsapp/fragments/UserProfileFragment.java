@@ -35,7 +35,7 @@ import com.example.eventsapp.LoginActivity;
 import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.ProfileActivity;
 import com.example.eventsapp.R;
-import com.example.eventsapp.User;
+import com.example.eventsapp.models.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
