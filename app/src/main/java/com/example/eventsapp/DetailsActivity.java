@@ -56,7 +56,7 @@ public class DetailsActivity extends AppCompatActivity {
                     String eventFee = snapshot.child("eventFee").getValue().toString();
                     String eventDate = snapshot.child("eventDate").getValue().toString();
                     String eventTime = snapshot.child("eventTimeStart").getValue().toString();
-                    String eventGenre = snapshot.child("eventMusic").getValue().toString();
+       //             String eventGenre = snapshot.child("eventMusic").getValue().toString();
                     String imageUrl = snapshot.child("eventImage").getValue().toString();
 
                     Picasso.get().load(imageUrl).into(ivEventImage);
@@ -64,7 +64,7 @@ public class DetailsActivity extends AppCompatActivity {
                     tvEventFee.setText(eventFee);
                     tvEventDate.setText(eventDate);
                     tvEventTime.setText(eventTime);
-                    tvEventGenre.setText(eventGenre);
+            //        tvEventGenre.setText(eventGenre);
 
                     bnBuyTicket.setOnClickListener(new View.OnClickListener() {
                         @Override

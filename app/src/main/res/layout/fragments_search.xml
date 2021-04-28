@@ -24,6 +24,15 @@
             android:drawableRight="@drawable/ic_search1"
             android:paddingRight="10dp"
             android:background="@drawable/input_search"
+
+            />
+
+        <ImageButton
+            android:id="@+id/set_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00FFFFFF"
+            app:srcCompat="@drawable/ic_location"
             />
 
 
