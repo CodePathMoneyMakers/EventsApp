@@ -5,7 +5,8 @@
     style="@android:style/Widget.Material.ScrollView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:scrollbarStyle="insideOverlay">
+    android:scrollbarStyle="insideOverlay"
+    android:id="@+id/scrollable">
 
     <RelativeLayout
         android:layout_width="match_parent"

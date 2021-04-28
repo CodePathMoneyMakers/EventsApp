@@ -3,6 +3,7 @@ package com.example.eventsapp.fragments;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -67,6 +68,8 @@ public class UserProfileFragment extends Fragment  {
     private ImageButton btnEdit;
     private EditText etBio;
     private String fullName, email, age, bio;
+    private ImageButton settings;
+    String TAG = "UserProfileFragment";
 
     // Required empty public constructor
     public UserProfileFragment() {
@@ -85,11 +88,11 @@ public class UserProfileFragment extends Fragment  {
 //
 //    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//        return super.onOptionsItemSelected(item);
+//    }
     // The onCreateView method is called when Fragment should create its View object hierarchy,
     // either dynamically or via XML layout inflation.
     @Override
@@ -105,6 +108,7 @@ public class UserProfileFragment extends Fragment  {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        settings = view.findViewById(R.id.settings);
         logOut = view.findViewById(R.id.btnSignOut);
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,12 +188,6 @@ public class UserProfileFragment extends Fragment  {
 
     }
 
-    public void showPopup(View view){
-        PopupMenu popupMenu = new PopupMenu(getContext(), view);
-        popupMenu.setOnMenuItemClickListener((PopupMenu.OnMenuItemClickListener) this);
-        popupMenu.inflate(R.menu.options);
-        popupMenu.show();
-    }
 
     private void RetrieveUserInfo() {
         reference.child(userID).addValueEventListener(new ValueEventListener() {
@@ -212,6 +210,36 @@ public class UserProfileFragment extends Fragment  {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "btn", Toast.LENGTH_SHORT).show();
+                PopupMenu popupMenu = new PopupMenu(getContext(), settings);
+                popupMenu.getMenuInflater().inflate(R.menu.options, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.itLogOut:
+                                Toast.makeText(getContext(), "Logged out", Toast.LENGTH_SHORT).show();
+                                FirebaseAuth.getInstance().signOut();
+                                startActivity(new Intent(getContext(), LoginActivity.class));
+                                return true;
+                            case R.id.itEdit:
+                                Toast.makeText(getContext(), "Edit profile", Toast.LENGTH_SHORT).show();
+                                UpdateSettings();
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                popupMenu.show();
             }
         });
     }
@@ -295,7 +323,7 @@ public class UserProfileFragment extends Fragment  {
                    }
                });
     }
-
+//
 //    @Override
 //    public boolean onMenuItemClick(MenuItem item) {
 //        switch (item.getItemId()){

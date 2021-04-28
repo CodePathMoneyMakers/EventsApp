@@ -1,0 +1,12 @@
+<resources>
+
+    <style name="Widget.Theme.EventsApp.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="Widget.Theme.EventsApp.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+</resources>

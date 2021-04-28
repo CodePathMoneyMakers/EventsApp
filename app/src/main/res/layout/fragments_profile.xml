@@ -7,6 +7,18 @@
     android:orientation="vertical">
 
 
+
+        <ImageButton
+            android:id="@+id/settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="370dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/transparent_bg"
+            android:elevation="10dp"
+            android:src="@drawable/ic_path" />
+
     <ImageButton
         android:id="@+id/btnSignOut"
         android:layout_width="20dp"
@@ -17,7 +29,7 @@
         android:layout_marginTop="33dp"
         android:layout_marginEnd="5dp"
         android:background="#00FFFFFF"
-        android:elevation="10dp"
+        android:elevation="0dp"
         android:src="@drawable/ic_logout" />
 
     <ImageButton
@@ -29,7 +41,7 @@
         android:layout_marginTop="59dp"
         android:layout_marginEnd="6dp"
         android:background="@drawable/transparent_bg"
-        android:elevation="10dp"
+        android:elevation="0dp"
         android:src="@drawable/ic_edit" />
 
     <TextView
@@ -38,18 +50,31 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="320dp"
         android:layout_marginTop="10dp"
-        android:elevation="10dp"
+        android:elevation="0dp"
         android:text="Email Address: "
         android:textSize="12dp" />
 
-    <ImageView
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:adjustViewBounds="false"
-        android:cropToPadding="false"
-        android:scaleType="centerCrop"
-        android:src="@drawable/building"
-        android:foreground="@drawable/profile_gradient_overlay"/>
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/profileBackground"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:adjustViewBounds="false"
+            android:cropToPadding="false"
+            android:scaleType="centerCrop"
+            android:src="@drawable/loginback"/>
+           <!-- android:foreground="@drawable/profile_gradient_overlay"
+           -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/fade_image_background"/>
+    </FrameLayout>
 
 
     <androidx.cardview.widget.CardView

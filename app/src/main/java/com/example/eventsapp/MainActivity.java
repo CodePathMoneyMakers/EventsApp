@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setItemIconTintList(null);
-//      bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -61,44 +60,6 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.action_home);
 
     }
-
-
-    /*private BottomNavigationView.OnNavigationItemSelectedListener navListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment selectedFragment = new Fragment();
-
-                    switch (item.getItemId()){
-                        case R.layout.fragments_home:
-                            Log.e(TAG, "home fragment");
-
-                            selectedFragment = new HomeFragment();
-                            break;
-                        case R.layout.fragments_search:
-                            Log.e(TAG, "search fragment");
-
-                            selectedFragment = new SearchFragment();
-                            break;
-                        case R.layout.fragments_pendingvents:
-                            Log.e(TAG, "pending events fragment");
-
-                            selectedFragment = new PendingEventsFragment();
-                            break;
-                        case R.layout.fragments_compose:
-                            Log.e(TAG, "compose fragment");
-
-                            selectedFragment = new ComposeFragment();
-                            break;
-                    }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, selectedFragment).commit();
-                    return true;
-                }
-            };*/
-
-
-
-
 
 }
 

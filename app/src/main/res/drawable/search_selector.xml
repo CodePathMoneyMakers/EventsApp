@@ -3,7 +3,7 @@
 
     <item android:drawable="@drawable/ic_search"
         android:state_checked="true"/>
-    <item android:drawable="@drawable/ic_searchoutline"
+    <item android:drawable="@drawable/ic_searchout"
         android:state_checked="false"/>
 
 </selector>

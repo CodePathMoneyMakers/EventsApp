@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SplashScreen"
+    >
+
+    <com.jgabrielfreitas.core.BlurImageView
+        android:id="@+id/blurImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login" />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/mappin"
+        android:layout_width="247dp"
+        android:layout_height="236dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="165dp"
+        android:layout_marginTop="242dp"
+        android:background="#00FFFFFF"
+        android:backgroundTint="#00FFFFFF"
+        android:elevation="10dp"
+        android:src="@drawable/logohdddd"
+        android:transitionName="transition" />
+
+
+</RelativeLayout>

@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.ChangeBounds;
+import android.transition.Fade;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -21,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.core.view.Change;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -38,6 +41,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //setSharedElementEnterTransition(new ChangeBounds());
 
         forgotPassword = (TextView) findViewById(R.id.tvForgotPassword);
         forgotPassword.setOnClickListener(this);
