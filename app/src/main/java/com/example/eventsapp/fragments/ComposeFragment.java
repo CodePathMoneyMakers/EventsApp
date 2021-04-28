@@ -11,15 +11,19 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.GestureDetector;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -38,21 +42,32 @@ import androidx.navigation.Navigation;
 
 import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,13 +80,18 @@ import static android.app.Activity.RESULT_OK;
 public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private static final float DEFAULT_ZOOM = 15f;
     public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     public static final String TAG = "ComposeFragment";
     public int counter;
-    private FirebaseAuth mAuth;
     public Boolean switchState;
     private GoogleMap mMap;
     private MapView mapView;
+    public DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
+    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, eventLocation,
+            eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage, eventDay, eventMonth, eventWeekDay;
+    public Double latitude, longitude;
     private TextView tvDate;
     private ImageButton calendar_btn;
     private ImageButton time_btn;
@@ -87,13 +107,19 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private Switch aSwitch;
     private EditText etOrganization;
     private ImageButton location_btn;
-    private EditText etLocation;
+    private EditText etLocation1, etLocationTitle;
     private ImageView selectedImage;
     private ImageButton picture_btn;
     private ImageButton post_btn;
-    private EditText etMultiline;
-    public int eventsCreated;
+    private EditText etMultiline, etEventTitle;
+    public FirebaseAuth mAuth;
     OnSwipeTouchListener onSwipeTouchListener;
+    DatabaseReference Dayaref, LocationRef;
+    public StorageReference Storageref;
+
+
+    Uri selectedImageUri;
+    boolean isImageAdded = false;
 
     int t1Hour, t1Minute, t2Hour, t2Minute;
 
@@ -116,29 +142,51 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
 
 
         tvDate = view.findViewById(R.id.tvDate);
-        calendar_btn = view.findViewById(R.id.calender_btn);
-        time_btn = view.findViewById(R.id.time_btn);
+        calendar_btn = view.findViewById(R.id.calender_logo);
+        time_btn = view.findViewById(R.id.time_logo);
         tvTime = view.findViewById(R.id.tvTime);
         tvTime1 = view.findViewById(R.id.tvTime1);
         till = view.findViewById(R.id.till);
         from = view.findViewById(R.id.from);
-        music_btn = view.findViewById(R.id.music_btn);
-        fee_btn = view.findViewById(R.id.fee_btn);
+        music_btn = view.findViewById(R.id.music_logo);
+        fee_btn = view.findViewById(R.id.fee_logo);
         tvMusic = view.findViewById(R.id.tvMusic);
         tvFee = view.findViewById(R.id.tvFee);
         visibility = view.findViewById(R.id.visibility);
         aSwitch = view.findViewById(R.id.switch1);
         etOrganization = view.findViewById(R.id.etOrganization);
-        location_btn = view.findViewById(R.id.set_btn);
-        etLocation = view.findViewById(R.id.etLocation);
-        picture_btn = view.findViewById(R.id.picture_btn);
+        location_btn = view.findViewById(R.id.set_image);
+       // etLocation1 = view.findViewById(R.id.etLocation);
+        etLocationTitle = view.findViewById(R.id.etLocationTitle);
+        picture_btn = view.findViewById(R.id.picture_image);
         selectedImage = view.findViewById(R.id.selectedImage);
         post_btn = view.findViewById(R.id.post_btn);
         etMultiline = view.findViewById(R.id.etMultiline);
+        etEventTitle = view.findViewById(R.id.etEventTitle);
 
         mapView = view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
+
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
+        Storageref = FirebaseStorage.getInstance().getReference().child("EventImage");
+        LocationRef = FirebaseDatabase.getInstance().getReference().child("User Locations");
+
+        post_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreateEvent();
+            }
+        });
+
+
 
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         calendar.clear();
@@ -163,6 +211,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         });
 
 
+
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
             @Override
             public void onPositiveButtonClick(Object selection) {
@@ -180,6 +229,11 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 }
                 tvDate.setText(dayOfTheWeek + " " + day + " " + month);
 
+                eventDate = tvDate.getText().toString().trim(); //save event date as string
+                String[] dateArray = tvDate.getText().toString().trim().split("[ ,]+");
+                eventWeekDay = dateArray[0];
+                eventDay = dateArray[1];
+                eventMonth = dateArray[2];
             }
         });
 
@@ -210,6 +264,9 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                         if (counter % 2 == 0) {
                             tvTime1.setText(DateFormat.format("hh:mm aa", c));
                             till.setText("till");
+
+                            eventTimeStart = tvTime.getText().toString().trim(); // saves event time start as a string
+                            eventTimeEnd = tvTime1.getText().toString().trim(); // saves event end time as a string
                         } else {
                             tvTime.setText(DateFormat.format("hh:mm aa", c));
                             from.setText("from");
@@ -240,6 +297,8 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                         String str = etMusicType.getText().toString();
                         tvMusic.setText(str);
                         dialog.dismiss();
+
+                        eventMusic = etMusicType.getText().toString(); // saves music as a string
                     }
                 });
 
@@ -263,6 +322,8 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                     String str = etFee.getText().toString();
                     tvFee.setText(str);
                     dialog.dismiss();
+
+                    eventFee = etFee.getText().toString(); // save everthing from edit text as a string eventFee
                 }
             });
 
@@ -293,13 +354,51 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                     visibility.setImageDrawable(getResources().getDrawable(R.drawable.ic_visibility));
                     switchState = false;
                 }
+                eventPrivacy = switchState.toString();
             }
         });
 
         post_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // HashMap<> string = new HashMap();
+                CreateEvent();
+            }
+        });
+    }
+
+    private void CreateEvent() {
+        eventDescription = etMultiline.getText().toString().trim();
+        eventTitle = etEventTitle.getText().toString().trim();
+
+        HashMap<Object, Object> profileMap = new HashMap<>();
+        profileMap.put("eventTitle", eventTitle);
+        profileMap.put("eventDescription", eventDescription);
+        profileMap.put("eventDate", String.valueOf(eventDate));
+        profileMap.put("eventTimeStart", String.valueOf(eventTimeStart));
+        profileMap.put("eventTimeEnd", String.valueOf(eventTimeEnd));
+        profileMap.put("eventPrivacy", eventPrivacy);
+        profileMap.put("eventFee", String.valueOf(eventFee));
+        profileMap.put("eventGenre", eventMusic);
+        profileMap.put("eventImage", eventImage);
+        profileMap.put("userID", currentUserID);
+        profileMap.put("eventMonth", eventMonth);
+        profileMap.put("eventDay", eventDay);
+        profileMap.put("eventWeekDay", eventWeekDay);
+        profileMap.put("latitude", latitude);
+        profileMap.put("longitude", longitude);
+       // profileMap.put("eventLocation", eventLocation);
+
+        EventsRef.push().setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getContext(),
+                            "Profile updated.", Toast.LENGTH_LONG).show();
+                } else {
+                    String message = task.getException().toString();
+                    Toast.makeText(getContext(), "Error" + message, Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -315,11 +414,12 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SELECT_IMAGE) {
             if(resultCode == RESULT_OK) {
-                Uri selectedImageUri = data.getData();
+                selectedImageUri = data.getData();
                 InputStream inputStream = null;
                 try {
                     assert selectedImageUri != null;
                     inputStream = getActivity().getContentResolver().openInputStream(selectedImageUri);
+                    isImageAdded = true;
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -327,8 +427,26 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 BitmapFactory.decodeStream(inputStream);
                 selectedImage.setImageURI(selectedImageUri);
                 Toast.makeText(getContext(), "Cover Image selected", Toast.LENGTH_SHORT).show();
+                uploadImage(currentUserID);
             }
         }
+    }
+
+    private void uploadImage(String currentUserID) {
+       final String key = UsersRef.push().getKey();
+
+        Storageref.child(key +".jpg").putFile(selectedImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Storageref.child(key +".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        eventImage = uri.toString();
+
+                    }
+                });
+            }
+        });
     }
 
     public String getCallerFragment() {
@@ -338,10 +456,10 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     }
 
     public void onMapReady(View view) {
-        String location = etLocation.getText().toString();
+        String location = etLocationTitle.getText().toString();
         List<Address> addressList = null;
 
-        if(etLocation != null || !etLocation.equals("")){
+        if(etLocationTitle != null || !etLocationTitle.equals("")){
             Geocoder geocoder = new Geocoder(getContext());
             try{
                 addressList = geocoder.getFromLocationName(location, 1);
@@ -351,6 +469,9 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             }
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+           // eventLocation = address.getLatitude() + ", " + address.getLongitude();
+            latitude = address.getLatitude();
+            longitude = address.getLongitude();
             mMap.addMarker(new MarkerOptions().position(latLng).title(location));
             //mMap.animateCamera(CameraUpdateFactory.newLatLng());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));

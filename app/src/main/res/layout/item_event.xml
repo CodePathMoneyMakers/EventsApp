@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -71,7 +72,7 @@
         android:layout_marginStart="20dp">
 
         <TextView
-            android:id="@+id/eventDateDay"
+            android:id="@+id/eventDay"
             android:layout_width="40dp"
             android:layout_height="56dp"
             tools:text="12"
@@ -82,7 +83,7 @@
             android:layout_marginTop="12dp"/>
 
         <TextView
-            android:id="@+id/eventDateWeekDay"
+            android:id="@+id/eventMonth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="THU"
@@ -138,7 +139,7 @@
             android:alpha="0.7"/>
 
         <TextView
-            android:id="@+id/eventName"
+            android:id="@+id/eventTitle"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
@@ -149,7 +150,7 @@
             android:layout_marginStart="16dp"/>
 
         <TextView
-            android:id="@+id/eventMusic"
+            android:id="@+id/eventGenre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eventsapp.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -142,7 +143,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     });
                 } else {
                     Toast.makeText(RegisterActivity.this,
-                            "Failed to register :(, Please try agian.", Toast.LENGTH_LONG).show();
+                            "Failed to register :(, Please try again.", Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.GONE);
                 }
             }

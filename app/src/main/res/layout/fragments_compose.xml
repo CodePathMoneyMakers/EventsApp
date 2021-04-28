@@ -68,7 +68,7 @@
             app:cardElevation="10dp">
 
             <ImageButton
-                android:id="@+id/calender_btn"
+                android:id="@+id/calender_logo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"
@@ -112,7 +112,7 @@
             app:cardElevation="10dp">
 
             <ImageButton
-                android:id="@+id/music_btn"
+                android:id="@+id/music_logo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"
@@ -156,7 +156,7 @@
             app:cardElevation="10dp">
 
             <ImageButton
-                android:id="@+id/time_btn"
+                android:id="@+id/time_logo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"
@@ -211,7 +211,7 @@
             app:cardElevation="10dp">
 
             <ImageButton
-                android:id="@+id/fee_btn"
+                android:id="@+id/fee_logo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"
@@ -255,7 +255,7 @@
             app:cardElevation="10dp">
 
             <ImageButton
-                android:id="@+id/picture_btn"
+                android:id="@+id/picture_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"
@@ -361,7 +361,7 @@
             app:cardElevation="10dp">
 
             <ImageButton
-                android:id="@+id/set_btn"
+                android:id="@+id/set_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"
@@ -383,23 +383,9 @@
             android:hint="Location Name"
             android:inputType="textPersonName"
             android:textColor="#373A42"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/etLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/etLocationTitle"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="69dp"
-            android:layout_marginTop="730dp"
-            android:layout_toEndOf="@+id/location_card"
-            android:fontFamily="sans-serif-medium"
-            android:textColor="#373A42"
-            android:textSize="14sp"
             android:textStyle="bold"
-            tools:text="5530 S Unversity Dr, Davie, FL 33328" />
+            />
+
 
         <TextView
             android:id="@+id/tvPrivacy"
@@ -508,7 +494,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="790dp"
             android:layout_marginRight="10dp"
-            android:layout_below="@+id/etLocation">
+            android:layout_below="@+id/etLocationTitle">
 
             <com.google.android.gms.maps.MapView
                 android:id="@+id/mapView"
