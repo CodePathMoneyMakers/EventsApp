@@ -18,12 +18,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DetailsActivity extends AppCompatActivity {
     private ImageView ivEventImage;
     private FirebaseAuth mAuth;
     TextView tvEventTitle, tvEventGenre, tvEventFee, tvEventTime, tvEventDate;
     Button bnBuyTicket;
-    DatabaseReference reference, EventsRef, UsersRef;
+    DatabaseReference reference, EventsRef, UsersRef, rsvpRef;
     String currentUserID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,7 @@ public class DetailsActivity extends AppCompatActivity {
         currentUserID = mAuth.getCurrentUser().getUid();
         EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        rsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
 
         String EventID = getIntent().getStringExtra("EventID");
 
@@ -69,8 +73,14 @@ public class DetailsActivity extends AppCompatActivity {
                     bnBuyTicket.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            EventsRef.child(EventID).child("Attendees").child("currentUserID").setValue(currentUserID);
-                            UsersRef.child(currentUserID).child("Attending").child("EventID").setValue(EventID);
+                            Map<String,Object> taskMap = new HashMap<>();
+                            taskMap.put(currentUserID, currentUserID);
+
+                           // EventsRef.child(EventID).child("Attendees").updateChildren(taskMap);
+
+                           // EventsRef.child(EventID).child("Attendees").child("currentUserID").setValue(currentUserID);
+                          //  UsersRef.child(currentUserID).child("Attending").child("EventID").setValue(EventID);
+                            rsvpRef.child(currentUserID).child("username").setValue(EventID);
 
                             Toast.makeText(getApplicationContext(), "You have successfully registered", Toast.LENGTH_LONG).show();
                         }
