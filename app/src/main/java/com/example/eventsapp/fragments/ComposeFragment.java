@@ -116,6 +116,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     OnSwipeTouchListener onSwipeTouchListener;
     DatabaseReference Dayaref, LocationRef;
     public StorageReference Storageref;
+    String eventCreated;
 
 
     Uri selectedImageUri;

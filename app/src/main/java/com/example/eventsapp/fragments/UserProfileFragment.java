@@ -336,7 +336,7 @@ public class UserProfileFragment extends Fragment  {
             public void onClick(View v) {
                 Toast.makeText(getContext(), "btn", Toast.LENGTH_SHORT).show();
                 PopupMenu popupMenu = new PopupMenu(getContext(), settings);
-                popupMenu.getMenuInflater().inflate(R.menu.options, popupMenu.getMenu());
+                popupMenu.inflate(R.menu.options);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -424,7 +424,8 @@ public class UserProfileFragment extends Fragment  {
         pd.setTitle("Uploading Image...");
         pd.show();
 
-    private void uploadImage(String currentUserID) {
+    }
+    public void uploadImage(String currentUserID){
         final String key = UsersRef.push().getKey();
 
         Storageref.child(key +".jpg").putFile(selectedImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

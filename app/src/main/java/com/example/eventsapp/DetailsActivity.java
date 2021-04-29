@@ -31,12 +31,12 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
 
         bnBuyTicket = findViewById(R.id.buyTicket);
-        tvEventTitle = findViewById(R.id.eventTitle);
+//        tvEventTitle = findViewById(R.id.eventTitle);
         ivEventImage = findViewById(R.id.eventImage);
         tvEventDate = findViewById(R.id.eventDate);
         tvEventFee = findViewById(R.id.eventFee);
         tvEventTime = findViewById(R.id.eventTime);
-        tvEventGenre = findViewById(R.id.eventGenre);
+//        tvEventGenre = findViewById(R.id.eventGenre);
         ivEventImage = findViewById(R.id.eventImage);
 
         mAuth = FirebaseAuth.getInstance();
@@ -56,11 +56,11 @@ public class DetailsActivity extends AppCompatActivity {
                     String eventFee = snapshot.child("eventFee").getValue().toString();
                     String eventDate = snapshot.child("eventDate").getValue().toString();
                     String eventTime = snapshot.child("eventTimeStart").getValue().toString();
-       //             String eventGenre = snapshot.child("eventMusic").getValue().toString();
+       //           String eventGenre = snapshot.child("eventMusic").getValue().toString();
                     String imageUrl = snapshot.child("eventImage").getValue().toString();
 
                     Picasso.get().load(imageUrl).into(ivEventImage);
-                    tvEventTitle.setText(eventTitle);
+//                    tvEventTitle.setText(eventTitle);
                     tvEventFee.setText(eventFee);
                     tvEventDate.setText(eventDate);
                     tvEventTime.setText(eventTime);
