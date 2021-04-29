@@ -100,32 +100,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // object to sign user in
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    // verify email first
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        // verify email first
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                    if(user.isEmailVerified()){
-                        // redirect to user profile
-                        Toast.makeText(LoginActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        finish();
+                        if(user.isEmailVerified()){
+                            // redirect to user profile
+                            Toast.makeText(LoginActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
+                        } else {
+                            // send an email notification link
+                            user.sendEmailVerification();
+                            Toast.makeText(LoginActivity.this,
+                                    "Please check your email to verify your account.", Toast.LENGTH_LONG).show();
+                        }
+
                     } else {
-                        // send an email notification link
-                        user.sendEmailVerification();
                         Toast.makeText(LoginActivity.this,
-                                "Please check your email to verify your account.", Toast.LENGTH_LONG).show();
+                                "Cannot Log In.\nPlease check your credentials.", Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
                     }
-
-                } else {
-                    Toast.makeText(LoginActivity.this,
-                            "Cannot Log In.\nPlease check your credentials.", Toast.LENGTH_LONG).show();
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
-        });
+                });
     }
 
     /*private void goMainActivity() {

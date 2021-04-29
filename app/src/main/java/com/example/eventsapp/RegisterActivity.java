@@ -71,7 +71,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-
     private void registerUser() {
 
         String email = editTextEmail.getText().toString().trim();

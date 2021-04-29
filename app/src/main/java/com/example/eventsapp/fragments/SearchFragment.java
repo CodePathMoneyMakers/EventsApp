@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +23,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.eventsapp.Event;
 import com.example.eventsapp.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -36,17 +34,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -59,9 +53,6 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback {
     EditText etLocationTitle;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     public static final String TAG = "SearchFragment";
-    private ImageButton location_btn;
-    private DatabaseReference EventsRef;
-
 
     public SearchFragment() {
     }
@@ -81,12 +72,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback {
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-        location_btn = view.findViewById(R.id.set_image);
-        location_btn.setOnClickListener(v -> onMapReady(location_btn));
-
         etLocationTitle = view.findViewById(R.id.etLocationTitle);
-
-        EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
 
     }
 
@@ -101,34 +87,22 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
         try{
-            //  if(mLocationPermissionsGranted){
-
+            TimeUnit.SECONDS.sleep(2);
             final Task location = mFusedLocationProviderClient.getLastLocation();
-            location.addOnCompleteListener(new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if(task.isSuccessful()){
-                        Log.d(TAG, "onComplete: found location!");
-                        Location currentLocation = (Location) task.getResult();
+            location.addOnCompleteListener(task -> {
+                if(task.isSuccessful()){
+                    Log.d(TAG, "onComplete: found location!");
+                    Location currentLocation = (Location) task.getResult();
 
-                        // try to update the Map View, prevent an error crash
-                        try {
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    DEFAULT_ZOOM, "My Location");
-                        }
-                        catch(Exception e) {
-                            Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
-                        }
+                    moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                            DEFAULT_ZOOM, "My Location");
 
-
-                    }else{
-                        Log.d(TAG, "onComplete: current location is null");
-                        Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
-                    }
+                }else{
+                    Log.d(TAG, "onComplete: current location is null");
+                    Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
                 }
             });
-            //  }
-        }catch (SecurityException e){
+        }catch (SecurityException | InterruptedException e){
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }
     }
@@ -216,53 +190,9 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-
-        EventsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot s : snapshot.getChildren()){
-                    Event event = s.getValue(Event.class);
-                    LatLng location = new LatLng(event.latitude, event.longitude);
-                    mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
         getDeviceLocation();
         mMap.setMyLocationEnabled(true);
         init();
     }
 
-    public void onMapReady(View view) {
-        String location = etLocationTitle.getText().toString();
-        List<Address> addressList = null;
-
-        if (etLocationTitle != null || !etLocationTitle.equals("")){
-            Geocoder geocoder = new Geocoder(getContext());
-            try {
-                addressList = geocoder.getFromLocationName(location, 1);
-
-            } catch (IOException e) {
-                Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-
-            //TODO: put an if else to prevent null pointer crash
-            if (addressList == null || addressList.size() < 1) {
-                Toast.makeText(getActivity(), "Unable to locate address.", Toast.LENGTH_SHORT).show();
-            } else {
-                Address address = addressList.get(0);
-                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                //eventLocation = address.getLatitude() + ", " + address.getLongitude();
-                mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-            }
-
-        }
-    }
 }

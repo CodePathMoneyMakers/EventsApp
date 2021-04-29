@@ -87,7 +87,6 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     public DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
     public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, eventLocation,
             eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage, eventDay, eventMonth, eventWeekDay;
-    public Double latitude, longitude;
     private TextView tvDate;
     private ImageButton calendar_btn;
     private ImageButton time_btn;
@@ -362,7 +361,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         eventDescription = etMultiline.getText().toString().trim();
         eventTitle = etEventTitle.getText().toString().trim();
 
-        HashMap<Object, Object> profileMap = new HashMap<>();
+        HashMap<String, String> profileMap = new HashMap<>();
         profileMap.put("eventTitle", eventTitle);
         profileMap.put("eventDescription", eventDescription);
         profileMap.put("eventDate", String.valueOf(eventDate));
@@ -370,15 +369,13 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         profileMap.put("eventTimeEnd", String.valueOf(eventTimeEnd));
         profileMap.put("eventPrivacy", eventPrivacy);
         profileMap.put("eventFee", String.valueOf(eventFee));
-        profileMap.put("eventGenre", eventMusic);
+        profileMap.put("eventMusic", eventMusic);
         profileMap.put("eventImage", eventImage);
         profileMap.put("userID", currentUserID);
         profileMap.put("eventMonth", eventMonth);
         profileMap.put("eventDay", eventDay);
         profileMap.put("eventWeekDay", eventWeekDay);
-        profileMap.put("latitude", latitude);
-        profileMap.put("longitude", longitude);
-       // profileMap.put("eventLocation", eventLocation);
+        profileMap.put("eventLocation", eventLocation);
 
         EventsRef.push().setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
 
@@ -461,9 +458,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             }
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-           // eventLocation = address.getLatitude() + ", " + address.getLongitude();
-            latitude = address.getLatitude();
-            longitude = address.getLongitude();
+            eventLocation = address.getLatitude() + ", " + address.getLongitude();
             mMap.addMarker(new MarkerOptions().position(latLng).title(location));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }
