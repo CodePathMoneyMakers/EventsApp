@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -37,6 +38,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.eventsapp.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -72,7 +75,8 @@ import java.util.TimeZone;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
+public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback,
+        GoogleApiClient.OnConnectionFailedListener{
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -101,11 +105,13 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private Switch aSwitch;
     private EditText etOrganization;
     private ImageButton location_btn;
-    private EditText etLocation1, etLocationTitle;
+    private EditText etLocation1;
+    private AutoCompleteTextView etLocationTitle;
     private ImageView selectedImage;
     private ImageButton picture_btn;
     private ImageButton post_btn;
     private EditText etMultiline, etEventTitle;
+    public FirebaseAuth mAuth;
 
     DatabaseReference Dayaref;
     public StorageReference Storageref;
@@ -115,6 +121,11 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     boolean isImageAdded = false;
 
     int t1Hour, t1Minute, t2Hour, t2Minute;
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 
     public ComposeFragment() {
     }
@@ -501,6 +512,14 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     public void init(){
         Log.d(TAG, "init: initializing");
 
+        /*mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build();
+        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter();*/
+
         etLocationTitle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
@@ -584,5 +603,6 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         mMap.setMyLocationEnabled(true);
         init();
     }
+
 
 }

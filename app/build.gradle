@@ -72,4 +72,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:22.1.2'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+
+    //Google Places
+    implementation 'com.google.android.gms:play-services-places:15.0.1'
+    implementation 'com.google.android.libraries.places:places-compat:2.1.0'
+    implementation 'com.google.android.libraries.places:places:2.2.0'
 }

@@ -254,7 +254,7 @@
             app:cardElevation="10dp">
 
             <ImageButton
-                android:id="@+id/picture_image"
+                android:id="@+id/picture_btn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"
@@ -360,7 +360,7 @@
             app:cardElevation="10dp">
 
             <ImageButton
-                android:id="@+id/set_image"
+                android:id="@+id/set_btn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"
