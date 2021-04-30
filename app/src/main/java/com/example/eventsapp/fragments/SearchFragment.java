@@ -7,6 +7,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.eventsapp.Event;
@@ -35,6 +38,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -45,7 +51,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PendingResult;
+import com.google.maps.internal.PolylineEncoding;
 import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.DirectionsRoute;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,7 +61,10 @@ import java.util.List;
 
 public class SearchFragment
         extends Fragment
-        implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnInfoWindowClickListener {
+        implements OnMapReadyCallback,
+        View.OnClickListener,
+        GoogleMap.OnInfoWindowClickListener,
+        GoogleMap.OnPolylineClickListener {
 
     private static final float DEFAULT_ZOOM = 15f;
     MapView mapView;
@@ -64,6 +75,8 @@ public class SearchFragment
     public static final String TAG = "SearchFragment";
     private ImageButton location_btn;
     private DatabaseReference EventsRef;
+    private double currentLat;
+    private double currentLong;
 
     private GeoApiContext geoApiContext = null;
 
@@ -203,8 +216,7 @@ public class SearchFragment
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -234,6 +246,7 @@ public class SearchFragment
 
         getDeviceLocation();
         mMap.setMyLocationEnabled(true);
+        mMap.setOnPolylineClickListener(this);
         //init();
     }
 
@@ -248,6 +261,9 @@ public class SearchFragment
                 if (task.isSuccessful()) {
                     Log.d(TAG, "onComplete: found location!");
                     Location currentLocation = (Location) task.getResult();
+
+                    currentLat = currentLocation.getLatitude();
+                    currentLong = currentLocation.getLongitude();
 
                     // try to update the Map View, prevent an error crash
                     try {
@@ -275,39 +291,23 @@ public class SearchFragment
         }
     }
 
-    private void calculateDirections(Marker marker){
+    private void calculateDirections(LatLng marker){
         Log.d(TAG, "calculateDirections: calculating directions.");
 
-        com.google.maps.model.LatLng destination = new com.google.maps.model.LatLng(
-                marker.getPosition().latitude,
-                marker.getPosition().longitude
-        );
+        com.google.maps.model.LatLng origin =
+                new com.google.maps.model.LatLng(currentLat, currentLong);
+        com.google.maps.model.LatLng destination =
+                new com.google.maps.model.LatLng(marker.latitude, marker.longitude);
+
         DirectionsApiRequest directions = new DirectionsApiRequest(geoApiContext);
+        directions.alternatives(true);
+        directions.origin(origin);
 
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
-        try {
-            Task location = mFusedLocationProviderClient.getLastLocation();
-            location.addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "onComplete: found location!");
-                    Location currentLocation = (Location) task.getResult();
-
-                    directions.alternatives(true);
-                    directions.origin(new com.google.maps.model.LatLng(
-                            currentLocation.getLatitude(), currentLocation.getLongitude()));
-
-                } else {
-                    Log.d(TAG, "onComplete: current location is null");
-                    Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } catch (SecurityException e) {
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
-        }
 
         Log.d(TAG, "calculateDirections: destination: " + destination.toString());
+
         directions.destination(destination).setCallback(new PendingResult.Callback<DirectionsResult>() {
             @Override
             public void onResult(DirectionsResult result) {
@@ -315,6 +315,8 @@ public class SearchFragment
                 Log.d(TAG, "calculateDirections: duration: " + result.routes[0].legs[0].duration);
                 Log.d(TAG, "calculateDirections: distance: " + result.routes[0].legs[0].distance);
                 Log.d(TAG, "calculateDirections: geocodedWayPoints: " + result.geocodedWaypoints[0].toString());
+
+                addPolylinesToMap(result);
             }
 
             @Override
@@ -324,16 +326,40 @@ public class SearchFragment
         });
     }
 
+    private void addPolylinesToMap(final DirectionsResult result){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "run: result routes: " + result.routes.length);
+                for(DirectionsRoute route: result.routes){
+                    Log.d(TAG, "run: leg: " + route.legs[0].toString());
+                    List<com.google.maps.model.LatLng> decodedPath = PolylineEncoding.decode(route.overviewPolyline.getEncodedPath());
+                    List<LatLng> newDecodedPath = new ArrayList<>();
+                    // This loops through all the LatLng coordinates of ONE polyline.
+                    for(com.google.maps.model.LatLng latLng: decodedPath){
+                    // Log.d(TAG, "run: latlng: " + latLng.toString());
+                        newDecodedPath.add(new LatLng(
+                                latLng.lat,
+                                latLng.lng
+                        ));
+                    }
+                    Polyline polyline = mMap.addPolyline(new PolylineOptions().addAll(newDecodedPath));
+                    polyline.setColor(ContextCompat.getColor(getActivity(), R.color.darkGrey));
+                    polyline.setClickable(true);
+                }
+            }
+        });
+    }
+
     @Override
     public void onInfoWindowClick(Marker marker) {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        // TODO: the marker is null, need to fix this
-        builder.setMessage(marker.getSnippet() + "Would you like to navigate?");
+        builder.setMessage("Would you like to navigate to " + marker.getTitle() + "?");
         builder.setCancelable(true);
         builder.setPositiveButton("Yes", (dialog, id) -> {
-            calculateDirections(marker);
+            calculateDirections(marker.getPosition());
             dialog.dismiss();
         });
         builder.setNegativeButton("No", (dialog, id) -> {
@@ -346,5 +372,11 @@ public class SearchFragment
     @Override
     public void onClick(View v) {
 
+    }
+
+    @Override
+    public void onPolylineClick(Polyline polyline) {
+        polyline.setColor(ContextCompat.getColor(getActivity(), R.color.blue1));
+        polyline.setZIndex(1);
     }
 }
