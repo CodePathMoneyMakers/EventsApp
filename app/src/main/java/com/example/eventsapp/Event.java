@@ -3,13 +3,14 @@ package com.example.eventsapp;
 public class Event {
 
     public String eventTitle, eventDate, eventDescription, eventImage, eventGenre, eventFee, eventDay, eventMonth;
+    public Double latitude, longitude;
 
     // if we create an empty object of this class
     // we have access to the variables via a
     // default empty constructor.
     public Event(){}
 
-    public Event(String eventTitle, String eventDate, String eventDescription, String eventImage, String eventGenre, String eventFee, String eventMonth, String eventDay) {
+    public Event(String eventTitle, String eventDate, String eventDescription, String eventImage, String eventGenre, String eventFee, String eventMonth, String eventDay, Double latitude, Double longitude) {
         this.eventTitle = eventTitle;
         this.eventDate = eventDate;
         this.eventDescription = eventDescription;
@@ -18,6 +19,8 @@ public class Event {
         this.eventFee = eventFee;
         this.eventMonth = eventMonth;
         this.eventDay = eventDay;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getEventFee(){
@@ -68,5 +71,13 @@ public class Event {
 
     public void setEventImage(String eventImage) {
         this.eventImage = eventImage;
+    }
+
+    public Double getLatitude(){
+        return latitude;
+    }
+
+    public Double getLongitude(){
+        return longitude;
     }
 }
