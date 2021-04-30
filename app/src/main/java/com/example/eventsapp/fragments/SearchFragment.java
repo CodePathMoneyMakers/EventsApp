@@ -2,10 +2,13 @@ package com.example.eventsapp.fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +31,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.eventsapp.Event;
 import com.example.eventsapp.EventLocation;
+import com.example.eventsapp.PolylineData;
 import com.example.eventsapp.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -36,6 +40,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -56,6 +61,7 @@ import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,10 +85,12 @@ public class SearchFragment
     private double currentLong;
 
     private GeoApiContext geoApiContext = null;
+    private ArrayList<PolylineData> polylineData = new ArrayList<>();
+    private Marker selectedMarker = null;
 
     // Global Event location object
-    private EventLocation eventPosition;
-    private ArrayList<EventLocation> eventLocations = new ArrayList<>();
+    //private EventLocation eventPosition;
+    //private ArrayList<EventLocation> eventLocations = new ArrayList<>();
 
 
 
@@ -169,11 +177,25 @@ public class SearchFragment
 
 
         // if(!title.equals("My Location")){
-        MarkerOptions options = new MarkerOptions()
-                .position(latLng)
-                .title(title);
-        mMap.addMarker(options);
+//        MarkerOptions options = new MarkerOptions()
+//                .position(latLng)
+//                .title(title);
+//        mMap.addMarker(options);
         //   }
+    }
+
+    public void zoomRoute(List<LatLng> lstLatLngRoute) {
+        if (mMap == null || lstLatLngRoute == null || lstLatLngRoute.isEmpty()) return;
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        for (LatLng latLngPoint : lstLatLngRoute)
+            boundsBuilder.include(latLngPoint);
+        int routePadding = 120;
+        LatLngBounds latLngBounds = boundsBuilder.build();
+        mMap.animateCamera(
+                CameraUpdateFactory.newLatLngBounds(latLngBounds, routePadding),
+                600,
+                null
+        );
     }
 
     public void onMapReady() {
@@ -245,6 +267,8 @@ public class SearchFragment
         });
 
         getDeviceLocation();
+        //Disable Map Toolbar:
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setMyLocationEnabled(true);
         mMap.setOnPolylineClickListener(this);
         //init();
@@ -283,13 +307,13 @@ public class SearchFragment
         }
     }
 
-    private void setEventLocation() {
-        for (EventLocation events : eventLocations) {
-            if (events.getUser().getUser_id().equals(FirebaseAuth.getInstance().getUid())) {
-                eventPosition = events;
-            }
-        }
-    }
+//    private void setEventLocation() {
+//        for (EventLocation events : eventLocations) {
+//            if (events.getUser().getUser_id().equals(FirebaseAuth.getInstance().getUid())) {
+//                eventPosition = events;
+//            }
+//        }
+//    }
 
     private void calculateDirections(LatLng marker){
         Log.d(TAG, "calculateDirections: calculating directions.");
@@ -331,6 +355,16 @@ public class SearchFragment
             @Override
             public void run() {
                 Log.d(TAG, "run: result routes: " + result.routes.length);
+
+                if(polylineData.size() > 0) {
+                   for(PolylineData data: polylineData) {
+                       data.getPolyline().remove();
+                   }
+                   polylineData.clear();
+                   polylineData = new ArrayList<>();
+                }
+
+                double duration = 999999999;
                 for(DirectionsRoute route: result.routes){
                     Log.d(TAG, "run: leg: " + route.legs[0].toString());
                     List<com.google.maps.model.LatLng> decodedPath = PolylineEncoding.decode(route.overviewPolyline.getEncodedPath());
@@ -346,27 +380,69 @@ public class SearchFragment
                     Polyline polyline = mMap.addPolyline(new PolylineOptions().addAll(newDecodedPath));
                     polyline.setColor(ContextCompat.getColor(getActivity(), R.color.darkGrey));
                     polyline.setClickable(true);
+
+                    polylineData.add(new PolylineData(polyline, route.legs[0]));
+
+                    // find fastest route
+                    double tempDuration = route.legs[0].duration.inSeconds;
+                    if(tempDuration < duration) {
+                        duration = tempDuration;
+                        onPolylineClick(polyline);
+                        zoomRoute(polyline.getPoints());
+                    }
+
+                    selectedMarker.setVisible(false);
                 }
             }
         });
     }
 
     @Override
-    public void onInfoWindowClick(Marker marker) {
+    public void onInfoWindowClick(Marker marker)  {
+        if(marker.getTitle().contains("Navigate to ")){
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Open Turn by Turn Directions?")
+                    .setCancelable(true)
+                    .setPositiveButton("Yes", (dialog, id) -> {
+                        String latitude = String.valueOf(marker.getPosition().latitude);
+                        String longitude = String.valueOf(marker.getPosition().longitude);
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude);
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
 
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        try{
+                            if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                                startActivity(mapIntent);
+                            }
+                        }catch (NullPointerException e){
+                            Log.e(TAG, "onClick: NullPointerException: Couldn't open map." + e.getMessage() );
+                            Toast.makeText(getActivity(), "Couldn't open map", Toast.LENGTH_SHORT).show();
+                        }
 
-        builder.setMessage("Would you like to navigate to " + marker.getTitle() + "?");
-        builder.setCancelable(true);
-        builder.setPositiveButton("Yes", (dialog, id) -> {
-            calculateDirections(marker.getPosition());
-            dialog.dismiss();
-        });
-        builder.setNegativeButton("No", (dialog, id) -> {
-            dialog.cancel();
-        });
-        final AlertDialog alert = builder.create();
-        alert.show();
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                            dialog.cancel();
+                        }
+                    });
+            final AlertDialog alert = builder.create();
+            alert.show();
+        } else {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            builder.setMessage("Find routes to " + marker.getTitle() + "?");
+            builder.setCancelable(true);
+            builder.setPositiveButton("Yes", (dialog, id) -> {
+                selectedMarker = marker;
+                calculateDirections(marker.getPosition());
+                dialog.dismiss();
+            });
+            builder.setNegativeButton("No", (dialog, id) -> {
+                dialog.cancel();
+            });
+            final AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 
     @Override
@@ -376,7 +452,30 @@ public class SearchFragment
 
     @Override
     public void onPolylineClick(Polyline polyline) {
-        polyline.setColor(ContextCompat.getColor(getActivity(), R.color.blue1));
-        polyline.setZIndex(1);
+
+        for(PolylineData data: polylineData){
+            Log.d(TAG, "onPolylineClick: toString: " + data.toString());
+            if(polyline.getId().equals(data.getPolyline().getId())){
+                data.getPolyline().setColor(ContextCompat.getColor(getActivity(), R.color.blue1));
+                data.getPolyline().setZIndex(1);
+
+                String title;
+                LatLng endLocation = new LatLng(
+                        data.getLeg().endLocation.lat,
+                        data.getLeg().endLocation.lng
+                );
+
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                .position(endLocation)
+                .title("Navigate to " + selectedMarker.getTitle())
+                .snippet("Duration: " + data.getLeg().duration));
+
+                marker.showInfoWindow();
+            }
+            else{
+                data.getPolyline().setColor(ContextCompat.getColor(getActivity(), R.color.darkGrey));
+                data.getPolyline().setZIndex(0);
+            }
+        }
     }
 }
