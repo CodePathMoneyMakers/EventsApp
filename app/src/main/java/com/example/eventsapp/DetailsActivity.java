@@ -24,10 +24,11 @@ import java.util.Map;
 public class DetailsActivity extends AppCompatActivity {
     private ImageView ivEventImage;
     private FirebaseAuth mAuth;
-    TextView tvEventTitle, tvEventGenre, tvEventFee, tvEventTime, tvEventDate;
+    TextView tvEventTitle, tvEventGenre, tvEventFee, tvEventTime, tvEventDate,
+    tvEventOrganization, tvEventOrganizer, tvEventDescription;
     Button bnBuyTicket;
     DatabaseReference reference, EventsRef, UsersRef, rsvpRef;
-    String currentUserID;
+    String currentUserID, eventOrganizer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +42,9 @@ public class DetailsActivity extends AppCompatActivity {
         tvEventTime = findViewById(R.id.eventTime);
         tvEventGenre = findViewById(R.id.eventGenre);
         ivEventImage = findViewById(R.id.eventImage);
+        tvEventDescription = findViewById(R.id.eventDescription);
+        tvEventOrganizer = findViewById(R.id.eventOrganizer);
+        tvEventOrganization = findViewById(R.id.eventOrganization);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -60,15 +64,23 @@ public class DetailsActivity extends AppCompatActivity {
                     String eventFee = snapshot.child("eventFee").getValue().toString();
                     String eventDate = snapshot.child("eventDate").getValue().toString();
                     String eventTime = snapshot.child("eventTimeStart").getValue().toString();
-       //             String eventGenre = snapshot.child("eventMusic").getValue().toString();
+                    String eventGenre = snapshot.child("eventGenre").getValue().toString();
                     String imageUrl = snapshot.child("eventImage").getValue().toString();
+                    String eventOrganization = snapshot.child("eventOrganization").getValue().toString();
+                    String eventOrganizer = snapshot.child("userID").getValue().toString();
+                    String eventDescription = snapshot.child("eventDescription").getValue().toString();
+
+
 
                     Picasso.get().load(imageUrl).into(ivEventImage);
                     tvEventTitle.setText(eventTitle);
                     tvEventFee.setText(eventFee);
                     tvEventDate.setText(eventDate);
                     tvEventTime.setText(eventTime);
-            //        tvEventGenre.setText(eventGenre);
+                    tvEventGenre.setText(eventGenre);
+                    tvEventOrganization.setText(eventOrganization);
+                    tvEventDescription.setText(eventDescription);
+
 
                     bnBuyTicket.setOnClickListener(new View.OnClickListener() {
                         @Override

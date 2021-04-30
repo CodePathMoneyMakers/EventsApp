@@ -231,23 +231,6 @@ public class UserProfileFragment extends Fragment  {
             }
         });
 
-       /* DataRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-
-                    if(dataSnapshot.child("Attendees").getValue() != null) {
-                        if (String.valueOf(dataSnapshot.child("Attendees").getValue()).contains(currentUserID) ){
-                            event = dataSnapshot.getKey();
-                            eventID = FirebaseDatabase.getInstance().getReference().child("Events").child(dataSnapshot.getKey());
-                        } else {
-                            Log.d(TAG, "Failure D:");
-                        }
-
-                    }
-                 //   LoadData(options);
-
-                }*/
 
             }
 
@@ -311,12 +294,16 @@ public class UserProfileFragment extends Fragment  {
                     etBio.setHint(retrieveUserName);
                 }
                 else if(snapshot.exists()  && (snapshot.hasChild("userImage"))){
-                  //  String retrieveUserName = snapshot.child("bio").getValue().toString();
+                    String retrieveUserName = snapshot.child("bio").getValue().toString();
 
                     String userImage2 = snapshot.child("userImage").getValue().toString();
                     Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);
 
-                  //  etBio.setHint(retrieveUserName);
+                    etBio.setHint(retrieveUserName);
+                }
+                else if(snapshot.exists() && (snapshot.child("bio").exists())){
+                   String retrieveUserName = snapshot.child("bio").getValue().toString();
+                    etBio.setHint(retrieveUserName);
                 }
                 else{
                   //  String userImage2 = snapshot.child("userImage").getValue().toString();

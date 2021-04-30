@@ -85,7 +85,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private GoogleMap mMap;
     private MapView mapView;
     public DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
-    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, eventLocation,
+    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, eventLocation, eventOrganization,
             eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage, eventDay, eventMonth, eventWeekDay;
     public Double latitude, longitude;
     private TextView tvDate;
@@ -360,6 +360,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
 
     private void CreateEvent() {
         eventDescription = etMultiline.getText().toString().trim();
+        eventOrganization = etOrganization.getText().toString().trim();
         eventTitle = etEventTitle.getText().toString().trim();
 
         HashMap<Object, Object> profileMap = new HashMap<>();
@@ -378,6 +379,8 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         profileMap.put("eventWeekDay", eventWeekDay);
         profileMap.put("latitude", latitude);
         profileMap.put("longitude", longitude);
+        profileMap.put("eventOrganization", eventOrganization);
+        profileMap.put("eventDescription", eventDescription);
        // profileMap.put("eventLocation", eventLocation);
 
         EventsRef.push().setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -386,7 +389,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(getContext(),
-                            "Profile updated.", Toast.LENGTH_LONG).show();
+                            "Event successfully created.", Toast.LENGTH_LONG).show();
                 } else {
                     String message = task.getException().toString();
                     Toast.makeText(getContext(), "Error" + message, Toast.LENGTH_LONG).show();
