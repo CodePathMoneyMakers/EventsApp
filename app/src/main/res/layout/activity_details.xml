@@ -178,11 +178,14 @@
            <RelativeLayout
                android:layout_width="match_parent"
                android:layout_height="500dp"
+               android:layout_alignParentEnd="true"
                android:layout_marginTop="295dp"
+               android:layout_marginEnd="0dp"
                android:background="@drawable/relative_back_white">
 
 
                <TextView
+                   android:id="@+id/details"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:layout_marginStart="30dp"
@@ -190,35 +193,97 @@
                    android:text="Details"
                    android:textColor="@color/black"
                    android:textSize="24sp"
-                   android:textStyle="bold"
-                   android:id="@+id/details"/>
+                   android:textStyle="bold" />
 
                <TextView
                    android:id="@+id/eventDescription"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
+                   android:layout_below="@+id/details"
                    android:layout_marginStart="30dp"
+                   android:layout_marginTop="10dp"
                    android:layout_marginEnd="10dp"
-                   android:layout_marginTop="40dp"
-                   android:layout_centerHorizontal="true"
                    android:textColor="@color/black"
                    android:textSize="18sp"
-                   tools:text="eventDescription"
-                   android:layout_below="@+id/details"
-                   />
+                   tools:text="eventDescription" />
+
+               <androidx.cardview.widget.CardView
+                   android:id="@+id/mapCard"
+                   app:cardCornerRadius="20dp"
+                   app:cardElevation="10dp"
+                   android:layout_width="362dp"
+                   android:layout_height="144dp"
+                   android:layout_below="@+id/eventDescription"
+                   android:layout_gravity="center_horizontal|center_vertical"
+                   android:layout_marginStart="15dp"
+                   android:layout_marginTop="20dp"
+                   >
+
+                   <com.google.android.gms.maps.MapView
+                       android:id="@+id/mapView"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent" />
+
+               </androidx.cardview.widget.CardView>
+
+               <TextView
+                   android:id="@+id/Organizer"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/mapCard"
+                   android:layout_marginStart="30dp"
+                   android:layout_marginTop="20dp"
+                   android:textColor="@color/black"
+                   android:textSize="18sp"
+                   android:textStyle="bold"
+                   tools:text="Organizer" />
 
                <TextView
                    android:id="@+id/eventOrganizer"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:layout_marginStart="0dp"
+                   android:layout_below="@+id/Organizer"
                    android:layout_centerHorizontal="true"
+                   android:layout_marginStart="0dp"
+                   android:layout_marginRight="30dp"
+                   android:layout_marginTop="10dp"
                    android:textColor="@color/black"
                    android:textSize="18sp"
                    android:textStyle="bold"
-                   tools:text="eventDescription"
-                   android:layout_below="@+id/eventDescription"
-                   android:layout_marginTop="20dp"/>
+                   tools:text="eventOrganizer" />
+
+
+               <TextView
+                   android:id="@+id/userBio"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/eventOrganizer"
+                   android:layout_centerHorizontal="true"
+                   android:layout_marginStart="0dp"
+                   android:layout_marginTop="10dp"
+                   android:textColor="@color/black"
+                   android:textSize="18sp"
+                   android:textStyle="bold"
+                   tools:text="userBio" />
+
+               <androidx.cardview.widget.CardView
+                   android:layout_width="100dp"
+                   android:layout_height="100dp"
+                   android:id="@+id/cardProfileImage"
+                   android:layout_below="@id/Organizer"
+                   android:layout_toLeftOf="@+id/eventOrganizer"
+                   app:cardElevation="100dp"
+                   app:cardCornerRadius="50dp"
+                   >
+
+                   <ImageView
+                       android:id="@+id/userImage"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       tools:srcCompat="@tools:sample/avatars" />
+
+               </androidx.cardview.widget.CardView>
+
 
 
            </RelativeLayout>
