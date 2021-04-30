@@ -225,6 +225,7 @@ public class SearchFragment extends Fragment implements OnMapReadyCallback {
                     Event event = s.getValue(Event.class);
                     LatLng location = new LatLng(event.latitude, event.longitude);
                     mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
+
                 }
             }
 
