@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.text.TextUtils;
@@ -26,6 +27,7 @@ import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -82,8 +84,9 @@ public class UserProfileFragment extends Fragment  {
     private FirebaseAuth mAuth;
     private StorageReference storageReference;
     public DatabaseReference UsersRef, DataRef, EventsRef, eventID, rsvpRef;
-    private ImageButton btnEdit;
+    private ImageButton btnEdit, btnSettings;
     private EditText etBio;
+    private TextView numAttending;
     private String fullName, email, age, bio, userImage, currentUserID, event;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
     FirebaseRecyclerOptions<Event> options;
@@ -176,8 +179,11 @@ public class UserProfileFragment extends Fragment  {
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
 
         etBio = (EditText) view.findViewById(R.id.etBio);
+        numAttending = (TextView) view.findViewById(R.id.numAttending);
 
         btnEdit = view.findViewById(R.id.btnEdit);
+        btnSettings = view.findViewById(R.id.settings);
+
 
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -289,8 +295,6 @@ public class UserProfileFragment extends Fragment  {
 
 
 
-
-
     public void showPopup(View view){
         PopupMenu popupMenu = new PopupMenu(getContext(), view);
         popupMenu.setOnMenuItemClickListener((PopupMenu.OnMenuItemClickListener) this);
@@ -300,6 +304,7 @@ public class UserProfileFragment extends Fragment  {
 
     private void RetrieveUserInfo() {
         UsersRef.child(userID).addValueEventListener(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()  && (snapshot.hasChild("bio")) && (snapshot.hasChild("image"))){
@@ -311,6 +316,8 @@ public class UserProfileFragment extends Fragment  {
 
 
                     etBio.setHint(retrieveUserName);
+                    Long value = snapshot.child("Attending").getChildrenCount();
+                    numAttending.setText(String.valueOf(value));
                 }
                 else if(snapshot.exists()  && (snapshot.hasChild("userImage"))){
                     String retrieveUserName = snapshot.child("bio").getValue().toString();
@@ -319,12 +326,19 @@ public class UserProfileFragment extends Fragment  {
                     Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);
 
                     etBio.setHint(retrieveUserName);
+                    Long value = snapshot.child("Attending").getChildrenCount();
+                    numAttending.setText(String.valueOf(value));
+                   // numAttending.setText(Math.toIntExact(value));
                 }
                 else if(snapshot.exists() && (snapshot.child("bio").exists())){
                    String retrieveUserName = snapshot.child("bio").getValue().toString();
                     etBio.setHint(retrieveUserName);
+                    Long value = snapshot.child("Attending").getChildrenCount();
+                    numAttending.setText(String.valueOf(value));
                 }
                 else{
+                    Long value = snapshot.child("Attending").getChildrenCount();
+                    numAttending.setText(String.valueOf(value));
                   //  String userImage2 = snapshot.child("userImage").getValue().toString();
                   //  Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);
 

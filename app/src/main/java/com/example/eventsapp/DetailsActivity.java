@@ -120,10 +120,10 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                             Map<String, Object> taskMap = new HashMap<>();
                             taskMap.put(currentUserID, currentUserID);
 
-                            // EventsRef.child(EventID).child("Attendees").updateChildren(taskMap);
+                            EventsRef.child(EventID).child("Attendees").updateChildren(taskMap);
 
                             // EventsRef.child(EventID).child("Attendees").child("currentUserID").setValue(currentUserID);
-                            //  UsersRef.child(currentUserID).child("Attending").child("EventID").setValue(EventID);
+                            UsersRef.child(currentUserID).child("Attending").child("EventID").setValue(EventID);
                             rsvpRef.child(currentUserID).child("username").setValue(EventID);
 
                             Toast.makeText(getApplicationContext(), "You have successfully registered", Toast.LENGTH_LONG).show();

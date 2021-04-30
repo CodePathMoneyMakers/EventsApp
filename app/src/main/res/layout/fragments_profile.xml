@@ -184,6 +184,15 @@
             android:text="LIKES"
             android:textSize="12sp" />
 
+        <TextView
+            android:id="@+id/numAttending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvAttended"
+            android:layout_marginTop="160dp"
+            android:layout_marginStart="60dp"
+            android:text="0" />
+
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
