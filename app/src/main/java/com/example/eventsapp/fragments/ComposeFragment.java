@@ -85,8 +85,9 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private GoogleMap mMap;
     private MapView mapView;
     public DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
-    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, eventLocation,
+    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, eventLocation, eventOrganization,
             eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage, eventDay, eventMonth, eventWeekDay;
+    public Double latitude, longitude;
     private TextView tvDate;
     private ImageButton calendar_btn;
     private ImageButton time_btn;
@@ -147,7 +148,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         aSwitch = view.findViewById(R.id.switch1);
         etOrganization = view.findViewById(R.id.etOrganization);
         location_btn = view.findViewById(R.id.set_image);
-       // etLocation1 = view.findViewById(R.id.etLocation);
+        // etLocation1 = view.findViewById(R.id.etLocation);
         etLocationTitle = view.findViewById(R.id.etLocationTitle);
         picture_btn = view.findViewById(R.id.picture_image);
         selectedImage = view.findViewById(R.id.selectedImage);
@@ -196,7 +197,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         calendar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // MainActivity main = new MainActivity();
+                // MainActivity main = new MainActivity();
                 materialDatePicker.show(getFragmentManager(), "DatePicker");
             }
         });
@@ -359,9 +360,10 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
 
     private void CreateEvent() {
         eventDescription = etMultiline.getText().toString().trim();
+        eventOrganization = etOrganization.getText().toString().trim();
         eventTitle = etEventTitle.getText().toString().trim();
 
-        HashMap<String, String> profileMap = new HashMap<>();
+        HashMap<Object, Object> profileMap = new HashMap<>();
         profileMap.put("eventTitle", eventTitle);
         profileMap.put("eventDescription", eventDescription);
         profileMap.put("eventDate", String.valueOf(eventDate));
@@ -369,13 +371,17 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         profileMap.put("eventTimeEnd", String.valueOf(eventTimeEnd));
         profileMap.put("eventPrivacy", eventPrivacy);
         profileMap.put("eventFee", String.valueOf(eventFee));
-        profileMap.put("eventMusic", eventMusic);
+        profileMap.put("eventGenre", eventMusic);
         profileMap.put("eventImage", eventImage);
         profileMap.put("userID", currentUserID);
         profileMap.put("eventMonth", eventMonth);
         profileMap.put("eventDay", eventDay);
         profileMap.put("eventWeekDay", eventWeekDay);
-        profileMap.put("eventLocation", eventLocation);
+        profileMap.put("latitude", latitude);
+        profileMap.put("longitude", longitude);
+        profileMap.put("eventOrganization", eventOrganization);
+        profileMap.put("eventDescription", eventDescription);
+        // profileMap.put("eventLocation", eventLocation);
 
         EventsRef.push().setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
 
@@ -383,7 +389,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(getContext(),
-                            "Profile updated.", Toast.LENGTH_LONG).show();
+                            "Event successfully created.", Toast.LENGTH_LONG).show();
                 } else {
                     String message = task.getException().toString();
                     Toast.makeText(getContext(), "Error" + message, Toast.LENGTH_LONG).show();
@@ -422,7 +428,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     }
 
     private void uploadImage(String currentUserID) {
-       final String key = UsersRef.push().getKey();
+        final String key = UsersRef.push().getKey();
 
         Storageref.child(key +".jpg").putFile(selectedImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -458,7 +464,9 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             }
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            eventLocation = address.getLatitude() + ", " + address.getLongitude();
+            // eventLocation = address.getLatitude() + ", " + address.getLongitude();
+            latitude = address.getLatitude();
+            longitude = address.getLongitude();
             mMap.addMarker(new MarkerOptions().position(latLng).title(location));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }
