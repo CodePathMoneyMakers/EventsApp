@@ -83,6 +83,7 @@ public class DetailsActivity extends AppCompatActivity {
                     tvEventTime.setText(eventTime);
                     tvEventGenre.setText(eventGenre);
                     tvEventOrganization.setText(eventOrganization);
+                    tvEventOrganizer.setText(eventOrganizer);
                     tvEventDescription.setText(eventDescription);
 
 
