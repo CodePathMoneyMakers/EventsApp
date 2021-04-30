@@ -1,6 +1,7 @@
 package com.example.eventsapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -10,22 +11,24 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.eventsapp.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.core.Tag;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class DetailsActivity extends AppCompatActivity {
-    private ImageView ivEventImage;
+    private ImageView ivEventImage, ivUserImage;
     private FirebaseAuth mAuth;
     TextView tvEventTitle, tvEventGenre, tvEventFee, tvEventTime, tvEventDate,
-    tvEventOrganization, tvEventOrganizer, tvEventDescription;
+    tvEventOrganization, tvEventOrganizer, tvEventDescription, tvUserBio;
     Button bnBuyTicket;
     DatabaseReference reference, EventsRef, UsersRef, rsvpRef;
     String currentUserID, eventOrganizer;
@@ -45,6 +48,8 @@ public class DetailsActivity extends AppCompatActivity {
         tvEventDescription = findViewById(R.id.eventDescription);
         tvEventOrganizer = findViewById(R.id.eventOrganizer);
         tvEventOrganization = findViewById(R.id.eventOrganization);
+        tvUserBio = findViewById(R.id.userBio);
+        ivUserImage = findViewById(R.id.userImage);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -55,6 +60,7 @@ public class DetailsActivity extends AppCompatActivity {
         rsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
 
         String EventID = getIntent().getStringExtra("EventID");
+
 
         reference.child(EventID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -67,12 +73,13 @@ public class DetailsActivity extends AppCompatActivity {
                     String eventGenre = snapshot.child("eventGenre").getValue().toString();
                     String imageUrl = snapshot.child("eventImage").getValue().toString();
                     String eventOrganization = snapshot.child("eventOrganization").getValue().toString();
-                    String eventOrganizer = snapshot.child("userID").getValue().toString();
                     String eventDescription = snapshot.child("eventDescription").getValue().toString();
-
-
+                    String username = snapshot.child("username").getValue().toString();
+                    String userBio = snapshot.child("userBio").getValue().toString();
+                    String userImage = snapshot.child("userImage").getValue().toString();
 
                     Picasso.get().load(imageUrl).into(ivEventImage);
+                    Picasso.get().load(userImage).into(ivUserImage);
                     tvEventTitle.setText(eventTitle);
                     tvEventFee.setText(eventFee);
                     tvEventDate.setText(eventDate);
@@ -80,6 +87,8 @@ public class DetailsActivity extends AppCompatActivity {
                     tvEventGenre.setText(eventGenre);
                     tvEventOrganization.setText(eventOrganization);
                     tvEventDescription.setText(eventDescription);
+                    tvEventOrganizer.setText(username);
+                    tvUserBio.setText(userBio);
 
 
                     bnBuyTicket.setOnClickListener(new View.OnClickListener() {
