@@ -30,4 +30,10 @@
     <string name="action_chatroom_user_list">User list</string>
     <string name="action_profile">Profile</string>
 
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sdkfhksdhfksjhdfkjshdkfjhoiufhoiwuebfoweofiwheoihoieinueh">sdkfhksdhfksjhdfkjshdkfjhoiufhoiwuebfoweofiwheoihoieinueh</string>
 </resources>

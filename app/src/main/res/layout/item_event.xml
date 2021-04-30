@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="13dp"
         app:cardElevation="10dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="15dp"
         android:layout_marginStart="20dp">
 
         <TextView
@@ -103,7 +103,7 @@
         app:cardCornerRadius="10dp"
         android:layout_toRightOf="@+id/dateCard"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="15dp"
         app:cardElevation="10dp"
         >
 

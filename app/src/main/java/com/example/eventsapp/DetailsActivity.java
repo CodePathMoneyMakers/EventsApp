@@ -28,7 +28,8 @@ public class DetailsActivity extends AppCompatActivity {
     private ImageView ivEventImage, ivUserImage;
     private FirebaseAuth mAuth;
     TextView tvEventTitle, tvEventGenre, tvEventFee, tvEventTime, tvEventDate,
-    tvEventOrganization, tvEventOrganizer, tvEventDescription, tvUserBio;
+    tvEventOrganization, tvEventOrganizer, tvEventDescription;
+    TextView tveventFee2;
     Button bnBuyTicket;
     DatabaseReference reference, EventsRef, UsersRef, rsvpRef;
     String currentUserID, eventOrganizer;
@@ -43,6 +44,7 @@ public class DetailsActivity extends AppCompatActivity {
         tvEventDate = findViewById(R.id.eventDate);
         tvEventFee = findViewById(R.id.eventFee);
         tvEventTime = findViewById(R.id.eventTime);
+        tveventFee2 = findViewById(R.id.eventFee2);
         tvEventGenre = findViewById(R.id.eventGenre);
         ivEventImage = findViewById(R.id.eventImage);
         tvEventDescription = findViewById(R.id.eventDescription);
@@ -61,13 +63,13 @@ public class DetailsActivity extends AppCompatActivity {
 
         String EventID = getIntent().getStringExtra("EventID");
 
-
         reference.child(EventID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     String eventTitle = snapshot.child("eventTitle").getValue().toString();
                     String eventFee = snapshot.child("eventFee").getValue().toString();
+                    String eventFee2 = snapshot.child("eventFee").getValue().toString();
                     String eventDate = snapshot.child("eventDate").getValue().toString();
                     String eventTime = snapshot.child("eventTimeStart").getValue().toString();
                     String eventGenre = snapshot.child("eventGenre").getValue().toString();
@@ -82,6 +84,7 @@ public class DetailsActivity extends AppCompatActivity {
                     Picasso.get().load(userImage).into(ivUserImage);
                     tvEventTitle.setText(eventTitle);
                     tvEventFee.setText(eventFee);
+                    tveventFee2.setText(eventFee2);
                     tvEventDate.setText(eventDate);
                     tvEventTime.setText(eventTime);
                     tvEventGenre.setText(eventGenre);

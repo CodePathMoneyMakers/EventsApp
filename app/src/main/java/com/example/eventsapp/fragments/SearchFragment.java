@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.transition.ChangeBounds;
 
 import com.example.eventsapp.Event;
 import com.example.eventsapp.R;

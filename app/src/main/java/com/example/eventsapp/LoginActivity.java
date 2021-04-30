@@ -2,6 +2,9 @@ package com.example.eventsapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.ChangeBounds;
+import android.transition.Fade;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -39,6 +42,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         /*if(mAuth.getCurrentUser().getUid() != null) {
             goMainActivity();
         }*/
+
+        //setSharedElementEnterTransition(new ChangeBounds());
 
         forgotPassword = (TextView) findViewById(R.id.tvForgotPassword);
         forgotPassword.setOnClickListener(this);

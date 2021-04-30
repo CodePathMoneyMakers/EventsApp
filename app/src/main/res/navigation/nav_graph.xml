@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashScreen">
+
+    <activity
+        android:id="@+id/splashScreen"
+        android:name="com.example.eventsapp.SplashScreen"
+        android:label="splash_screen"
+        tools:layout="@layout/splash_screen" >
+        <action
+            android:id="@+id/action_splashScreen_to_loginActivity"
+            app:destination="@id/loginActivity" />
+    </activity>
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.eventsapp.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
+    <fragment
+        android:id="@+id/composeFragment2"
+        android:name="com.example.eventsapp.fragments.ComposeFragment"
+        android:label="ComposeFragment" >
+        <action
+            android:id="@+id/action_composeFragment2_to_searchFragment"
+            app:destination="@id/searchFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
+        <action
+            android:id="@+id/action_composeFragment2_to_userProfileFragment"
+            app:destination="@id/userProfileFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.eventsapp.fragments.SearchFragment"
+        android:label="SearchFragment" />
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.example.eventsapp.fragments.UserProfileFragment"
+        android:label="UserProfileFragment" />
+</navigation>

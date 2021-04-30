@@ -91,6 +91,8 @@ public class UserProfileFragment extends Fragment  {
     boolean isImageAdded = false;
     Query query;
 
+    private ImageButton settings;
+    String TAG = "UserProfileFragment";
     public StorageReference Storageref;
 
     Uri selectedImageUri;
@@ -134,6 +136,7 @@ public class UserProfileFragment extends Fragment  {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        settings = view.findViewById(R.id.settings);
         logOut = view.findViewById(R.id.btnSignOut);
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -230,45 +233,61 @@ public class UserProfileFragment extends Fragment  {
                         "Something wrong happened.", Toast.LENGTH_LONG).show();
             }
         });
-
-
-            }
-
-    public void LoadData(String s) {
-        Query query = DataRef.orderByChild("userID").equalTo(currentUserID);
-
-        options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
-        adapter = new FirebaseRecyclerAdapter<Event, EventsAdapter>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull EventsAdapter eventsAdapter, int i, @NonNull Event event) {
-                eventsAdapter.eventTitle.setText(event.getEventTitle());
-                eventsAdapter.eventGenre.setText(event.getEventGenre());
-                eventsAdapter.eventFee.setText(event.getEventFee());
-                eventsAdapter.eventDay.setText(event.getEventDay());
-                eventsAdapter.eventMonth.setText(event.getEventMonth());
-                Picasso.get().load(event.getEventImage()).into(eventsAdapter.eventImage);
-
-                eventsAdapter.view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent (getContext(), DetailsActivity.class);
-                        intent.putExtra("EventID", getRef(i).getKey());
-                        startActivity(intent);
-                    }
-                });
-            }
-
-            @NonNull
-            @Override
-            public EventsAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false);
-                return new EventsAdapter(v);
-            }
-        };
-
-        adapter.startListening();
-        profileRecycler.setAdapter(adapter);
     }
+ /*       DataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot: snapshot.getChildren()){
+                        if(String.valueOf(dataSnapshot.child("Attendees")) == currentUserID){
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+*/
+        public void LoadData (String s){
+            Query query = DataRef.orderByChild("userID").equalTo(currentUserID);
+
+            options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
+            adapter = new FirebaseRecyclerAdapter<Event, EventsAdapter>(options) {
+                @Override
+                protected void onBindViewHolder(@NonNull EventsAdapter eventsAdapter, int i, @NonNull Event event) {
+                    eventsAdapter.eventTitle.setText(event.getEventTitle());
+                    eventsAdapter.eventGenre.setText(event.getEventGenre());
+                    eventsAdapter.eventFee.setText(event.getEventFee());
+                    eventsAdapter.eventDay.setText(event.getEventDay());
+                    eventsAdapter.eventMonth.setText(event.getEventMonth());
+                    Picasso.get().load(event.getEventImage()).into(eventsAdapter.eventImage);
+
+                    eventsAdapter.view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getContext(), DetailsActivity.class);
+                            intent.putExtra("EventID", getRef(i).getKey());
+                            startActivity(intent);
+                        }
+                    });
+                }
+
+                @NonNull
+                @Override
+                public EventsAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                    View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false);
+                    return new EventsAdapter(v);
+                }
+            };
+
+            adapter.startListening();
+            profileRecycler.setAdapter(adapter);
+        }
+
+
+
 
 
 
@@ -395,4 +414,20 @@ public class UserProfileFragment extends Fragment  {
         });
     }
 
+//    @Override
+//    public boolean onMenuItemClick(MenuItem item) {
+//        switch (item.getItemId()){
+//            case R.id.itLogOut:
+//                Toast.makeText(getContext(), "Logged out", Toast.LENGTH_SHORT).show();
+//                FirebaseAuth.getInstance().signOut();
+//                startActivity(new Intent(getContext(), LoginActivity.class));
+//                return true;
+//            case R.id.itEdit:
+//                Toast.makeText(getContext(), "Edit profile", Toast.LENGTH_SHORT).show();
+//                UpdateSettings();
+//                return true;
+//            default:
+//                return false;
+//        }
+//    }
 }
