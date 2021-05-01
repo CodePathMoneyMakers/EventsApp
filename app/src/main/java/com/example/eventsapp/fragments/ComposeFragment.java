@@ -346,7 +346,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                     tvFee.setText(str);
                     dialog.dismiss();
 
-                    eventFee = etFee.getText().toString(); // save everthing from edit text as a string eventFee
+                    eventFee = etFee.getText().toString(); // save everything from edit text as a string eventFee
                 }
             });
 
@@ -429,6 +429,8 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 }
             }
         });
+
+        UsersRef.child(currentUserID).child("Created").child("EventID").setValue(currentUserID);
     }
 
     public void openCamera(View view){

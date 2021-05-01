@@ -89,7 +89,7 @@ public class ProfileActivity extends AppCompatActivity implements PopupMenu.OnMe
             }
         });
 
-        settings.findViewById(R.id.settings);
+        //settings.findViewById(R.id.settings);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

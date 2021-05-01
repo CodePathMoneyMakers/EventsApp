@@ -159,6 +159,6 @@
         android:background="@drawable/login_btn_background"
         android:includeFontPadding="false"
         android:text="Create Account"
-        android:textColor="@color/white" />
+        android:textColor="#FC1055" />
 
 </RelativeLayout>

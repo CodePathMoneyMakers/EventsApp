@@ -1,29 +1,22 @@
 package com.example.eventsapp.fragments;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.CalendarContract;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,17 +29,13 @@ import com.example.eventsapp.DetailsActivity;
 import com.example.eventsapp.Event;
 import com.example.eventsapp.EventsAdapter;
 import com.example.eventsapp.LoginActivity;
-import com.example.eventsapp.MainActivity;
-import com.example.eventsapp.ProfileActivity;
 import com.example.eventsapp.R;
 import com.example.eventsapp.models.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -56,7 +45,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
@@ -64,12 +52,8 @@ import com.squareup.picasso.Picasso;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.UUID;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
-import static com.example.eventsapp.fragments.ComposeFragment.TAG;
 
 public class UserProfileFragment extends Fragment  {
 
@@ -86,7 +70,7 @@ public class UserProfileFragment extends Fragment  {
     public DatabaseReference UsersRef, DataRef, EventsRef, eventID, rsvpRef;
     private ImageButton btnEdit, btnSettings;
     private EditText etBio;
-    private TextView numAttending;
+    private TextView numAttending, numCreated;
     private String fullName, email, age, bio, userImage, currentUserID, event;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
     FirebaseRecyclerOptions<Event> options;
@@ -110,20 +94,12 @@ public class UserProfileFragment extends Fragment  {
         setHasOptionsMenu(true);
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-//        inflater.inflate(R.menu.options, menu);
-//        super.onCreateOptionsMenu(menu, inflater);
-//
-//    }
-
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-
-        return super.onOptionsItemSelected(item);
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.options, menu);
+         super.onCreateOptionsMenu(menu, inflater);
     }
+
     // The onCreateView method is called when Fragment should create its View object hierarchy,
     // either dynamically or via XML layout inflation.
     @Override
@@ -139,7 +115,7 @@ public class UserProfileFragment extends Fragment  {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        settings = view.findViewById(R.id.settings);
+        //settings = view.findViewById(R.id.settings);
         logOut = view.findViewById(R.id.btnSignOut);
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,9 +156,9 @@ public class UserProfileFragment extends Fragment  {
 
         etBio = (EditText) view.findViewById(R.id.etBio);
         numAttending = (TextView) view.findViewById(R.id.numAttending);
+        numCreated = (TextView) view.findViewById(R.id.numCreated);
 
         btnEdit = view.findViewById(R.id.btnEdit);
-        btnSettings = view.findViewById(R.id.settings);
 
 
         btnEdit.setOnClickListener(new View.OnClickListener() {
@@ -192,6 +168,14 @@ public class UserProfileFragment extends Fragment  {
             }
         });
 
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Logged out", Toast.LENGTH_SHORT).show();
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getContext(), LoginActivity.class));
+            }
+        });
         RetrieveUserInfo();
 
         LoadData("");
@@ -225,9 +209,9 @@ public class UserProfileFragment extends Fragment  {
 
                     // set information to the layout
                     //greetingTextView.setText("Welcome, " + fullName + "!");
-                    fullNameTextView.setText(fullName);
+                    fullNameTextView.setText(fullName + ", " + age);
                     emailTextView.setText(email);
-                    ageTextView.setText(age);
+                  //  ageTextView.setText(age);
                 }
             }
 
@@ -270,14 +254,6 @@ public class UserProfileFragment extends Fragment  {
                     eventsAdapter.eventMonth.setText(event.getEventMonth());
                     Picasso.get().load(event.getEventImage()).into(eventsAdapter.eventImage);
 
-                    eventsAdapter.view.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(getContext(), DetailsActivity.class);
-                            intent.putExtra("EventID", getRef(i).getKey());
-                            startActivity(intent);
-                        }
-                    });
                 }
 
                 @NonNull
@@ -291,8 +267,6 @@ public class UserProfileFragment extends Fragment  {
             adapter.startListening();
             profileRecycler.setAdapter(adapter);
         }
-
-
 
 
     public void showPopup(View view){
@@ -317,7 +291,9 @@ public class UserProfileFragment extends Fragment  {
 
                     etBio.setHint(retrieveUserName);
                     Long value = snapshot.child("Attending").getChildrenCount();
+                    Long created = snapshot.child("Created").getChildrenCount();
                     numAttending.setText(String.valueOf(value));
+                    numCreated.setText(String.valueOf(created));
                 }
                 else if(snapshot.exists()  && (snapshot.hasChild("userImage"))){
                     String retrieveUserName = snapshot.child("bio").getValue().toString();
@@ -328,17 +304,24 @@ public class UserProfileFragment extends Fragment  {
                     etBio.setHint(retrieveUserName);
                     Long value = snapshot.child("Attending").getChildrenCount();
                     numAttending.setText(String.valueOf(value));
-                   // numAttending.setText(Math.toIntExact(value));
+                    Long created = snapshot.child("Created").getChildrenCount();
+
+                        numCreated.setText(String.valueOf(created));
+
                 }
                 else if(snapshot.exists() && (snapshot.child("bio").exists())){
                    String retrieveUserName = snapshot.child("bio").getValue().toString();
                     etBio.setHint(retrieveUserName);
                     Long value = snapshot.child("Attending").getChildrenCount();
                     numAttending.setText(String.valueOf(value));
+                    Long created = snapshot.child("Created").getChildrenCount();
+                    numCreated.setText(String.valueOf(created));
                 }
                 else{
                     Long value = snapshot.child("Attending").getChildrenCount();
                     numAttending.setText(String.valueOf(value));
+                    Long created = snapshot.child("Created").getChildrenCount();
+                    numCreated.setText(String.valueOf(created));
                   //  String userImage2 = snapshot.child("userImage").getValue().toString();
                   //  Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);
 
@@ -428,20 +411,5 @@ public class UserProfileFragment extends Fragment  {
         });
     }
 
-//    @Override
-//    public boolean onMenuItemClick(MenuItem item) {
-//        switch (item.getItemId()){
-//            case R.id.itLogOut:
-//                Toast.makeText(getContext(), "Logged out", Toast.LENGTH_SHORT).show();
-//                FirebaseAuth.getInstance().signOut();
-//                startActivity(new Intent(getContext(), LoginActivity.class));
-//                return true;
-//            case R.id.itEdit:
-//                Toast.makeText(getContext(), "Edit profile", Toast.LENGTH_SHORT).show();
-//                UpdateSettings();
-//                return true;
-//            default:
-//                return false;
-//        }
-//    }
+
 }

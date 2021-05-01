@@ -81,7 +81,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         rsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
 
-         EventID = getIntent().getStringExtra("EventID");
+        EventID = getIntent().getStringExtra("EventID");
 
         reference.child(EventID).addValueEventListener(new ValueEventListener() {
             @Override

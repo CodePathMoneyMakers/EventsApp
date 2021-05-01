@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             app:expandedTitleTextAppearance="@style/expandedBarTextStyle"
-            app:contentScrim="#FC1055">
+            app:contentScrim="#000000">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -61,7 +61,7 @@
             android:id="@+id/buyTicket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Buy Tickets"
+            android:text="RSVP"
             android:layout_marginStart="200dp"
             android:layout_marginTop="12dp"
             android:textColor="#FC1055"
@@ -160,6 +160,19 @@
                android:textSize="18sp"
                app:drawableStartCompat="@drawable/ic_clock_white"
                tools:text="eventTime" />
+
+           <TextView
+               android:id="@+id/eventLocation"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="230dp"
+               android:layout_marginTop="145dp"
+               android:drawablePadding="10dp"
+               android:textColor="@color/white"
+               android:textSize="18sp"
+               app:drawableStartCompat="@drawable/ic_baseline_location_on_24"
+               tools:text="eventLocation" />
+
 
            <TextView
                android:id="@+id/eventTitle"
