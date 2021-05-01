@@ -35,19 +35,23 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class DetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
     private ImageView ivEventImage, ivUserImage;
+    public LatLng location;
     private FirebaseAuth mAuth;
     TextView tvEventTitle, tvEventGenre, tvEventFee, tvEventTime, tvEventDate,
-    tvEventOrganization, tvEventOrganizer, tvEventDescription, tvUserBio;
+    tvEventOrganization, tvEventOrganizer, tvEventDescription, tvUserBio, tvEventLocation;
     TextView tveventFee2;
     private GoogleMap mMap;
     private MapView mapView;
     Button bnBuyTicket;
     DatabaseReference reference, EventsRef, UsersRef, rsvpRef;
     String currentUserID, eventOrganizer, EventID, eventTitle;
+    private String address;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +71,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         tvEventOrganization = findViewById(R.id.eventOrganization);
         tvUserBio = findViewById(R.id.userBio);
         ivUserImage = findViewById(R.id.userImage);
+        tvEventLocation = findViewById(R.id.eventLocation);
 
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
@@ -99,6 +104,26 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                     String username = snapshot.child("username").getValue().toString();
                     String userBio = snapshot.child("userBio").getValue().toString();
                     String userImage = snapshot.child("userImage").getValue().toString();
+                    Double latitude = ((Double) snapshot.child("latitude").getValue());
+                    Double longitude = (Double) snapshot.child("longitude").getValue();
+
+                    try{
+                        Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
+                        List<Address> addresses = geo.getFromLocation(latitude, longitude, 1);
+                        if (addresses.isEmpty()) {
+                            tvEventLocation.setText("Location unknown");
+                        }
+                        else {
+                            if (addresses.size() > 0) {
+                                 address = addresses.get(0).getFeatureName() + ", " + addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea()
+                                        + ", " + addresses.get(0).getCountryName();
+
+                            }
+                        }
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                     Picasso.get().load(imageUrl).into(ivEventImage);
                     Picasso.get().load(userImage).into(ivUserImage);
@@ -112,6 +137,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                     tvEventDescription.setText("Description: " + eventDescription);
                     tvEventOrganizer.setText(username);
                     tvUserBio.setText(userBio);
+                    tvEventLocation.setText(address);
 
 
                     bnBuyTicket.setOnClickListener(new View.OnClickListener() {
@@ -179,7 +205,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     Event event = snapshot.getValue(Event.class);
-                    LatLng location = new LatLng(event.latitude, event.longitude);
+                    location = new LatLng(event.latitude, event.longitude);
                     mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
                     moveCamera(location, 0, event.getEventTitle());
                 }
