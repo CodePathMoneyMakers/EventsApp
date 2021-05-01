@@ -77,4 +77,7 @@ dependencies {
     implementation 'com.android.support:design:30.0.0'
     implementation 'androidx.palette:palette:1.0.0'
 
+    // Blur image - SplashScreen
+    implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
+
 }
