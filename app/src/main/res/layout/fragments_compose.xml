@@ -19,10 +19,10 @@
                     android:layout_gravity="bottom"
                     android:background="@drawable/fade_image_background"/>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1200dp"
-                    android:background="@drawable/profile_gradient_overlay" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1200dp"
+            android:background="@drawable/profile_gradient_overlay" />
 
         <EditText
             android:id="@+id/etEventTitle"
@@ -288,7 +288,6 @@
 
             <TextView
                 android:id="@+id/Music"
-                android:layout_below="@+id/Time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -302,10 +301,10 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/music_card"
-                android:layout_below="@+id/Music"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="68dp"
                 app:cardCornerRadius="35dp"
@@ -318,52 +317,73 @@
                     android:backgroundTint="#00FFFFFF"
                     app:srcCompat="@drawable/ic_music" />
             </androidx.cardview.widget.CardView>
-
             <TextView
                 android:id="@+id/tvMusic"
-                android:layout_below="@+id/Music"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="120dp"
                 android:layout_marginTop="50dp"
                 android:textColor="#616368"
                 android:textSize="24dp"
-                android:text="Rageton"/>
-
+                tools:text="Genre" />
 
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/Fee"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="240dp"
-            android:layout_marginTop="345dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Entrence"
-            android:textColor="#373A42"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-
         <androidx.cardview.widget.CardView
-            android:id="@+id/fee_card"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:id="@+id/feeCardView"
+            android:layout_below="@+id/musicCardView"
+            android:layout_width="350dp"
+            android:layout_height="128dp"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="240dp"
-            android:layout_marginTop="380dp"
-            app:cardCornerRadius="35dp"
-            app:cardElevation="10dp">
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="90dp"
+            android:layout_marginEnd="30dp"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="5dp"
+            android:fadingEdgeLength="@dimen/cardview_default_elevation">
 
-            <ImageButton
-                android:id="@+id/fee_logo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:backgroundTint="#00FFFFFF"
-                app:srcCompat="@drawable/ic_ticket" />
+            <TextView
+                android:id="@+id/Fee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Fee"
+                android:textColor="#373A42"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/fee_card"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="68dp"
+                app:cardCornerRadius="35dp"
+                app:cardElevation="10dp">
+
+                <ImageButton
+                    android:id="@+id/fee_logo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="#00FFFFFF"
+                    app:srcCompat="@drawable/ic_ticket" />
+            </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/tvFee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="120dp"
+                android:layout_marginTop="50dp"
+                android:textColor="#616368"
+                android:textSize="24dp"
+                tools:text="Free" />
+
         </androidx.cardview.widget.CardView>
 
 
@@ -565,16 +585,16 @@
 
         </androidx.cardview.widget.CardView>
 
-<!--        <ImageView-->
-<!--            android:id="@+id/selectedImage"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignParentStart="true"-->
-<!--            android:layout_alignParentTop="true"-->
-<!--            android:layout_marginStart="258dp"-->
-<!--            android:layout_marginTop="434dp"-->
-<!--            tools:srcCompat="@tools:sample/avatars"-->
-<!--            android:visibility="invisible"/>-->
+        <ImageView
+            android:id="@+id/selectedImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="258dp"
+            android:layout_marginTop="434dp"
+            tools:srcCompat="@tools:sample/avatars"
+            android:visibility="invisible"/>
 
     </RelativeLayout>
 
