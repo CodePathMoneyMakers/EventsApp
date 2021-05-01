@@ -1,4 +1,4 @@
-package com.example.eventsapp.models;
+/*package com.example.eventsapp.models;
 
 import com.google.firebase.firestore.ServerTimestamp;
 
@@ -65,3 +65,4 @@ public class ChatMessage {
                 '}';
     }
 }
+*/

@@ -369,8 +369,8 @@
 
         </androidx.cardview.widget.CardView>
 
-        <EditText
-            android:id="@+id/etLocationTitle"
+        <fragment
+            android:id="@+id/autocomplete_fragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -383,6 +383,7 @@
             android:inputType="textPersonName"
             android:textColor="#373A42"
             android:textStyle="bold"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
             />
 
 

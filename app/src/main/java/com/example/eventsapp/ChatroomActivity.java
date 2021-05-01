@@ -1,4 +1,4 @@
-package com.example.eventsapp;
+/*package com.example.eventsapp;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -326,3 +326,4 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
     }
 
 }
+*/

@@ -10,17 +10,14 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -36,10 +33,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.R;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -49,6 +45,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -62,17 +65,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
@@ -81,6 +82,7 @@ import static android.app.Activity.RESULT_OK;
 public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
+    private static final String API_KEY = "AIzaSyD-TOc4swzSGkTyflob9y0gbQL8BjquBi8";
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final float DEFAULT_ZOOM = 15f;
     public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
@@ -157,7 +159,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         location_btn = view.findViewById(R.id.set_image);
        // etLocation1 = view.findViewById(R.id.etLocation);
         etLocationTitle = view.findViewById(R.id.etLocationTitle);
-        picture_btn = view.findViewById(R.id.picture_image);
+        picture_btn = view.findViewById(R.id.picture_btn);
         selectedImage = view.findViewById(R.id.selectedImage);
         post_btn = view.findViewById(R.id.post_btn);
         etMultiline = view.findViewById(R.id.etMultiline);
@@ -338,7 +340,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                     tvFee.setText(str);
                     dialog.dismiss();
 
-                    eventFee = etFee.getText().toString(); // save everthing from edit text as a string eventFee
+                    eventFee = etFee.getText().toString(); // save everything from edit text as a string eventFee
                 }
             });
 
@@ -379,6 +381,42 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 CreateEvent();
             }
         });
+
+        //Initialize SDK
+        Places.initialize(getContext(), API_KEY);
+
+        //Create a new places client instance
+        PlacesClient placesClient = Places.createClient(getContext());
+
+        //Initialize the AutoCompleteSupportFragment
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        //Specify which TypeFilter you want applied
+        autocompleteFragment.setTypeFilter(TypeFilter.ADDRESS);
+
+        autocompleteFragment.setLocationBias(RectangularBounds.newInstance(
+                new LatLng(-33.880490, 151.184363),
+                new LatLng(-33.858754, 151.229596)));
+        autocompleteFragment.setCountries("IN");
+
+        //Specify the types of place data to return
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                // TODO: Get info about the selected place.
+                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
     }
 
     private void CreateEvent() {
@@ -533,5 +571,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         }
         mMap.setMyLocationEnabled(true);
     }
+
+
 
 }

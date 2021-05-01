@@ -1,4 +1,4 @@
-package com.example.eventsapp.adapters;
+/*package com.example.eventsapp.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -75,7 +75,7 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter<com.example
 
 }
 
-
+*/
 
 
 

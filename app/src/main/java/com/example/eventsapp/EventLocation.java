@@ -1,4 +1,4 @@
-package com.example.eventsapp;
+/*package com.example.eventsapp;
 
 import com.example.eventsapp.models.User;
 import com.google.firebase.firestore.GeoPoint;
@@ -51,3 +51,4 @@ public class EventLocation {
                 '}';
     }
 }
+*/
