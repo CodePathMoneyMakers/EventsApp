@@ -6,11 +6,12 @@
         android:height="10dp"/>
 
     <corners
-        android:radius="20dp"/>
+        android:radius="15dp"/>
     <gradient
-        android:startColor="#FC1055"
-        android:endColor="#639CFF"
-        android:angle="135"/>
+        android:centerColor="#FFFFFF"
+        android:startColor="@color/white"
+        android:endColor="@color/white"
+        />
 
 
 </shape>

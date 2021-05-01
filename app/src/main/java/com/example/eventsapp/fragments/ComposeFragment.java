@@ -3,6 +3,7 @@ package com.example.eventsapp.fragments;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -14,9 +15,11 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.GestureDetector;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -54,11 +57,15 @@ import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -109,9 +116,13 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private ImageButton post_btn;
     private EditText etMultiline, etEventTitle;
     public FirebaseAuth mAuth;
+    OnSwipeTouchListener onSwipeTouchListener;
+
+    String username, userImage, userBio;
 
     DatabaseReference Dayaref, LocationRef;
     public StorageReference Storageref;
+    String eventCreated;
 
 
     Uri selectedImageUri;
@@ -133,6 +144,10 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        onSwipeTouchListener = new OnSwipeTouchListener(getContext(), view.findViewById(R.id.scrollable));
+
+
+
         tvDate = view.findViewById(R.id.tvDate);
         calendar_btn = view.findViewById(R.id.calender_logo);
         time_btn = view.findViewById(R.id.time_logo);
@@ -148,7 +163,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         aSwitch = view.findViewById(R.id.switch1);
         etOrganization = view.findViewById(R.id.etOrganization);
         location_btn = view.findViewById(R.id.set_image);
-        // etLocation1 = view.findViewById(R.id.etLocation);
+       // etLocation1 = view.findViewById(R.id.etLocation);
         etLocationTitle = view.findViewById(R.id.etLocationTitle);
         picture_btn = view.findViewById(R.id.picture_image);
         selectedImage = view.findViewById(R.id.selectedImage);
@@ -178,6 +193,22 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             }
         });
 
+        UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    username = snapshot.child("fullName").getValue().toString();
+                    userBio = snapshot.child("bio").getValue().toString();
+                    userImage = snapshot.child("userImage").getValue().toString();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -197,7 +228,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         calendar_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // MainActivity main = new MainActivity();
+               // MainActivity main = new MainActivity();
                 materialDatePicker.show(getFragmentManager(), "DatePicker");
             }
         });
@@ -315,7 +346,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                     tvFee.setText(str);
                     dialog.dismiss();
 
-                    eventFee = etFee.getText().toString(); // save everthing from edit text as a string eventFee
+                    eventFee = etFee.getText().toString(); // save everything from edit text as a string eventFee
                 }
             });
 
@@ -381,7 +412,9 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         profileMap.put("longitude", longitude);
         profileMap.put("eventOrganization", eventOrganization);
         profileMap.put("eventDescription", eventDescription);
-        // profileMap.put("eventLocation", eventLocation);
+        profileMap.put("username", username);
+        profileMap.put("userBio", userBio);
+        profileMap.put("userImage", userImage);
 
         EventsRef.push().setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
 
@@ -396,6 +429,8 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 }
             }
         });
+
+        UsersRef.child(currentUserID).child("Created").child("EventID").setValue(currentUserID);
     }
 
     public void openCamera(View view){
@@ -428,7 +463,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     }
 
     private void uploadImage(String currentUserID) {
-        final String key = UsersRef.push().getKey();
+       final String key = UsersRef.push().getKey();
 
         Storageref.child(key +".jpg").putFile(selectedImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -464,7 +499,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             }
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            // eventLocation = address.getLatitude() + ", " + address.getLongitude();
+           // eventLocation = address.getLatitude() + ", " + address.getLongitude();
             latitude = address.getLatitude();
             longitude = address.getLongitude();
             mMap.addMarker(new MarkerOptions().position(latLng).title(location));
@@ -509,4 +544,85 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         mMap.setMyLocationEnabled(true);
     }
 
+    public static class OnSwipeTouchListener implements View.OnTouchListener {
+        private final GestureDetector gestureDetector;
+        Context context;
+        OnSwipeTouchListener(Context ctx, View mainView) {
+            gestureDetector = new GestureDetector(ctx, new GestureListener());
+            mainView.setOnTouchListener(this);
+            context = ctx;
+        }
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            return gestureDetector.onTouchEvent(event);
+        }
+
+        public class GestureListener extends
+                GestureDetector.SimpleOnGestureListener {
+            private static final int SWIPE_THRESHOLD = 100;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+            View view;
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                boolean result = false;
+                try {
+                    float diffY = e2.getY() - e1.getY();
+                    float diffX = e2.getX() - e1.getX();
+                    if (Math.abs(diffX) > Math.abs(diffY)) {
+                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                            if (diffX > 0) {
+                                onSwipeRight();
+                            } else {
+                                onSwipeLeft();
+                            }
+                            result = true;
+                        }
+                    }
+                    else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffY > 0) {
+                            onSwipeBottom();
+                        } else {
+                            onSwipeTop();
+                        }
+                        result = true;
+                    }
+                }
+                catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                return result;
+            }
+        }
+        void onSwipeRight() {
+            //Toast.makeText(context, "Swiped Right", Toast.LENGTH_SHORT).show();
+            this.onSwipe.swipeRight();
+        }
+        boolean onSwipeLeft() {
+            //Toast.makeText(context, "Swiped Left", Toast.LENGTH_SHORT).show();
+            this.onSwipe.swipeLeft();
+            return true;
+        }
+        void onSwipeTop() {
+            //Toast.makeText(context, "Swiped Up", Toast.LENGTH_SHORT).show();
+            this.onSwipe.swipeTop();
+        }
+        void onSwipeBottom() {
+            //Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
+            this.onSwipe.swipeBottom();
+        }
+        interface onSwipeListener {
+            void swipeRight();
+            void swipeTop();
+            void swipeBottom();
+            void swipeLeft();
+        }
+        onSwipeListener onSwipe;
+    }
 }
+
+
+

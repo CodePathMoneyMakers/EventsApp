@@ -9,6 +9,7 @@
         android:radius="10dp"/>
 
     <gradient
+        android:angle="270"
         android:endColor="#10181F"
         android:startColor="#00FFFFFF"/>
 
