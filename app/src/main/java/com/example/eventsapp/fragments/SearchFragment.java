@@ -284,7 +284,7 @@ public class SearchFragment
         mMap.setOnPolylineClickListener(this);
 
         init();
-        
+
     }
 
     public void getDeviceLocation() {
