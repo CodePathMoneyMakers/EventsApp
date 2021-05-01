@@ -9,7 +9,7 @@
         android:id="@+id/inputSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search for events..."
+        android:hint="Search events here"
         android:layout_margin="20dp"
         android:paddingLeft="20dp"
         android:paddingTop="8dp"
