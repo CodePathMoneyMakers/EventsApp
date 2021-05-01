@@ -64,7 +64,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.0.0'
 
     // Google Directions
-    implementation 'com.google.maps:google-maps-services:0.2.9'
+    implementation 'com.google.maps:google-maps-services:0.10.0'
     implementation 'org.slf4j:slf4j-simple:1.7.25'
    // compile 'com.google.maps.android:android-maps-utils:0.3+'
 }

@@ -10,13 +10,15 @@
             android:layout_height="match_parent" />
 
         <EditText
+
+            android:inputType="text"
             android:shadowRadius="100"
             android:shadowColor="@color/black"
             android:textColor="#BE000000"
             android:id="@+id/etLocationTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search data here ..."
+            android:hint="Search locations here"
             android:layout_margin="20dp"
             android:paddingLeft="20dp"
             android:paddingTop="8dp"
@@ -27,21 +29,13 @@
 
             />
 
-        <ImageButton
-            android:id="@+id/set_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#00FFFFFF"
-            app:srcCompat="@drawable/ic_location"
-            />
-
-        <ImageButton
-            android:id="@+id/set_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#00FFFFFF"
-            app:srcCompat="@drawable/ic_location"
-            />
+<!--        <ImageButton-->
+<!--            android:id="@+id/set_image"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:backgroundTint="#00FFFFFF"-->
+<!--            app:srcCompat="@drawable/ic_location"-->
+<!--            />-->
 
 
 </RelativeLayout>

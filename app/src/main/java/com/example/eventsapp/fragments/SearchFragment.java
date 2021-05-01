@@ -1,5 +1,5 @@
 package com.example.eventsapp.fragments;
-
+import android.content.Context;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,8 +18,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +66,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SearchFragment
         extends Fragment
@@ -79,10 +82,10 @@ public class SearchFragment
     EditText etLocationTitle;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     public static final String TAG = "SearchFragment";
-    private ImageButton location_btn;
+//    private ImageButton location_btn;
     private DatabaseReference EventsRef;
-    private double currentLat;
-    private double currentLong;
+    private double currentLat = 0.0;
+    private double currentLong = 0.0;
 
     private GeoApiContext geoApiContext = null;
     private ArrayList<PolylineData> polylineData = new ArrayList<>();
@@ -112,8 +115,8 @@ public class SearchFragment
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-        location_btn = view.findViewById(R.id.set_image);
-        location_btn.setOnClickListener(v -> onMapReady());
+//        location_btn = view.findViewById(R.id.set_image);
+//        location_btn.setOnClickListener(v -> onMapReady());
 
         etLocationTitle = view.findViewById(R.id.etLocationTitle);
 
@@ -130,6 +133,13 @@ public class SearchFragment
         mapView.onResume();
     }
 
+    private void closeKeyboard() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
     public void init() {
         Log.d(TAG, "init: initializing");
 
@@ -139,7 +149,7 @@ public class SearchFragment
                     || keyEvent.getAction() == KeyEvent.ACTION_DOWN
                     || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
 
-                //execute our method for searching
+                closeKeyboard();
                 geoLocate();
             }
 
@@ -270,8 +280,11 @@ public class SearchFragment
         //Disable Map Toolbar:
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setMyLocationEnabled(true);
+        mMap.setPadding(0,220,20,0);
         mMap.setOnPolylineClickListener(this);
-        //init();
+
+        init();
+        
     }
 
     public void getDeviceLocation() {
