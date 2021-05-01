@@ -64,7 +64,7 @@
             android:text="RSVP"
             android:layout_marginStart="200dp"
             android:layout_marginTop="12dp"
-            android:textColor="#FC1055"
+            android:textColor="#FFFFFF"
             android:background="@drawable/btn_background"
             android:paddingLeft="50dp"
             android:paddingRight="50dp"
@@ -228,7 +228,7 @@
                    android:layout_height="144dp"
                    android:layout_below="@+id/eventDescription"
                    android:layout_gravity="center_horizontal|center_vertical"
-                   android:layout_marginStart="15dp"
+                   android:layout_marginStart="24dp"
                    android:layout_marginTop="20dp"
                    >
 
@@ -241,15 +241,14 @@
 
                <TextView
                    android:id="@+id/Organizer"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:layout_below="@+id/mapCard"
-                   android:layout_marginStart="30dp"
-                   android:layout_marginTop="20dp"
-                   android:textColor="@color/black"
-                   android:textSize="18sp"
-                   android:textStyle="bold"
-                   tools:text="Organizer" />
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="30dp"
+               android:layout_marginTop="280dp"
+               android:text="Meet the organizer"
+               android:textColor="@color/black"
+               android:textSize="18sp"
+               android:textStyle="normal" />
 
                <TextView
                    android:id="@+id/eventOrganizer"
@@ -257,9 +256,10 @@
                    android:layout_height="wrap_content"
                    android:layout_below="@+id/Organizer"
                    android:layout_centerHorizontal="true"
-                   android:layout_marginStart="0dp"
+                   android:layout_marginStart="20dp"
                    android:layout_marginRight="30dp"
-                   android:layout_marginTop="10dp"
+                   android:layout_toRightOf="@+id/cardProfileImage"
+                   android:layout_marginTop="30dp"
                    android:textColor="@color/black"
                    android:textSize="18sp"
                    android:textStyle="bold"
@@ -271,12 +271,12 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:layout_below="@+id/eventOrganizer"
+                   android:layout_toRightOf="@+id/cardProfileImage"
                    android:layout_centerHorizontal="true"
-                   android:layout_marginStart="0dp"
+                   android:layout_marginStart="20dp"
                    android:layout_marginTop="10dp"
                    android:textColor="@color/black"
                    android:textSize="18sp"
-                   android:textStyle="bold"
                    tools:text="userBio" />
 
                <androidx.cardview.widget.CardView
@@ -284,7 +284,8 @@
                    android:layout_height="100dp"
                    android:id="@+id/cardProfileImage"
                    android:layout_below="@id/Organizer"
-                   android:layout_toLeftOf="@+id/eventOrganizer"
+                   android:layout_marginTop="10dp"
+                   android:layout_marginLeft="30dp"
                    app:cardElevation="100dp"
                    app:cardCornerRadius="50dp"
                    >
