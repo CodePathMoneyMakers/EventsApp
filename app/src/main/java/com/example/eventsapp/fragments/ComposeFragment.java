@@ -197,9 +197,22 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
+                    if(snapshot.hasChild("userImage")){
+                        userImage = snapshot.child("userImage").getValue().toString();
+                    }else {
+                        userImage = "https://firebasestorage.googleapis.com/v0/b/landmark-d0e1d.appspot.com/o/UserImage%2F-MZbm49GJ5MNFLRKRyW0.jpg?alt=media&token=fc330a3d-d3f1-4512-a7d9-cf4005cc80a2";
+                    }
+                    if(snapshot.hasChild("bio")) {
+                        if (snapshot.child("bio").getValue().toString() != null) {
+                            userBio = snapshot.child("bio").getValue().toString();
+                        } else {
+                            userBio = "Go Panthers!";
+                        }
+                    }
+                    else{
+                        userBio = "Go Panthers!";
+                    }
                     username = snapshot.child("fullName").getValue().toString();
-                    userBio = snapshot.child("bio").getValue().toString();
-                    userImage = snapshot.child("userImage").getValue().toString();
 
                 }
             }
@@ -430,7 +443,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             }
         });
 
-        UsersRef.child(currentUserID).child("Created").child("EventID").setValue(currentUserID);
+        UsersRef.child(currentUserID).child("Created").child(eventTitle).setValue(currentUserID);
     }
 
     public void openCamera(View view){
