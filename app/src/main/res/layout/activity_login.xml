@@ -7,19 +7,19 @@
     tools:context=".LoginActivity"
     >
 
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/mappin"
-        android:layout_width="100dp"
-        android:layout_height="184dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="308dp"
-        android:layout_marginTop="28dp"
-        android:cropToPadding="false"
-        android:elevation="10dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/logohdddd"
-        android:transitionName="transition" />
+<!--    <pl.droidsonroids.gif.GifImageView-->
+<!--        android:id="@+id/mappin"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="184dp"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        android:layout_marginStart="308dp"-->
+<!--        android:layout_marginTop="28dp"-->
+<!--        android:cropToPadding="false"-->
+<!--        android:elevation="10dp"-->
+<!--        android:scaleType="centerCrop"-->
+<!--        android:src="@drawable/logohdddd"-->
+<!--        android:transitionName="transition" />-->
 
     <ImageView
         android:id="@+id/imageView2"
@@ -42,16 +42,15 @@
         android:id="@+id/banner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="42dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
         android:fontFamily="sans-serif-black"
         android:shadowColor="@color/teal_700"
         android:shadowRadius="30"
-        android:text="Landmark"
+        android:text="L a n d m a r k"
         android:textAlignment="center"
         android:textColor="#BEF3F3F3"
-        android:textSize="60sp"
+        android:textSize="54sp"
         android:textStyle="bold"
         />
 
