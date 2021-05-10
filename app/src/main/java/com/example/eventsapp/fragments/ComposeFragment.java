@@ -38,10 +38,12 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 
 import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.R;
+import com.example.eventsapp.models.User;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -89,8 +91,10 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private GoogleMap mMap;
     private MapView mapView;
     public DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
-    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, eventLocation, eventOrganization,
-            eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage, eventDay, eventMonth, eventWeekDay;
+    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime,
+                  eventLocation, eventOrganization, eventDescription, eventDate, eventTimeStart,
+                  eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage,
+                  eventDay, eventMonth, eventWeekDay;
     public Double latitude, longitude;
     private TextView tvDate;
     private ImageButton calendar_btn;
@@ -117,15 +121,12 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     DatabaseReference Dayaref, LocationRef;
     public StorageReference Storageref;
     String eventCreated;
-
-
     Uri selectedImageUri;
     boolean isImageAdded = false;
 
     int t1Hour, t1Minute, t2Hour, t2Minute;
 
-    public ComposeFragment() {
-    }
+    public ComposeFragment() { }
 
     @Nullable
     @Override
@@ -488,6 +489,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         mapView.onResume();
     }
 
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -521,12 +523,15 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
 
     public static class OnSwipeTouchListener implements View.OnTouchListener {
         private final GestureDetector gestureDetector;
+        public MainActivity fragment;
         Context context;
+
         OnSwipeTouchListener(Context ctx, View mainView) {
             gestureDetector = new GestureDetector(ctx, new GestureListener());
             mainView.setOnTouchListener(this);
             context = ctx;
         }
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             return gestureDetector.onTouchEvent(event);
@@ -573,20 +578,28 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             }
         }
         void onSwipeRight() {
-            //Toast.makeText(context, "Swiped Right", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Swiped Right", Toast.LENGTH_SHORT).show();
             this.onSwipe.swipeRight();
         }
         boolean onSwipeLeft() {
-            //Toast.makeText(context, "Swiped Left", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Swiped Left", Toast.LENGTH_SHORT).show();
+            UserProfileFragment userProfileFragment = new UserProfileFragment();
+            fragment.fragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left,
+                            R.anim.enter_left_to_right, R.anim.exit_left_to_right)
+                    .replace(R.id.flContainer, userProfileFragment)
+                    .addToBackStack(null)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .commit();
             this.onSwipe.swipeLeft();
             return true;
         }
         void onSwipeTop() {
-            //Toast.makeText(context, "Swiped Up", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Swiped Up", Toast.LENGTH_SHORT).show();
             this.onSwipe.swipeTop();
         }
         void onSwipeBottom() {
-            //Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
             this.onSwipe.swipeBottom();
         }
         interface onSwipeListener {
