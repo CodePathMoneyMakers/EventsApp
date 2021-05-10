@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="23dp"
+        android:layout_marginStart="42dp"
         android:layout_marginTop="100dp"
         android:fontFamily="sans-serif-black"
         android:shadowColor="@color/teal_700"
@@ -51,7 +51,7 @@
         android:text="Landmark"
         android:textAlignment="center"
         android:textColor="#BEF3F3F3"
-        android:textSize="64sp"
+        android:textSize="60sp"
         android:textStyle="bold"
         />
 
@@ -126,7 +126,7 @@
         android:background="@drawable/login_btn_background"
         android:includeFontPadding="false"
         android:text="@string/login"
-        android:textColor="@color/white" />
+        android:textColor="#FFFFFF" />
 
     <TextView
         android:id="@+id/tvCreateAccount"

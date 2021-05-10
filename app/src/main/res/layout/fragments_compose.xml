@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     style="@android:style/Widget.Material.ScrollView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,262 +10,56 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="1200dp">
+        android:layout_height="wrap_content">
+
+
+<!--                <ImageView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="280dp"-->
+<!--                    android:layout_gravity="bottom"-->
+<!--                    android:background="@drawable/fade_image_background"/>-->
+
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="2200dp"-->
+<!--            android:background="@drawable/profile_gradient_overlay" />-->
 
         <EditText
             android:id="@+id/etEventTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="17dp"
-            android:layout_marginTop="28dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="45dp"
             android:background="@drawable/transparent_bg"
-            android:ems="10"
+            android:maxLines="2"
             android:fontFamily="sans-serif-medium"
-            android:hint="Event Title"
+            android:hint="Tap to Add Event Title"
             android:inputType="textPersonName"
-            android:textColor="#373A42"
-            android:textStyle="bold" />
+            android:textColor="#26282E"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textSize="32dp"/>
 
         <TextView
             android:id="@+id/tvDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="57dp"
+            android:layout_marginStart="37dp"
+            android:layout_marginTop="45dp"
             android:fontFamily="sans-serif-medium"
             android:text="Details"
             android:textColor="#373A42"
             android:textSize="18dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_below="@+id/etEventTitle"/>
 
-        <TextView
-            android:id="@+id/Date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="39dp"
-            android:layout_marginTop="250dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Date"
-            android:textColor="#373A42"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/calendar_card"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="39dp"
-            android:layout_marginTop="285dp"
-            app:cardCornerRadius="35dp"
-            app:cardElevation="10dp">
-
-            <ImageButton
-                android:id="@+id/calender_logo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:backgroundTint="#00FFFFFF"
-                app:srcCompat="@drawable/ic_calendar" />
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="295dp"
-            android:layout_toEndOf="@+id/calendar_card"
-            android:textColor="#616368"
-            tools:text="Friday, 24 Aug" />
-
-        <TextView
-            android:id="@+id/Music"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="38dp"
-            android:layout_marginTop="345dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Music"
-            android:textColor="#373A42"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/music_card"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="39dp"
-            android:layout_marginTop="380dp"
-            app:cardCornerRadius="35dp"
-            app:cardElevation="10dp">
-
-            <ImageButton
-                android:id="@+id/music_logo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:backgroundTint="#00FFFFFF"
-                app:srcCompat="@drawable/ic_music" />
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/tvMusic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="389dp"
-            android:layout_toEndOf="@+id/music_card"
-            android:textColor="#616368"
-            tools:text="Hip Hop" />
-
-        <TextView
-            android:id="@+id/Time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="240dp"
-            android:layout_marginTop="250dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Time"
-            android:textColor="#373A42"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/time_card"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="240dp"
-            android:layout_marginTop="285dp"
-            app:cardCornerRadius="35dp"
-            app:cardElevation="10dp">
-
-            <ImageButton
-                android:id="@+id/time_logo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:backgroundTint="#00FFFFFF"
-                app:srcCompat="@drawable/ic_clock_" />
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/tvTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="53dp"
-            android:layout_marginTop="281dp"
-            android:layout_toEndOf="@+id/time_card"
-            android:textColor="#616368"
-            tools:text="6:30PM" />
-
-        <TextView
-            android:id="@+id/tvTime1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="53dp"
-            android:layout_marginTop="308dp"
-            android:layout_toEndOf="@+id/time_card"
-            android:textColor="#616368"
-            tools:text="6:30PM" />
-
-        <TextView
-            android:id="@+id/Fee"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="240dp"
-            android:layout_marginTop="345dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Entrence"
-            android:textColor="#373A42"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/fee_card"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="240dp"
-            android:layout_marginTop="380dp"
-            app:cardCornerRadius="35dp"
-            app:cardElevation="10dp">
-
-            <ImageButton
-                android:id="@+id/fee_logo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:backgroundTint="#00FFFFFF"
-                app:srcCompat="@drawable/ic_ticket" />
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/tvFee"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="389dp"
-            android:layout_toEndOf="@+id/fee_card"
-            android:textColor="#616368"
-            tools:text="Free" />
-
-        <TextView
-            android:id="@+id/Picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="170dp"
-            android:layout_marginTop="437dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Picture"
-            android:textColor="#373A42"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/picture_card"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="180dp"
-            android:layout_marginTop="472dp"
-            app:cardCornerRadius="35dp"
-            app:cardElevation="10dp">
-
-            <ImageButton
-                android:id="@+id/picture_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:backgroundTint="#00FFFFFF"
-                app:srcCompat="@drawable/ic_picture" />
-        </androidx.cardview.widget.CardView>
 
         <RelativeLayout
+            android:layout_below="@+id/tvDetails"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginTop="80dp"
+            android:layout_height="100dp"
             android:layout_marginStart="0dp"
             android:paddingBottom="5dp">
 
@@ -276,9 +70,9 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginBottom="2dp"
-                android:layout_marginStart="37dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="68dp"
+                android:layout_marginStart="38dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="38dp"
                 app:cardCornerRadius="15dp"
                 app:cardElevation="5dp"
                 app:cardPreventCornerOverlap="true"
@@ -295,19 +89,391 @@
                     android:inputType="textMultiLine"
                     />
             </androidx.cardview.widget.CardView>
-
-
         </RelativeLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/dateCardView"
+            android:layout_below="@id/etEventTitle"
+            android:layout_width="350dp"
+            android:layout_height="128dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="38dp"
+            android:layout_marginTop="200dp"
+            android:layout_marginEnd="38dp"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="5dp"
+            android:fadingEdgeLength="@dimen/cardview_default_elevation">
+
+            <TextView
+                android:id="@+id/Date"
+                android:layout_below="@+id/tvDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Date"
+                android:textColor="#373A42"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/calendar_card"
+                android:layout_below="@+id/Date"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="60dp"
+                app:cardCornerRadius="35dp"
+                app:cardElevation="10dp">
+
+                <ImageButton
+                    android:id="@+id/calender_logo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="#00FFFFFF"
+                    app:srcCompat="@drawable/ic_calendar" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_below="@id/Date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="120dp"
+                android:layout_marginTop="50dp"
+                android:textColor="#616368"
+                android:textSize="20dp"
+                android:hint="Your Event Date"/>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/timeCardView"
+            android:layout_below="@id/dateCardView"
+            android:layout_width="350dp"
+            android:layout_height="120dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="38dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="38dp"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="5dp"
+            android:fadingEdgeLength="@dimen/cardview_default_elevation">
+
+            <TextView
+                android:id="@+id/Time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Time"
+                android:textColor="#373A42"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/time_card"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="60dp"
+                app:cardCornerRadius="35dp"
+                app:cardElevation="10dp">
+
+                <ImageButton
+                    android:id="@+id/time_logo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="#00FFFFFF"
+                    app:srcCompat="@drawable/ic_clock_" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="170dp"
+                android:layout_marginTop="70dp"
+                android:textColor="#616368"
+                android:textSize="20dp"
+                android:hint="End Time" />
+
+            <TextView
+                android:id="@+id/tvTime1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="170dp"
+                android:layout_marginTop="30dp"
+                android:textColor="#616368"
+                android:textSize="20dp"
+                android:hint="Start Time" />
+
+            <TextView
+                android:id="@+id/till"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="120dp"
+                android:layout_marginTop="75dp"
+                android:text="till"
+                android:textColor="#FC1055" />
+
+            <TextView
+                android:id="@+id/from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="120dp"
+                android:layout_marginTop="35dp"
+                android:text="from"
+                android:textColor="#FC1055" />
+
+
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/musicCardView"
+            android:layout_below="@+id/timeCardView"
+            android:layout_width="350dp"
+            android:layout_height="128dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="38dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="38dp"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="5dp"
+            android:fadingEdgeLength="@dimen/cardview_default_elevation">
+
+            <TextView
+                android:id="@+id/Music"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Music"
+                android:textColor="#373A42"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/music_card"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="60dp"
+                app:cardCornerRadius="35dp"
+                app:cardElevation="10dp">
+
+                <ImageButton
+                    android:id="@+id/music_logo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="#00FFFFFF"
+                    app:srcCompat="@drawable/ic_music" />
+            </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/tvMusic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="120dp"
+                android:layout_marginTop="50dp"
+                android:textColor="#616368"
+                android:textSize="20dp"
+                android:hint="Event Music Genre" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/feeCardView"
+            android:layout_below="@+id/musicCardView"
+            android:layout_width="350dp"
+            android:layout_height="128dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="38dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="38dp"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="5dp"
+            android:fadingEdgeLength="@dimen/cardview_default_elevation">
+
+            <TextView
+                android:id="@+id/Fee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Fee"
+                android:textColor="#373A42"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/fee_card"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="60dp"
+                app:cardCornerRadius="35dp"
+                app:cardElevation="10dp">
+
+                <ImageButton
+                    android:id="@+id/fee_logo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="#00FFFFFF"
+                    app:srcCompat="@drawable/ic_ticket" />
+            </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/tvFee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="120dp"
+                android:layout_marginTop="50dp"
+                android:textColor="#616368"
+                android:textSize="20dp"
+                android:hint="Entrance Fees" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/pictureCardView"
+            android:layout_below="@+id/feeCardView"
+            android:layout_width="350dp"
+            android:layout_height="128dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="38dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="38dp"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="5dp"
+            android:fadingEdgeLength="@dimen/cardview_default_elevation">
+
+            <TextView
+                android:id="@+id/Picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Picture Upload"
+                android:textColor="#373A42"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/picture_card"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="60dp"
+                app:cardCornerRadius="35dp"
+                app:cardElevation="10dp">
+
+                <ImageButton
+                    android:id="@+id/picture_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:backgroundTint="#00FFFFFF"
+                    app:srcCompat="@drawable/ic_picture" />
+            </androidx.cardview.widget.CardView>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/privacyCardView"
+            android:layout_below="@+id/pictureCardView"
+            android:layout_width="350dp"
+            android:layout_height="128dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="38dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="38dp"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="5dp"
+            android:fadingEdgeLength="@dimen/cardview_default_elevation">
+
+            <TextView
+                android:id="@+id/tvPrivacy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Private Event"
+                android:textColor="#373A42"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="70dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="45dp"
+                android:layout_marginEnd="345dp"
+                android:text=""
+                android:textColor="#616368"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@+id/tvPrivacy"
+                android:layout_marginStart="85dp"
+                android:layout_marginTop="50dp"
+                android:layout_toEndOf="@+id/switch1"
+                app:cardCornerRadius="30dp"
+                app:cardElevation="10dp"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/visibility"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:padding="5dp"
+                    app:srcCompat="@drawable/ic_visibility" />
+            </androidx.cardview.widget.CardView>
+
+
+
+        </androidx.cardview.widget.CardView>
 
 
         <TextView
             android:id="@+id/tvOrganization"
+            android:layout_below="@+id/privacyCardView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="540dp"
+            android:layout_marginTop="90dp"
             android:fontFamily="sans-serif-medium"
             android:text="Organization"
             android:textColor="#373A42"
@@ -316,14 +482,14 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/organization_card"
+            android:layout_below="@+id/tvOrganization"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="577dp"
-            android:layout_marginEnd="67dp"
+            android:layout_marginStart="38dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="38dp"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="15dp"
             app:cardElevation="5dp"
@@ -351,12 +517,12 @@
 
         <TextView
             android:id="@+id/tvLocation"
+            android:layout_below="@+id/organization_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="680dp"
+            android:layout_marginTop="60dp"
             android:fontFamily="sans-serif-medium"
             android:text="Location"
             android:textColor="#373A42"
@@ -365,12 +531,12 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/location_card"
+            android:layout_below="@+id/tvLocation"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:layout_marginStart="15dp"
-            android:layout_marginTop="720dp"
+            android:layout_marginTop="20dp"
             app:cardCornerRadius="35dp"
             app:cardElevation="10dp">
 
@@ -380,133 +546,47 @@
                 android:layout_height="match_parent"
                 android:backgroundTint="#00FFFFFF"
                 app:srcCompat="@drawable/ic_location"
-               />
+                />
 
         </androidx.cardview.widget.CardView>
 
         <EditText
             android:id="@+id/etLocationTitle"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/tvLocation"
+            android:layout_toRightOf="@+id/location_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="710dp"
+            android:layout_centerHorizontal="true"
             android:layout_toEndOf="@+id/location_card"
             android:background="@drawable/transparent_bg"
             android:ems="10"
             android:fontFamily="sans-serif-medium"
-            android:hint="Location Name"
+            android:hint="Tap to add a location"
             android:inputType="textPersonName"
             android:textColor="#373A42"
             android:textStyle="bold"
+            android:textSize="24dp"
+            android:textAlignment="center"
             />
 
 
-        <TextView
-            android:id="@+id/tvPrivacy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="170dp"
-            android:layout_marginTop="1002dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Privacy"
-            android:textColor="#373A42"
-            android:textSize="18dp"
-            android:textStyle="bold" />
 
-        <Switch
-            android:id="@+id/switch1"
-            android:layout_width="70dp"
-            android:layout_height="56dp"
-            android:layout_below="@+id/tvPrivacy"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginEnd="345dp"
-            android:text=""
-            android:textColor="#616368"
-            tools:ignore="UseSwitchCompatOrMaterialXml"
-           />
 
-        <TextView
-            android:id="@+id/till"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="295dp"
-            android:layout_marginTop="308dp"
-            android:text="till"
-            android:textColor="#FC1055" />
 
-        <TextView
-            android:id="@+id/from"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="295dp"
-            android:layout_marginTop="283dp"
-            android:text="from"
-            android:textColor="#FC1055" />
 
 
         <androidx.cardview.widget.CardView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@+id/tvPrivacy"
-            android:layout_marginStart="-80dp"
-            android:layout_marginTop="10dp"
-            android:layout_toEndOf="@+id/switch1"
-            app:cardCornerRadius="30dp"
-            app:cardElevation="10dp"
-            android:padding="5dp">
-
-            <ImageView
-                android:id="@+id/visibility"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:padding="5dp"
-                app:srcCompat="@drawable/ic_visibility" />
-
-
-        </androidx.cardview.widget.CardView>
-
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/post_card"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="170dp"
-            android:layout_marginTop="1100dp"
-            app:cardCornerRadius="35dp"
-            app:cardElevation="10dp">
-
-            <ImageButton
-                android:id="@+id/post_btn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:backgroundTint="#00FFFFFF"
-                app:srcCompat="@drawable/ic_addfill" />
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
+            android:id="@+id/mapCard"
             app:cardCornerRadius="20dp"
             app:cardElevation="10dp"
             android:layout_width="362dp"
             android:layout_height="144dp"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:layout_gravity="center_horizontal|center_vertical"
             android:layout_marginStart="25dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="790dp"
+            android:layout_marginTop="50dp"
             android:layout_marginRight="10dp"
             android:layout_below="@+id/etLocationTitle">
 
@@ -519,14 +599,48 @@
 
         <ImageView
             android:id="@+id/selectedImage"
+            android:layout_toRightOf="@+id/post_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:layout_marginStart="258dp"
             android:layout_marginTop="434dp"
             tools:srcCompat="@tools:sample/avatars"
             android:visibility="invisible"/>
+
+
+        <TextView
+            android:layout_marginTop="50dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/postEventTextView"
+            android:layout_below="@+id/mapCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#373A42"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:text="Post Event">
+
+        </TextView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/post_card"
+            android:layout_below="@+id/postEventTextView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="24dp"
+            android:layout_centerHorizontal="true"
+            app:cardCornerRadius="35dp"
+            app:cardElevation="10dp">
+
+            <ImageButton
+                android:id="@+id/post_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="#00FFFFFF"
+                app:srcCompat="@drawable/ic_addfill" />
+        </androidx.cardview.widget.CardView>
 
     </RelativeLayout>
 

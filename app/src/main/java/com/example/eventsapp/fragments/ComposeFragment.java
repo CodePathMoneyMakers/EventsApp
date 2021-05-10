@@ -38,8 +38,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.Navigation;
 
 import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.R;
@@ -60,11 +58,15 @@ import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -91,10 +93,8 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private GoogleMap mMap;
     private MapView mapView;
     public DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
-    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime,
-                  eventLocation, eventOrganization, eventDescription, eventDate, eventTimeStart,
-                  eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage,
-                  eventDay, eventMonth, eventWeekDay;
+    public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, eventLocation, eventOrganization,
+            eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage, eventDay, eventMonth, eventWeekDay;
     public Double latitude, longitude;
     private TextView tvDate;
     private ImageButton calendar_btn;
@@ -118,6 +118,9 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private EditText etMultiline, etEventTitle;
     public FirebaseAuth mAuth;
     OnSwipeTouchListener onSwipeTouchListener;
+
+    String username, userImage, userBio;
+
     DatabaseReference Dayaref, LocationRef;
     public StorageReference Storageref;
     String eventCreated;
@@ -188,6 +191,35 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             }
         });
 
+        UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    if(snapshot.hasChild("userImage")){
+                        userImage = snapshot.child("userImage").getValue().toString();
+                    }else {
+                        userImage = "https://firebasestorage.googleapis.com/v0/b/landmark-d0e1d.appspot.com/o/UserImage%2F-MZbm49GJ5MNFLRKRyW0.jpg?alt=media&token=fc330a3d-d3f1-4512-a7d9-cf4005cc80a2";
+                    }
+                    if(snapshot.hasChild("bio")) {
+                        if (snapshot.child("bio").getValue().toString() != null) {
+                            userBio = snapshot.child("bio").getValue().toString();
+                        } else {
+                            userBio = "Go Panthers!";
+                        }
+                    }
+                    else{
+                        userBio = "Go Panthers!";
+                    }
+                    username = snapshot.child("fullName").getValue().toString();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -325,7 +357,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                     tvFee.setText(str);
                     dialog.dismiss();
 
-                    eventFee = etFee.getText().toString(); // save everthing from edit text as a string eventFee
+                    eventFee = etFee.getText().toString(); // save everything from edit text as a string eventFee
                 }
             });
 
@@ -391,7 +423,9 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         profileMap.put("longitude", longitude);
         profileMap.put("eventOrganization", eventOrganization);
         profileMap.put("eventDescription", eventDescription);
-       // profileMap.put("eventLocation", eventLocation);
+        profileMap.put("username", username);
+        profileMap.put("userBio", userBio);
+        profileMap.put("userImage", userImage);
 
         EventsRef.push().setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
 
@@ -406,6 +440,8 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 }
             }
         });
+
+        UsersRef.child(currentUserID).child("Created").child(eventTitle).setValue(currentUserID);
     }
 
     public void openCamera(View view){
@@ -523,15 +559,12 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
 
     public static class OnSwipeTouchListener implements View.OnTouchListener {
         private final GestureDetector gestureDetector;
-        public MainActivity fragment;
         Context context;
-
         OnSwipeTouchListener(Context ctx, View mainView) {
             gestureDetector = new GestureDetector(ctx, new GestureListener());
             mainView.setOnTouchListener(this);
             context = ctx;
         }
-
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             return gestureDetector.onTouchEvent(event);
@@ -578,28 +611,20 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             }
         }
         void onSwipeRight() {
-            Toast.makeText(context, "Swiped Right", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Swiped Right", Toast.LENGTH_SHORT).show();
             this.onSwipe.swipeRight();
         }
         boolean onSwipeLeft() {
-            Toast.makeText(context, "Swiped Left", Toast.LENGTH_SHORT).show();
-            UserProfileFragment userProfileFragment = new UserProfileFragment();
-            fragment.fragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left,
-                            R.anim.enter_left_to_right, R.anim.exit_left_to_right)
-                    .replace(R.id.flContainer, userProfileFragment)
-                    .addToBackStack(null)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .commit();
+            //Toast.makeText(context, "Swiped Left", Toast.LENGTH_SHORT).show();
             this.onSwipe.swipeLeft();
             return true;
         }
         void onSwipeTop() {
-            Toast.makeText(context, "Swiped Up", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Swiped Up", Toast.LENGTH_SHORT).show();
             this.onSwipe.swipeTop();
         }
         void onSwipeBottom() {
-            Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
             this.onSwipe.swipeBottom();
         }
         interface onSwipeListener {

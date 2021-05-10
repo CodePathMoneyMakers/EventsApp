@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.EventsApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#FFFFFF</item>
-        <item name="colorPrimaryVariant">#FC1055</item>
+        <item name="colorPrimary">#FC1055</item>
+        <item name="colorPrimaryVariant">@color/DarkGrey</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">#FC1055</item>
