@@ -22,20 +22,23 @@ import com.example.eventsapp.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class HomeFragment extends Fragment {
     EditText inputSearch;
-    RecyclerView recyclerView;
+    RecyclerView recyclerView, horizontalView;
     FirebaseAuth mAuth;
     String currentUserID;
 
     FirebaseRecyclerOptions<Event> options;
     FirebaseRecyclerAdapter<Event, EventsAdapter> adapter;
-    DatabaseReference DataRef;
+    DatabaseReference DataRef, rsvpRef;
 
     public static final String TAG = "HomeFragment";
 
@@ -57,12 +60,17 @@ public class HomeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         DataRef =   FirebaseDatabase.getInstance().getReference().child("Events");
+        rsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
         recyclerView = view.findViewById(R.id.recylerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
+        horizontalView = view.findViewById(R.id.horizontalView);
+        horizontalView.setLayoutManager(new LinearLayoutManager(getContext()));
+        horizontalView.setHasFixedSize(true);
         inputSearch = view.findViewById(R.id.inputSearch);
         
         LoadData("");
+        LoadRsvpdEvents();
 
         inputSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -85,6 +93,50 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void LoadRsvpdEvents() {
+        Query query = rsvpRef.orderByChild(currentUserID).equalTo(currentUserID);
+
+        options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
+        adapter = new FirebaseRecyclerAdapter<Event, EventsAdapter>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull EventsAdapter eventsAdapter, int i, @NonNull Event event) {
+                final String eventIds = getRef(i).getKey();
+                DataRef.child(eventIds).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String day = snapshot.child("eventDay").getValue().toString();
+                        String month = snapshot.child("eventMonth").getValue().toString();
+                        String fee = snapshot.child("eventFee").getValue().toString();
+                        String image = snapshot.child("eventImage").getValue().toString();
+                        String genre = snapshot.child("eventGenre").getValue().toString();
+                        eventsAdapter.eventDay.setText(day);
+                        eventsAdapter.eventGenre.setText(genre);
+                        eventsAdapter.eventFee.setText(fee);
+                        eventsAdapter.eventMonth.setText(month);
+                        Picasso.get().load(image).into(eventsAdapter.eventImage);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+
+            @NonNull
+            @Override
+            public EventsAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event2, parent, false);
+                return new EventsAdapter(v);
+            }
+        };
+
+        adapter.startListening();
+        horizontalView.setAdapter(adapter);
+        horizontalView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     }
 
     public void LoadData(String data) {

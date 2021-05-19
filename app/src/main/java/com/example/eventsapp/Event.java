@@ -2,7 +2,8 @@ package com.example.eventsapp;
 
 public class Event {
 
-    public String eventTitle, eventDate, eventDescription, eventImage, eventGenre, eventFee, eventDay, eventMonth;
+    public String eventTitle, eventDate, eventDescription, eventImage, eventGenre, eventFee, eventDay, eventMonth,
+    eventPrivacy;
     public Double latitude, longitude;
 
     // if we create an empty object of this class
@@ -10,7 +11,7 @@ public class Event {
     // default empty constructor.
     public Event(){}
 
-    public Event(String eventTitle, String eventDate, String eventDescription, String eventImage, String eventGenre, String eventFee, String eventMonth, String eventDay, Double latitude, Double longitude) {
+    public Event(String eventTitle, String eventDate, String eventDescription, String eventImage, String eventGenre, String eventFee, String eventMonth, String eventDay, String eventPrivacy, Double latitude, Double longitude) {
         this.eventTitle = eventTitle;
         this.eventDate = eventDate;
         this.eventDescription = eventDescription;
@@ -21,6 +22,7 @@ public class Event {
         this.eventDay = eventDay;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.eventPrivacy = eventPrivacy;
     }
 
     public String getEventFee(){
@@ -79,5 +81,9 @@ public class Event {
 
     public Double getLongitude(){
         return longitude;
+    }
+
+    public String getEventPrivacy(){
+        return eventPrivacy;
     }
 }

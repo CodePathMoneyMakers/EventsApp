@@ -263,8 +263,10 @@ public class SearchFragment
                 try {
                     for (DataSnapshot s : snapshot.getChildren()) {
                         event = s.getValue(Event.class);
-                        LatLng location = new LatLng(event.latitude, event.longitude);
-                        mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
+                        if(event.eventPrivacy != "false") {
+                            LatLng location = new LatLng(event.latitude, event.longitude);
+                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
+                        }
                     }
                 } catch (NullPointerException e) {
                     Toast.makeText(getActivity(), "An event was not able to load.", Toast.LENGTH_SHORT).show();
