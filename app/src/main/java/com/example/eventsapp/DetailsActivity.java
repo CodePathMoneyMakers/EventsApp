@@ -143,14 +143,10 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                     bnBuyTicket.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Map<String, Object> taskMap = new HashMap<>();
-                            taskMap.put(currentUserID, currentUserID);
-
-                            EventsRef.child(EventID).child("Attendees").updateChildren(taskMap);
-
                             // EventsRef.child(EventID).child("Attendees").child("currentUserID").setValue(currentUserID);
                             UsersRef.child(currentUserID).child("Attending").child("EventID").setValue(EventID);
-                            rsvpRef.child(currentUserID).child("username").setValue(EventID);
+                           // rsvpRef.child(currentUserID).child("username").setValue(EventID);
+                            rsvpRef.child(EventID).child(currentUserID).setValue(currentUserID);
 
                             Toast.makeText(getApplicationContext(), "You have successfully registered", Toast.LENGTH_LONG).show();
                         }

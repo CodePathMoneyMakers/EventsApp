@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,6 +52,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
@@ -241,18 +243,47 @@ public class UserProfileFragment extends Fragment  {
             }
 */
         public void LoadData (String s){
-            Query query = DataRef.orderByChild("userID").equalTo(currentUserID);
+          //  Query query = DataRef.orderByChild("userID").equalTo(currentUserID);
+          //  Query query = DataRef.child("Attendees").orderByChild("attendee").equalTo(userID);
+            Query query = rsvpRef.orderByChild(currentUserID).equalTo(currentUserID);
+          ArrayList<Object> save = new ArrayList<>();
+
+          /*   options =
+                    new FirebaseRecyclerOptions.Builder<Event>()
+                            .setQuery(rsvpRef, Event.class)
+                            .build(); */
 
             options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
             adapter = new FirebaseRecyclerAdapter<Event, EventsAdapter>(options) {
                 @Override
                 protected void onBindViewHolder(@NonNull EventsAdapter eventsAdapter, int i, @NonNull Event event) {
-                    eventsAdapter.eventTitle.setText(event.getEventTitle());
+                   /* eventsAdapter.eventTitle.setText(event.getEventTitle());
                     eventsAdapter.eventGenre.setText(event.getEventGenre());
                     eventsAdapter.eventFee.setText(event.getEventFee());
                     eventsAdapter.eventDay.setText(event.getEventDay());
                     eventsAdapter.eventMonth.setText(event.getEventMonth());
-                    Picasso.get().load(event.getEventImage()).into(eventsAdapter.eventImage);
+                    Picasso.get().load(event.getEventImage()).into(eventsAdapter.eventImage); */
+                    final String eventIds = getRef(i).getKey();
+                    DataRef.child(eventIds).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String day = snapshot.child("eventDay").getValue().toString();
+                            String month = snapshot.child("eventMonth").getValue().toString();
+                            String fee = snapshot.child("eventFee").getValue().toString();
+                            String image = snapshot.child("eventImage").getValue().toString();
+                            String genre = snapshot.child("eventGenre").getValue().toString();
+                            eventsAdapter.eventDay.setText(day);
+                            eventsAdapter.eventGenre.setText(genre);
+                            eventsAdapter.eventFee.setText(fee);
+                            eventsAdapter.eventMonth.setText(month);
+                            Picasso.get().load(image).into(eventsAdapter.eventImage);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
 
                 }
 

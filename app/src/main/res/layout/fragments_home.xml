@@ -18,8 +18,16 @@
         android:paddingRight="10dp"
         android:background="@drawable/input_search"
         />
-    <androidx.recyclerview.widget.RecyclerView
+
+    <HorizontalScrollView
         android:layout_below="@+id/inputSearch"
+        android:id="@+id/horizontalview"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@+id/horizontalview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recylerView"
