@@ -9,6 +9,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+<!--        <fragment-->
+<!--            android:id="@+id/mapView"-->
+<!--            android:name="com.google.android.gms.maps.SupportMapFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
+
         <EditText
 
             android:inputType="text"
@@ -28,6 +34,14 @@
             android:background="@drawable/input_search"
 
             />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:layout_marginStart="323dp"
+            android:id="@+id/myLocationBtn"
+            android:src="@drawable/ic_my_location"/>
 
 <!--        <ImageButton-->
 <!--            android:id="@+id/set_image"-->

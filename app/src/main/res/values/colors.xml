@@ -23,6 +23,7 @@
     <color name="darkGrey">#a6a6a6 </color>
     <color name="Grey">#c3c3c3 </color>
     <color name="lightGrey">#f2f2f2 </color>
+    <color name="DarkGrey">#595959</color>
     <color name="Black">#000 </color>
     <color name="light_blue_600">#FF039BE5</color>
     <color name="light_blue_900">#FF01579B</color>

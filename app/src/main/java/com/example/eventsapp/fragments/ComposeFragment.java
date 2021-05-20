@@ -554,6 +554,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+
         mMap.setMyLocationEnabled(true);
     }
 
@@ -624,6 +625,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             this.onSwipe.swipeTop();
         }
         void onSwipeBottom() {
+
             //Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
             this.onSwipe.swipeBottom();
         }

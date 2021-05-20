@@ -5,6 +5,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -21,6 +25,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,12 +42,17 @@ import com.example.eventsapp.PolylineData;
 import com.example.eventsapp.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -124,7 +134,41 @@ public class SearchFragment
 
         geoApiContext = new GeoApiContext.Builder().apiKey(getString(R.string.google_maps_key)).build();
 
+        ImageView locationBtn = view.findViewById(R.id.myLocationBtn);
 
+        locationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+
+                try {
+                    final Task location = mFusedLocationProviderClient.getLastLocation();
+                    location.addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: found location!");
+                            Location currentLocation = (Location) task.getResult();
+
+                            currentLat = currentLocation.getLatitude();
+                            currentLong = currentLocation.getLongitude();
+
+                            // try to update the Map View, prevent an error crash
+                            try {
+                                LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                            } catch (Exception e) {
+                                Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } else {
+                            Log.d(TAG, "onComplete: current location is null");
+                            Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } catch (SecurityException e) {
+                    Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
+                }
+            }
+        });
     }
 
     @Override
@@ -246,6 +290,18 @@ public class SearchFragment
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+        try{
+            boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.mapstyle));
+
+            if(!success){
+                Log.e("SearchFragment", "Style parsing failed");
+            }
+
+        } catch (Resources.NotFoundException e){
+            Log.e("SearchFragment", "Can't find style");
+        }
+
         mMap = googleMap;
 
         //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
@@ -264,7 +320,7 @@ public class SearchFragment
                     for (DataSnapshot s : snapshot.getChildren()) {
                         event = s.getValue(Event.class);
                         LatLng location = new LatLng(event.latitude, event.longitude);
-                        mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
+                        mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_ticket)));
                     }
                 } catch (NullPointerException e) {
                     Toast.makeText(getActivity(), "An event was not able to load.", Toast.LENGTH_SHORT).show();
@@ -277,14 +333,33 @@ public class SearchFragment
         });
 
         getDeviceLocation();
+
         //Disable Map Toolbar:
         mMap.getUiSettings().setMapToolbarEnabled(false);
-        mMap.setMyLocationEnabled(true);
+        mMap.setMyLocationEnabled(false);
         mMap.setPadding(0,220,20,0);
         mMap.setOnPolylineClickListener(this);
 
+
         init();
 
+    }
+
+    private void getMyLocation() {
+        LatLng latLng = new LatLng(Double.parseDouble(String.valueOf(currentLat)), Double.parseDouble(String.valueOf(currentLong)));
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
+        mMap.animateCamera(cameraUpdate);
+    }
+
+    private BitmapDescriptor bitmapDescriptor(Context context, int vectorResId){
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+
+        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     public void getDeviceLocation() {

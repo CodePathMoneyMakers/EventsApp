@@ -10,7 +10,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#10181F">
 
 
 <!--                <ImageView-->
@@ -35,6 +36,7 @@
             android:maxLines="2"
             android:fontFamily="sans-serif-medium"
             android:hint="Tap to Add Event Title"
+            android:textColorHint="@color/darkGrey"
             android:inputType="textPersonName"
             android:textColor="#26282E"
             android:textStyle="bold"
@@ -50,7 +52,7 @@
             android:layout_marginTop="45dp"
             android:fontFamily="sans-serif-medium"
             android:text="Details"
-            android:textColor="#373A42"
+            android:textColor="@color/darkGrey"
             android:textSize="18dp"
             android:textStyle="bold"
             android:layout_below="@+id/etEventTitle"/>
@@ -476,7 +478,7 @@
             android:layout_marginTop="90dp"
             android:fontFamily="sans-serif-medium"
             android:text="Organization"
-            android:textColor="#373A42"
+            android:textColor="@color/darkGrey"
             android:textSize="18dp"
             android:textStyle="bold" />
 
@@ -525,7 +527,7 @@
             android:layout_marginTop="60dp"
             android:fontFamily="sans-serif-medium"
             android:text="Location"
-            android:textColor="#373A42"
+            android:textColor="@color/darkGrey"
             android:textSize="18dp"
             android:textStyle="bold" />
 
@@ -563,6 +565,7 @@
             android:ems="10"
             android:fontFamily="sans-serif-medium"
             android:hint="Tap to add a location"
+            android:textColorHint="@color/DarkGrey"
             android:inputType="textPersonName"
             android:textColor="#373A42"
             android:textStyle="bold"
@@ -617,7 +620,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:textColor="#373A42"
+            android:textColor="@color/darkGrey"
             android:textSize="24dp"
             android:textStyle="bold"
             android:text="Post Event">
@@ -631,7 +634,7 @@
             android:layout_height="80dp"
             android:layout_margin="24dp"
             android:layout_centerHorizontal="true"
-            app:cardCornerRadius="35dp"
+            app:cardCornerRadius="40dp"
             app:cardElevation="10dp">
 
             <ImageButton

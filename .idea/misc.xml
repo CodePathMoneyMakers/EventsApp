@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_13_PREVIEW" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="StickyNotes">
+    <option name="stickyNotes">
+      <list>
+        <SerializedStickyNote>
+          <option name="archived" value="true" />
+          <option name="description" value="sdcsdcsdvsdvsdv" />
+        </SerializedStickyNote>
+        <SerializedStickyNote>
+          <option name="archived" value="true" />
+          <option name="description" value="sdfsdcsd" />
+        </SerializedStickyNote>
+        <SerializedStickyNote>
+          <option name="archived" value="true" />
+          <option name="description" value="adb.exe failed to start" />
+        </SerializedStickyNote>
+      </list>
+    </option>
   </component>
 </project>

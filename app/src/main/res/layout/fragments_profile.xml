@@ -4,32 +4,131 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/details_back">
 
+
+<!--    <ImageView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginEnd="17dp"-->
+<!--        android:layout_marginBottom="20dp"-->
+<!--        android:elevation="11dp"-->
+<!--        android:clickable="true"-->
+<!--        android:id="@+id/Settings"-->
+<!--        android:src="@drawable/ic_baseline_settings_24"-->
+<!--        android:focusable="true" />-->
+
+<!--    <ImageView-->
+<!--        android:layout_width="10dp"-->
+<!--        android:layout_height="10dp"-->
+<!--        android:elevation="10dp"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:src="@drawable/red_back"-->
+<!--        android:layout_marginEnd="25dp"-->
+<!--        android:layout_marginBottom="28dp"-->
+<!--        android:clickable="false"/>-->
+
+
+<!--    <com.getbase.floatingactionbutton.FloatingActionsMenu-->
+<!--        android:id="@+id/actionBtn"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:clickable="true"-->
+<!--        android:elevation="1dp"-->
+<!--        android:fadeScrollbars="true"-->
+<!--        android:foregroundGravity="fill_vertical"-->
+<!--        android:hapticFeedbackEnabled="true"-->
+<!--        app:fab_addButtonColorNormal="#FC1055"-->
+<!--        app:fab_addButtonColorPressed="@color/red2"-->
+<!--        app:fab_addButtonPlusIconColor="@color/white"-->
+<!--        app:fab_addButtonSize="mini"-->
+<!--        app:fab_expandDirection="up"-->
+<!--        app:fab_labelStyle="@style/custom_Fab">-->
+
+
+<!--        <com.getbase.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/fab_action1"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:fab_colorNormal="@color/white"-->
+<!--            app:fab_colorPressed="#F3F3F3"-->
+<!--            app:fab_icon="@drawable/ic_pencil"-->
+<!--            app:fab_size="mini" />-->
+
+<!--        <com.getbase.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/fab_action2"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:fab_colorNormal="@color/white"-->
+<!--            app:fab_colorPressed="#F3F3F3"-->
+<!--            app:fab_icon="@drawable/ic_back_arrow"-->
+<!--            app:fab_size="mini" />-->
+
+<!--    </com.getbase.floatingactionbutton.FloatingActionsMenu>-->
+
+
+
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_settings_24"
+            android:elevation="10dp"
+            android:padding="10dp"
+            android:id="@+id/Settings"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/floating_btn"/>
 
     <ImageButton
-        android:id="@+id/btnSignOut"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="385dp"
-        android:layout_marginTop="33dp"
-        android:layout_marginEnd="5dp"
-        android:background="#00FFFFFF"
-        android:elevation="10dp"
-        android:src="@drawable/ic_logout" />
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="11dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/floating_btn_1"
+        android:elevation="9dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_back_arrow" />
 
     <ImageButton
-        android:id="@+id/btnEdit"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="59dp"
-        android:layout_marginEnd="6dp"
-        android:background="@drawable/transparent_bg"
-        android:elevation="10dp"
-        android:src="@drawable/ic_edit" />
+        android:id="@+id/edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="11dp"
+        android:layout_above="@+id/logout"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/floating_btn_1"
+        android:elevation="9dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_pencil" />
+
+    <ImageButton
+        android:id="@+id/rsvp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="11dp"
+        android:layout_above="@+id/logout"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/floating_btn_1"
+        android:elevation="9dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_verification_checkmark_symbol" />
+
 
     <TextView
         android:id="@+id/tvEmail"
@@ -43,6 +142,7 @@
 
 
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -53,14 +153,14 @@
             android:adjustViewBounds="false"
             android:cropToPadding="false"
             android:scaleType="centerCrop"
-            android:src="@drawable/loginback"/>
-           <!-- android:foreground="@drawable/profile_gradient_overlay"
+            android:src="@drawable/loginback" />
+        <!-- android:foreground="@drawable/profile_gradient_overlay"
            -->
         <View
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:layout_gravity="bottom"
-            android:background="@drawable/fade_image_background"/>
+            android:background="@drawable/fade_image_background" />
 
     </FrameLayout>
 
@@ -129,7 +229,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/login_et_background"
-            android:hint="Tell us about yourself!"
+            android:hint="@string/tell_us_about_yourself"
             android:inputType="textMultiLine"
             android:textSize="14sp">
 
@@ -144,7 +244,7 @@
             android:alpha="0.90"
             android:fontFamily="@font/amaranth_bold"
             android:lineSpacingExtra="10sp"
-            android:text="ATTENDED"
+            android:text="@string/attended"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textSize="12sp"
             android:typeface="monospace" />
@@ -157,7 +257,7 @@
             android:layout_marginTop="140dp"
             android:alpha="0.90"
             android:fontFamily="@font/amaranth_bold"
-            android:text="EVENTS CREATED"
+            android:text="@string/events_created"
             android:textSize="12sp" />
 
 

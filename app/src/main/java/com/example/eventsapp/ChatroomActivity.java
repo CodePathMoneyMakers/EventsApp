@@ -212,7 +212,7 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
 
         UserListFragment fragment = UserListFragment.newInstance();
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(getString(R.string.intent_user_list), mUserList);
+        //bundle.putParcelableArrayList(getString(R.string.intent_user_list), mUserList);
         fragment.setArguments(bundle);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
