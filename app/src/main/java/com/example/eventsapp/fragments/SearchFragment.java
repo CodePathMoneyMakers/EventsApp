@@ -1,7 +1,8 @@
 package com.example.eventsapp.fragments;
-import android.content.Context;
+
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,8 +21,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +31,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.eventsapp.Event;
-import com.example.eventsapp.EventLocation;
 import com.example.eventsapp.PolylineData;
 import com.example.eventsapp.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -47,9 +45,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,10 +59,8 @@ import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class SearchFragment
         extends Fragment
@@ -299,8 +293,12 @@ public class SearchFragment
                     Log.d(TAG, "onComplete: found location!");
                     Location currentLocation = (Location) task.getResult();
 
-                    currentLat = currentLocation.getLatitude();
-                    currentLong = currentLocation.getLongitude();
+                    try {
+                        currentLat = currentLocation.getLatitude();
+                        currentLong = currentLocation.getLongitude();
+                    } catch (Exception e) {
+                        Toast.makeText(getActivity(), "Click the location button to see your local events.", Toast.LENGTH_SHORT).show();
+                    }
 
                     // try to update the Map View, prevent an error crash
                     try {
