@@ -41,6 +41,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.R;
+import com.example.eventsapp.models.User;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -123,15 +124,12 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     DatabaseReference Dayaref, LocationRef;
     public StorageReference Storageref;
     String eventCreated;
-
-
     Uri selectedImageUri;
     boolean isImageAdded = false;
 
     int t1Hour, t1Minute, t2Hour, t2Minute;
 
-    public ComposeFragment() {
-    }
+    public ComposeFragment() { }
 
     @Nullable
     @Override
@@ -516,6 +514,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             latitude = address.getLatitude();
             longitude = address.getLongitude();
             mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+            //mMap.animateCamera(CameraUpdateFactory.newLatLng());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }
     }
@@ -525,6 +524,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         super.onResume();
         mapView.onResume();
     }
+
 
     /**
      * Manipulates the map once available.
@@ -554,6 +554,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+
         mMap.setMyLocationEnabled(true);
     }
 
@@ -624,6 +625,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             this.onSwipe.swipeTop();
         }
         void onSwipeBottom() {
+
             //Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
             this.onSwipe.swipeBottom();
         }

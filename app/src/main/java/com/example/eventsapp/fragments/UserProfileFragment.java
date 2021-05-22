@@ -1,7 +1,15 @@
 package com.example.eventsapp.fragments;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -30,10 +39,12 @@ import com.example.eventsapp.Event;
 import com.example.eventsapp.EventsAdapter;
 import com.example.eventsapp.LoginActivity;
 import com.example.eventsapp.R;
-import com.example.eventsapp.RequestsActivity;
+import com.example.eventsapp.adapters.RSVPRecyclerAdapter;
 import com.example.eventsapp.models.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -57,9 +68,11 @@ import java.util.HashMap;
 import static android.app.Activity.RESULT_OK;
 
 public class UserProfileFragment extends Fragment  {
-
+    private boolean showingFirst = true;
     private FirebaseUser user;
     RecyclerView profileRecycler;
+    RecyclerView rsvpRecyclerView;
+    RSVPRecyclerAdapter rsvpRecyclerAdapter;
     private DatabaseReference reference;
     private String userID, test;
     private ImageButton logOut;
@@ -116,9 +129,55 @@ public class UserProfileFragment extends Fragment  {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //settings = view.findViewById(R.id.settings);
-        logOut = view.findViewById(R.id.btnSignOut);
-        logOut.setOnClickListener(new View.OnClickListener() {
+
+        ImageView settings = view.findViewById(R.id.Settings);
+        ImageButton logout = view.findViewById(R.id.logout);
+        ImageButton edit = view.findViewById(R.id.edit);
+        ImageButton rsvp = view.findViewById(R.id.rsvp);
+
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(showingFirst == true){
+                    ObjectAnimator rotate = ObjectAnimator.ofFloat(settings, "rotation", 0f, 180f);
+                    ObjectAnimator animateY = ObjectAnimator.ofFloat(logout, "y", 1330f);
+                    ObjectAnimator animateY2 = ObjectAnimator.ofFloat(edit, "y", 1200f);
+                    ObjectAnimator animateY3 = ObjectAnimator.ofFloat(rsvp, "y", 1070f);
+                    rotate.setDuration(1000);
+                    animateY.setDuration(500);
+                    animateY2.setDuration(500);
+                    animateY3.setDuration(500);
+                    AnimatorSet animatorSet = new AnimatorSet();
+                    animatorSet.playTogether(rotate, animateY, animateY2, animateY3);
+                    animatorSet.start();
+                    showingFirst = false;
+                }else{
+                    ObjectAnimator rotate = ObjectAnimator.ofFloat(settings, "rotation", 180f, 0f);
+                    ObjectAnimator animateY = ObjectAnimator.ofFloat(logout, "y", 1465f);
+                    ObjectAnimator animateY2 = ObjectAnimator.ofFloat(edit, "y", 1465f);
+                    ObjectAnimator animateY3 = ObjectAnimator.ofFloat(rsvp, "y", 1465f);
+                    rotate.setDuration(1000);
+                    animateY.setDuration(500);
+                    animateY2.setDuration(500);
+                    animateY3.setDuration(500);
+                    AnimatorSet animatorSet = new AnimatorSet();
+                    animatorSet.playTogether(rotate, animateY, animateY2, animateY3);
+                    animatorSet.start();
+                    showingFirst = true;
+                }
+
+            }
+        });
+
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UpdateSettings();
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // get an instance of firebase auth
@@ -127,7 +186,28 @@ public class UserProfileFragment extends Fragment  {
             }
         });
 
-        //   eventID = getActivity().getIntent().getStringExtra("EventID");
+        rsvp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Dialog dialog = new Dialog(getActivity());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.rsvp_dialog);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                rsvpRecyclerView = dialog.findViewById(R.id.rsvp_recycler);
+                rsvpRecyclerAdapter = new RSVPRecyclerAdapter();
+                rsvpRecyclerView.setAdapter(rsvpRecyclerAdapter);
+
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+                itemTouchHelper.attachToRecyclerView(rsvpRecyclerView);
+
+
+                dialog.show();
+            }
+        });
+
+        // eventID = getActivity().getIntent().getStringExtra("EventID");
         mAuth = FirebaseAuth.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
@@ -159,24 +239,31 @@ public class UserProfileFragment extends Fragment  {
         numAttending = (TextView) view.findViewById(R.id.numAttending);
         numCreated = (TextView) view.findViewById(R.id.numCreated);
 
-        btnEdit = view.findViewById(R.id.btnEdit);
+        //btnEdit = view.findViewById(R.id.btnEdit);
 
 
-        btnEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UpdateSettings();
-            }
-        });
-
-        logOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Logged out", Toast.LENGTH_SHORT).show();
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getContext(), LoginActivity.class));
-            }
-        });
+//        btnEdit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                UpdateSettings();
+//            }
+//        });
+//        fab2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getContext(), "Logged out", Toast.LENGTH_SHORT).show();
+//                FirebaseAuth.getInstance().signOut();
+//                startActivity(new Intent(getContext(), LoginActivity.class));
+//            }
+//        });
+//        logOut.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getContext(), "Logged out", Toast.LENGTH_SHORT).show();
+//                FirebaseAuth.getInstance().signOut();
+//                startActivity(new Intent(getContext(), LoginActivity.class));
+//            }
+//        });
         RetrieveUserInfo();
 
         LoadData("");
@@ -225,6 +312,29 @@ public class UserProfileFragment extends Fragment  {
             }
         });
     }
+
+
+            ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                @Override
+                public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                    int position = viewHolder.getAdapterPosition();
+                    switch (direction){
+                        case ItemTouchHelper.LEFT:
+                            Toast.makeText(getContext(), "swiped left", Toast.LENGTH_SHORT).show();
+                            break;
+                        case ItemTouchHelper.RIGHT:
+
+                            Toast.makeText(getContext(), "swiped right", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                }
+            };
+
  /*       DataRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
