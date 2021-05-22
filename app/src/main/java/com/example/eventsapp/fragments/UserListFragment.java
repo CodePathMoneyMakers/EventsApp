@@ -45,7 +45,7 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
-            mUserList = getArguments().getParcelableArrayList(getString(R.string.intent_user_list));
+//            mUserList = getArguments().getParcelableArrayList(getString(R.string.intent_user_list));
         }
     }
 

@@ -77,7 +77,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String password = editTextPassword.getText().toString().trim();
         String fullName = editTextUsername.getText().toString().trim();
         String age = editTextAge.getText().toString().trim();
-
+        String image = "https://firebasestorage.googleapis.com/v0/b/landmark-d0e1d.appspot.com/o/UserImage%2F-MZd5irMdbKGZ4xNGWbl.jpg?alt=media&token=64faaa7f-9b1c-4638-9567-df96cc9002ce";
 
         if (fullName.isEmpty()) {
             editTextUsername.setError("Full name is required.");
@@ -114,7 +114,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (task.isSuccessful()) {
 
                     // create an android studio User object
-                    User user = new User(fullName, age, email);
+                    User user = new User(fullName, age, email, image);
 
                     // create a firebase User Object
                     FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -129,7 +129,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 progressBar.setVisibility(View.VISIBLE);
                                 fbUser.sendEmailVerification();
                                 Toast.makeText(RegisterActivity.this,
-                                        "You have been registered Successfully!", Toast.LENGTH_LONG).show();
+                                        "You have been registered successfully!", Toast.LENGTH_LONG).show();
                                 Toast.makeText(RegisterActivity.this,
                                         "Please check your email to complete sign up!", Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));

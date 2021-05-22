@@ -30,6 +30,7 @@ import com.example.eventsapp.Event;
 import com.example.eventsapp.EventsAdapter;
 import com.example.eventsapp.LoginActivity;
 import com.example.eventsapp.R;
+import com.example.eventsapp.RequestsActivity;
 import com.example.eventsapp.models.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -253,6 +254,14 @@ public class UserProfileFragment extends Fragment  {
                     eventsAdapter.eventDay.setText(event.getEventDay());
                     eventsAdapter.eventMonth.setText(event.getEventMonth());
                     Picasso.get().load(event.getEventImage()).into(eventsAdapter.eventImage);
+                    eventsAdapter.view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent (getContext(), RequestsActivity.class);
+                            intent.putExtra("EventID", getRef(i).getKey());
+                            startActivity(intent);
+                        }
+                    });
 
                 }
 

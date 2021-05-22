@@ -32,6 +32,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.core.Tag;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +50,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
     private GoogleMap mMap;
     private MapView mapView;
     Button bnBuyTicket;
-    DatabaseReference reference, EventsRef, UsersRef, rsvpRef;
+    DatabaseReference reference, EventsRef, UsersRef, rsvpRef, requestRef;
     String currentUserID, eventOrganizer, EventID, eventTitle;
     private String address;
 
@@ -85,6 +87,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         rsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
+        requestRef = FirebaseDatabase.getInstance().getReference().child("Requests");
 
         EventID = getIntent().getStringExtra("EventID");
 
@@ -147,6 +150,33 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                             UsersRef.child(currentUserID).child("Attending").child("EventID").setValue(EventID);
                             // rsvpRef.child(currentUserID).child("username").setValue(EventID);
                             rsvpRef.child(EventID).child(currentUserID).setValue(currentUserID);
+
+                            EventsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Event event;
+                                    try {
+                                        for (DataSnapshot s : snapshot.getChildren()) {
+                                            event = s.getValue(Event.class);
+                                            if(event.eventPrivacy != "true") {
+                                            //    HashMap<String, Object> profileMap = new HashMap<>();
+                                            //    profileMap.put("Privacy", "Pending");
+                                            //    requestRef.child(EventID).child(currentUserID).updateChildren(profileMap);
+                                                    HashMap<String, Object> profileMap = new HashMap<>();
+                                                    profileMap.put("userID", currentUserID);
+                                                    requestRef.child(EventID).updateChildren(profileMap);
+                                            }
+                                        }
+                                    } catch (NullPointerException e) {
+                                        Toast.makeText(getApplicationContext(), "An event was not able to load.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                                }
+                            });
 
                             Toast.makeText(getApplicationContext(), "You have successfully registered", Toast.LENGTH_LONG).show();
                         }
