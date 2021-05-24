@@ -12,38 +12,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.eventsapp.R;
 import com.example.eventsapp.models.User;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.text.BreakIterator;
 import java.util.ArrayList;
 
-public class RSVPRecyclerAdapter extends RecyclerView.Adapter<RSVPRecyclerAdapter.ViewHolder> {
+public class RSVPRecyclerAdapter extends RecyclerView.ViewHolder {
 
-    private ArrayList<User> mUsers = new ArrayList<>();
 
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.rsvp_recycler_layout, parent, false);
-        return new ViewHolder(view);
-    }
+   public ImageView profileImage;
+   public     TextView tvEmail, tvEventTitle, tvFullName;
+    public View view;
 
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tvEmail.setText("email");
-        holder.tvFullName.setText("Name");
-        holder.tvEventTitle.setText("title");
-    }
-
-    @Override
-    public int getItemCount() {
-        return 10;
-    }
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView profileImage;
-        TextView tvEmail, tvEventTitle, tvFullName;
-
-        public ViewHolder(@NonNull View itemView) {
+        public RSVPRecyclerAdapter(@NonNull View itemView) {
             super(itemView);
 
             profileImage = itemView.findViewById(R.id.ivProfileImage);
@@ -51,7 +32,7 @@ public class RSVPRecyclerAdapter extends RecyclerView.Adapter<RSVPRecyclerAdapte
             tvEventTitle = itemView.findViewById(R.id.eventTitle);
             tvFullName = itemView.findViewById(R.id.tvFullName);
 
-
+            view = itemView;
         }
-    }
+
 }

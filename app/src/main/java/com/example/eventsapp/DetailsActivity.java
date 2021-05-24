@@ -158,13 +158,17 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                                     try {
                                         for (DataSnapshot s : snapshot.getChildren()) {
                                             event = s.getValue(Event.class);
-                                            if(event.eventPrivacy != "true") {
+                                            if(event.eventPrivacy.equals( "true")) {
                                             //    HashMap<String, Object> profileMap = new HashMap<>();
                                             //    profileMap.put("Privacy", "Pending");
                                             //    requestRef.child(EventID).child(currentUserID).updateChildren(profileMap);
+                                                if(s.getKey().equals(EventID)){
+                                                    String peanut= event.userID;
                                                     HashMap<String, Object> profileMap = new HashMap<>();
-                                                    profileMap.put("userID", currentUserID);
-                                                    requestRef.child(EventID).updateChildren(profileMap);
+                                                    profileMap.put(currentUserID, "pending");
+                                                    requestRef.child(peanut).child(EventID).updateChildren(profileMap);
+                                                }
+
                                             }
                                         }
                                     } catch (NullPointerException e) {
