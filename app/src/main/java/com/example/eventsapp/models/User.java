@@ -49,6 +49,10 @@ public class User implements Parcelable {
         return username;
     }
 
+    public String getFullName(){
+        return  fullName;
+    }
+
     public String getEmail() {
         return email;
     }

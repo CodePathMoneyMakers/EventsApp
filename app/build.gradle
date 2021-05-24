@@ -85,4 +85,7 @@ dependencies {
     // Blur image - SplashScreen
     implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
 
+    // chatroom
+    implementation 'com.firebaseui:firebase-ui:0.6.0'
+
 }
