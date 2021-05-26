@@ -1,67 +1,44 @@
 package com.example.eventsapp.models;
 
-import com.google.firebase.firestore.ServerTimestamp;
-
 import java.util.Date;
 
 public class ChatMessage {
 
-    private User user;
-    private String message;
-    private String message_id;
-    private @ServerTimestamp
-    Date timestamp;
+    private String messageText;
+    private String messageUser;
+    private long messageTime;
 
-    public ChatMessage(User user, String message, String message_id, Date timestamp) {
-        this.user = user;
-        this.message = message;
-        this.message_id = message_id;
-        this.timestamp = timestamp;
+    public ChatMessage(String messageText, String messageUser) {
+        this.messageText = messageText;
+        this.messageUser = messageUser;
+        messageTime = new Date().getTime();         // Initialize to current time
     }
 
-    public ChatMessage() {
+    public ChatMessage(){
 
     }
 
-    public User getUser() {
-        return user;
+    public String getMessageText() {
+        return messageText;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setMessageText(String messageText) {
+        this.messageText = messageText;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMessageUser() {
+        return messageUser;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMessageUser(String messageUser) {
+        this.messageUser = messageUser;
     }
 
-    public String getMessage_id() {
-        return message_id;
+    public long getMessageTime() {
+        return messageTime;
     }
 
-    public void setMessage_id(String message_id) {
-        this.message_id = message_id;
-    }
-
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    @Override
-    public String toString() {
-        return "ChatMessage{" +
-                "user=" + user +
-                ", message='" + message + '\'' +
-                ", message_id='" + message_id + '\'' +
-                ", timestamp=" + timestamp +
-                '}';
+    public void setMessageTime(long messageTime) {
+        this.messageTime = messageTime;
     }
 }

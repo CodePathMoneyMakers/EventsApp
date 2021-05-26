@@ -1,6 +1,7 @@
 package com.example.eventsapp;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,9 +53,12 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
     private MapView mapView;
     Button bnBuyTicket;
     DatabaseReference reference, EventsRef, UsersRef, rsvpRef, requestRef;
+    DatabaseReference reference, EventsRef, UsersRef, rsvpRef, CurrentUserReference;
     String currentUserID, eventOrganizer, EventID, eventTitle;
-    String specificName, specificEmail, specificImage;
     private String address;
+
+    // chatroom
+    private Button joinChatroom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +81,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         ivUserImage = findViewById(R.id.userImage);
         tvEventLocation = findViewById(R.id.eventLocation);
 
+
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
@@ -86,11 +92,43 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         reference = FirebaseDatabase.getInstance().getReference().child("Events");
         currentUserID = mAuth.getCurrentUser().getUid();
         EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
+        CurrentUserReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID);
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         rsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
         requestRef = FirebaseDatabase.getInstance().getReference().child("Requests");
 
         EventID = getIntent().getStringExtra("EventID");
+
+
+        // Chatroom
+        joinChatroom = (Button)findViewById(R.id.joinChatroomBtn);
+        joinChatroom.setOnClickListener(v -> {
+            Intent chatroomIntent = new Intent(this, ChatroomActivity.class);
+            chatroomIntent.putExtra("EventID", EventID);
+            // Can only enter chatroom if user RSVP to event
+            FirebaseDatabase.getInstance().getReference()
+                    .child("Events")
+                    .child(EventID)
+                    .child("Attendees")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                            for (DataSnapshot snaps : snapshot.getChildren()) {
+                                if(currentUserID.equals(snaps.getValue().toString())) {
+                                    startActivity(chatroomIntent);
+                                    return;
+                                }
+                            }
+                            Toast.makeText(DetailsActivity.this, "You must RSVP to enter the chatroom.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                            Toast.makeText(DetailsActivity.this, "Error getting info from the database.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        });
+
 
         reference.child(EventID).addValueEventListener(new ValueEventListener() {
             @Override
