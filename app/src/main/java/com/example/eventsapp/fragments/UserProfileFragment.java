@@ -399,7 +399,8 @@ public class UserProfileFragment extends Fragment  {
                             break;
                         case ItemTouchHelper.RIGHT:
                             Toast.makeText(getContext(), "swiped right", Toast.LENGTH_SHORT).show();
-                            rsvpRef.child(keyList.get(position)).child(idList.get(position)).setValue(idList.get(position));
+                            //rsvpRef.child(keyList.get(position)).child(idList.get(position)).setValue(idList.get(position));
+                            EventsRef.child(keyList.get(position)).child("Attendees").child(idList.get(position)).setValue(idList.get(position));
                             requestsRef.child(currentUserID).child(keyList.get(position)).removeValue();
 
                             keyList.remove(position);

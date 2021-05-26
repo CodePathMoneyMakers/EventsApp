@@ -83,9 +83,10 @@ public class SearchFragment
     private FusedLocationProviderClient mFusedLocationProviderClient;
     public static final String TAG = "SearchFragment";
 //    private ImageButton location_btn;
-    private DatabaseReference EventsRef;
+    private DatabaseReference EventsRef, RsvpRef;
     private double currentLat = 0.0;
     private double currentLong = 0.0;
+    String currentUserID;
 
     private GeoApiContext geoApiContext = null;
     private ArrayList<PolylineData> polylineData = new ArrayList<>();
@@ -121,6 +122,8 @@ public class SearchFragment
         etLocationTitle = view.findViewById(R.id.etLocationTitle);
 
         EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
+        RsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
+        currentUserID =  FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         geoApiContext = new GeoApiContext.Builder().apiKey(getString(R.string.google_maps_key)).build();
 
@@ -263,9 +266,16 @@ public class SearchFragment
                 try {
                     for (DataSnapshot s : snapshot.getChildren()) {
                         event = s.getValue(Event.class);
-                        if(event.eventPrivacy != "false") {
+                        if(event.eventPrivacy == "false") {
                             LatLng location = new LatLng(event.latitude, event.longitude);
                             mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
+                        }
+                        else if (event.eventPrivacy == "true"){
+                            if(s.child("Attendees").child(currentUserID).exists()){
+                                LatLng location = new LatLng(event.latitude, event.longitude);
+                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
+                            }
+
                         }
                     }
                 } catch (NullPointerException e) {
