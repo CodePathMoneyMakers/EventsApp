@@ -52,6 +52,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
     Button bnBuyTicket;
     DatabaseReference reference, EventsRef, UsersRef, rsvpRef, requestRef;
     String currentUserID, eventOrganizer, EventID, eventTitle;
+    String specificName, specificEmail, specificImage;
     private String address;
 
     @Override
@@ -147,9 +148,23 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                         @Override
                         public void onClick(View v) {
                             // EventsRef.child(EventID).child("Attendees").child("currentUserID").setValue(currentUserID);
-                            UsersRef.child(currentUserID).child("Attending").child("EventID").setValue(EventID);
+                           // UsersRef.child(currentUserID).child("Attending").child("EventID").setValue(EventID);
                             // rsvpRef.child(currentUserID).child("username").setValue(EventID);
-                            rsvpRef.child(EventID).child(currentUserID).setValue(currentUserID);
+                          //  rsvpRef.child(EventID).child(currentUserID).setValue(currentUserID);
+
+                            UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                                    specificEmail = snapshot.child("email").getValue().toString();
+                                    specificName = snapshot.child("fullName").getValue().toString();
+                                    specificImage = snapshot.child("userImage").getValue().toString();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                                }
+                            });
 
                             EventsRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -158,18 +173,24 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                                     try {
                                         for (DataSnapshot s : snapshot.getChildren()) {
                                             event = s.getValue(Event.class);
-                                            if(event.eventPrivacy.equals( "true")) {
-                                            //    HashMap<String, Object> profileMap = new HashMap<>();
-                                            //    profileMap.put("Privacy", "Pending");
-                                            //    requestRef.child(EventID).child(currentUserID).updateChildren(profileMap);
-                                                if(s.getKey().equals(EventID)){
-                                                    String peanut= event.userID;
-                                                    HashMap<String, Object> profileMap = new HashMap<>();
-                                                    profileMap.put(currentUserID, "pending");
-                                                    requestRef.child(peanut).child(EventID).updateChildren(profileMap);
-                                                }
+                                            String eventName = event.eventTitle;
 
+                                                if(s.getKey().equals(EventID)){
+                                                    if(event.eventPrivacy.equals( "true")) {
+                                                        String peanut = event.userID;
+                                                        HashMap<String, Object> profileMap = new HashMap<>();
+                                                        profileMap.put("name", specificName);
+                                                        profileMap.put("email", specificEmail);
+                                                        profileMap.put("image", specificImage);
+                                                        profileMap.put("event", eventName);
+                                                        profileMap.put("UID", currentUserID);
+                                                        requestRef.child(peanut).push().updateChildren(profileMap);
+                                                    }
+                                                    else if(event.eventPrivacy.equals("false")){
+                                                        rsvpRef.child(EventID).child(currentUserID).setValue(currentUserID);
+                                                    }
                                             }
+
                                         }
                                     } catch (NullPointerException e) {
                                         Toast.makeText(getApplicationContext(), "An event was not able to load.", Toast.LENGTH_SHORT).show();
