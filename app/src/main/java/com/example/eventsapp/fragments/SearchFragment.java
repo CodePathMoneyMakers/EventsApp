@@ -342,6 +342,7 @@ public class SearchFragment
         getDeviceLocation();
         //Disable Map Toolbar:
         mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.setMyLocationEnabled(true);
         mMap.setPadding(0,220,20,0);
         mMap.setOnPolylineClickListener(this);

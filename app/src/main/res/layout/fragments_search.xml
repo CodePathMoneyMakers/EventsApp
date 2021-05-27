@@ -16,12 +16,12 @@
             android:layout_height="match_parent" />
 
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="268dp"
-            android:contentDescription="@string/todo"
-            android:elevation="20dp"
-            android:src="@drawable/search_fade_background" />
+<!--        <ImageView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="268dp"-->
+<!--            android:contentDescription="@string/todo"-->
+<!--            android:elevation="20dp"-->
+<!--            android:src="@drawable/search_fade_background" />-->
 
         <androidx.cardview.widget.CardView
             android:id="@+id/etLocationCard"
