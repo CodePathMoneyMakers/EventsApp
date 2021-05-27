@@ -320,14 +320,14 @@ public class SearchFragment
                     for (DataSnapshot s : snapshot.getChildren()) {
                         event = s.getValue(Event.class);
                         LatLng location = new LatLng(event.latitude, event.longitude);
-                        mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_sports_mappin1)));
-//                        if(event.getEventGenre().equals("Sports")){
-//
-//                        }else if(event.getEventGenre().equals("Music")){
-//                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_music_mappin)));
-//                        }else{
-//                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_user_group)));
-//                        }
+
+                        if(event.getEventGenre().equals("Sports")){
+                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_sports_mappin1)));
+                        }else if(event.getEventGenre().equals("Music")){
+                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_music_mappin)));
+                        }else{
+                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_user_group)));
+                        }
 
                     }
                 } catch (NullPointerException e) {
