@@ -3,9 +3,9 @@ package com.example.eventsapp.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class User implements Parcelable {
+public class User {
 
-    public String fullName, age, email;
+    public String fullName, age, email, userImage;
 
     private String user_id = "user_id";
     private String username = "username";
@@ -14,10 +14,11 @@ public class User implements Parcelable {
     // Default empty constructor
     public User(){}
 
-    public User(String fullName, String age, String email){
+    public User(String fullName, String age, String email, String userImage){
         this.fullName = fullName;
         this.age = age;
         this.email = email;
+        this.userImage = userImage;
     }
 
     protected User(Parcel in) {
@@ -57,16 +58,10 @@ public class User implements Parcelable {
         return email;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getUserImage(){
+        return userImage;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(email);
-        dest.writeString(user_id);
-        dest.writeString(username);
-        dest.writeString(avatar);
-    }
+
+
 }

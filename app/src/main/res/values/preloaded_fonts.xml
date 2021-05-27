@@ -6,5 +6,7 @@
         <item>@font/averia_libre_bold</item>
         <item>@font/concert_one</item>
         <item>@font/days_one</item>
+        <item>@font/work_sans_medium</item>
+        <item>@font/work_sans_thin</item>
     </array>
 </resources>

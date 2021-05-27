@@ -4,30 +4,73 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+        <!--        <fragment-->
+<!--            android:id="@+id/mapView"-->
+<!--            android:name="com.google.android.gms.maps.SupportMapFragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
+
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <EditText
 
-            android:inputType="text"
-            android:shadowRadius="100"
-            android:shadowColor="@color/black"
-            android:textColor="#BE000000"
-            android:id="@+id/etLocationTitle"
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Search locations here"
-            android:layout_margin="20dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:drawableRight="@drawable/ic_search1"
-            android:paddingRight="10dp"
-            android:background="@drawable/input_search"
+            android:layout_height="268dp"
+            android:contentDescription="@string/todo"
+            android:elevation="20dp"
+            android:src="@drawable/search_fade_background" />
 
-            />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/etLocationCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="2dp"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="80dp"
+            app:cardMaxElevation="420dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="false"
+            app:contentPadding="5dp">
+
+                <EditText
+                    android:id="@+id/etLocationTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints=""
+                    android:background="@drawable/transparent_bg"
+                    android:drawableStart="@drawable/ic_search2"
+                    android:drawablePadding="5dp"
+                    android:ems="10"
+                    android:fontFamily="@font/work_sans_medium"
+                    android:foregroundGravity="bottom"
+                    android:gravity="start|top"
+                    android:hint="@string/event_name_artist_place"
+                    android:inputType="text"
+                    android:padding="2dp"
+                    android:textAlignment="textStart"
+                    android:textColorHint="#CACDD4"
+                    android:textSize="18sp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <ImageView
+            android:id="@+id/myLocationBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etLocationCard"
+            android:layout_marginStart="323dp"
+            android:layout_marginTop="30dp"
+            android:elevation="21dp"
+            android:src="@drawable/ic_my_location" />
 
 <!--        <ImageButton-->
 <!--            android:id="@+id/set_image"-->

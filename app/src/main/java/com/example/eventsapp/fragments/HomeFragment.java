@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,8 +56,18 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUserID = mAuth.getCurrentUser().getUid();
+        if(FirebaseAuth.getInstance() == null){
+            Log.e(getTag(), "instance null");
+        }else{
+            mAuth = FirebaseAuth.getInstance();
+        }
+
+        if(mAuth.getCurrentUser().getUid() == null){
+            Toast.makeText(getContext(), "User ID cannot be null", Toast.LENGTH_SHORT).show();
+        }else{
+            currentUserID = mAuth.getCurrentUser().getUid();
+        }
+
         DataRef =   FirebaseDatabase.getInstance().getReference().child("Events");
         recyclerView = view.findViewById(R.id.recylerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

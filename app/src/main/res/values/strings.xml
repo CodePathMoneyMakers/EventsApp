@@ -36,4 +36,22 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sdkfhksdhfksjhdfkjshdkfjhoiufhoiwuebfoweofiwheoihoieinueh">sdkfhksdhfksjhdfkjshdkfjhoiufhoiwuebfoweofiwheoihoieinueh</string>
+    <string name="attended">ATTENDED</string>
+    <string name="tell_us_about_yourself">Tell us about yourself!</string>
+    <string name="events_created">EVENTS CREATED</string>
+    <string name="actionbtn">actionBtn</string>
+    <string name="title_activity_main2">MainActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="yugugy">yugugy</string>
+    <string name="rsvp_s_to">RSVP\'s to</string>
+    <string name="event_name_artist_place">Event name, artist, place</string>
+    <string name="todo">TODO</string>
+    <string name="profilersvp_s">profilersvp\'s</string>
 </resources>

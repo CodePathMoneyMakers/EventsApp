@@ -2,8 +2,20 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@drawable/composenew"
-        android:state_checked="true"/>
+        android:state_checked="true"
+        android:state_enabled="true"
+        android:state_active="true"
+        android:state_selected="true"
+        android:state_activated="true"
+        android:state_drag_hovered="true"
+        android:state_hovered="true"/>
     <item android:drawable="@drawable/composeoutline"
-        android:state_checked="false"/>
+        android:state_checked="false"
+        android:state_enabled="false"
+        android:state_active="false"
+        android:state_selected="false"
+        android:state_activated="false"
+        android:state_drag_hovered="false"
+        android:state_hovered="false"/>
 
 </selector>
