@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -39,6 +40,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -46,6 +49,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -258,18 +262,37 @@ public class SearchFragment
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Event event;
                 try {
+                    Log.d(TAG, "Entering try method");
                     for (DataSnapshot s : snapshot.getChildren()) {
                         event = s.getValue(Event.class);
                         if(event.eventPrivacy == "false") {
+                            Log.d(TAG, "Location testing ");
                             LatLng location = new LatLng(event.latitude, event.longitude);
                             mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
                         }
                         else if (event.eventPrivacy == "true"){
-                            if(s.child("Attendees").child(currentUserID).exists()){
+                            if(s.child("Attendees").getValue().equals(currentUserID)) {
+                                Log.d(TAG, "Location testing2 ");
                                 LatLng location = new LatLng(event.latitude, event.longitude);
                                 mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
+
+//                                LatLng location = new LatLng(event.latitude, event.longitude);
+//                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
+//
+                            }
+                            else{
+                                LatLng location = new LatLng(event.latitude, event.longitude);
+                                Circle circle = mMap.addCircle(new CircleOptions()
+                                        .center(location)
+                                        .radius(10000)
+                                        .strokeColor(Color.RED)
+                                        .fillColor(Color.BLUE));
                             }
 
+                        }
+                        else{
+                            LatLng location = new LatLng(event.latitude, event.longitude);
+                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
                         }
                     }
                 } catch (NullPointerException e) {

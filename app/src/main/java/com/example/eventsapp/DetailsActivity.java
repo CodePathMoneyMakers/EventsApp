@@ -52,9 +52,8 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
     private GoogleMap mMap;
     private MapView mapView;
     Button bnBuyTicket;
-    DatabaseReference reference, EventsRef, UsersRef, rsvpRef, requestRef;
-    DatabaseReference reference, EventsRef, UsersRef, rsvpRef, CurrentUserReference;
-    String currentUserID, eventOrganizer, EventID, eventTitle;
+    DatabaseReference reference, EventsRef, UsersRef, rsvpRef, requestRef, CurrentUserReference;
+    String currentUserID, eventOrganizer, EventID, eventTitle, specificEmail, specificName, specificImage;
     private String address;
 
     // chatroom

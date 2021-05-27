@@ -23,6 +23,7 @@
         android:layout_below="@+id/inputSearch"
         android:layout_width="match_parent"
         android:layout_height="232dp"
+        android:paddingTop="8dp"
         android:id="@+id/horizontalView"
         android:layout_marginBottom="8dp"
         />
@@ -31,6 +32,7 @@
         android:layout_below="@+id/horizontalView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="8dp"
         android:id="@+id/recylerView"
         />
 
