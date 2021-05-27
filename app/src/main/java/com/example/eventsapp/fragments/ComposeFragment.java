@@ -437,7 +437,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
 
         HashMap<Object, Object> profileMap = new HashMap<>();
         profileMap.put("eventTitle", eventTitle);
-        profileMap.put("eventDescription", eventDescription);
+        //profileMap.put("eventDescription", eventDescription);
         profileMap.put("eventDate", String.valueOf(eventDate));
         profileMap.put("eventTimeStart", String.valueOf(eventTimeStart));
         profileMap.put("eventTimeEnd", String.valueOf(eventTimeEnd));
@@ -465,8 +465,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                     Toast.makeText(getContext(),
                             "Event successfully created.", Toast.LENGTH_LONG).show();
                 } else {
-                    String message = task.getException().toString();
-                    Toast.makeText(getContext(), "Error" + message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Error" + task.getException().toString(), Toast.LENGTH_LONG).show();
                 }
             }
         });

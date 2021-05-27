@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="232dp">
+    android:layout_height="wrap_content">
 
     <View
         android:id="@+id/path_10"
@@ -111,8 +111,8 @@
             android:id="@+id/eventImage"
             android:layout_width="287dp"
             android:layout_height="172dp"
-            android:adjustViewBounds="false"
-            android:cropToPadding="true"
+            android:adjustViewBounds="true"
+            android:cropToPadding="false"
             android:foreground="@drawable/recycler_transparent"
             android:scaleType="centerCrop"
             tools:srcCompat="@drawable/partyevent">

@@ -12,54 +12,12 @@
         tools:layout="@layout/splash_screen">
         <action
             android:id="@+id/action_splashScreen_to_loginActivity"
-            app:destination="@id/loginActivity" />
+            app:destination="@id/loginActivity"
+            app:exitAnim="@anim/enter_fade" />
     </activity>
     <activity
         android:id="@+id/loginActivity"
         android:name="com.example.eventsapp.LoginActivity"
         android:label="activity_login"
         tools:layout="@layout/activity_login" />
-    <fragment
-        android:id="@+id/composeFragment2"
-        android:name="com.example.eventsapp.fragments.ComposeFragment"
-        android:label="ComposeFragment">
-        <action
-            android:id="@+id/action_composeFragment2_to_searchFragment"
-            app:destination="@id/searchFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit" />
-        <action
-            android:id="@+id/action_composeFragment2_to_userProfileFragment"
-            app:destination="@id/userProfileFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_fade_exit" />
-    </fragment>
-    <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.example.eventsapp.fragments.SearchFragment"
-        android:label="SearchFragment" />
-    <fragment
-        android:id="@+id/userProfileFragment"
-        android:name="com.example.eventsapp.fragments.UserProfileFragment"
-        android:label="UserProfileFragment" />
-    <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.example.eventsapp.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
-
-        <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.eventsapp.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
-    </fragment>
 </navigation>
