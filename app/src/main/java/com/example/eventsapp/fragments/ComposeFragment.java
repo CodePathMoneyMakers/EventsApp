@@ -24,10 +24,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -41,6 +43,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.R;
+import com.example.eventsapp.SpinnerItem;
+import com.example.eventsapp.adapters.SpinnerAdapter;
 import com.example.eventsapp.models.User;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -94,7 +98,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private MapView mapView;
     public DatabaseReference UsersRef, EventsRef, GroupMessageKeyRef;
     public String currentGroupName, currentUserID, currentUserName, currentDate, currentTime, eventLocation, eventOrganization,
-            eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventMusic, eventImage, eventDay, eventMonth, eventWeekDay;
+            eventDescription, eventDate,eventTimeStart,eventTimeEnd, eventTitle, eventPrivacy, eventFee, eventType, eventImage, eventDay, eventMonth, eventWeekDay;
     public Double latitude, longitude;
     private TextView tvDate;
     private ImageButton calendar_btn;
@@ -116,8 +120,10 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     private ImageButton picture_btn;
     private ImageButton post_btn;
     private EditText etMultiline, etEventTitle;
+    private ArrayList<SpinnerItem> spinnerItems;
+    private SpinnerAdapter spinnerAdapter;
+    private String selectedItemEventType;
     public FirebaseAuth mAuth;
-    OnSwipeTouchListener onSwipeTouchListener;
 
     String username, userImage, userBio;
 
@@ -142,10 +148,6 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        onSwipeTouchListener = new OnSwipeTouchListener(getContext(), view.findViewById(R.id.scrollable));
-
-
-
         tvDate = view.findViewById(R.id.tvDate);
         calendar_btn = view.findViewById(R.id.calender_logo);
         time_btn = view.findViewById(R.id.time_logo);
@@ -161,7 +163,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         aSwitch = view.findViewById(R.id.switch1);
         etOrganization = view.findViewById(R.id.etOrganization);
         location_btn = view.findViewById(R.id.set_image);
-       // etLocation1 = view.findViewById(R.id.etLocation);
+        //etLocation1 = view.findViewById(R.id.etLocation);
         etLocationTitle = view.findViewById(R.id.etLocationTitle);
         picture_btn = view.findViewById(R.id.picture_image);
         selectedImage = view.findViewById(R.id.selectedImage);
@@ -183,6 +185,25 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
         Storageref = FirebaseStorage.getInstance().getReference().child("EventImage");
         LocationRef = FirebaseDatabase.getInstance().getReference().child("User Locations");
+
+        initList();
+        Spinner spinner = view.findViewById(R.id.Spinner);
+        spinnerAdapter = new SpinnerAdapter(getContext(), spinnerItems);
+        spinner.setAdapter(spinnerAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SpinnerItem selectedItem = (SpinnerItem) parent.getItemAtPosition(position);
+                selectedItemEventType = selectedItem.getEventType();
+                music_btn.setImageResource(selectedItem.getEventTypeIcon());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         post_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,32 +334,32 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
             }
         });
 
-        music_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Dialog dialog = new Dialog(getActivity());
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.music_dialog);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                EditText etMusicType = dialog.findViewById(R.id.etMusicType);
-                Button save_btn = dialog.findViewById(R.id.save_btn);
-
-                save_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String str = etMusicType.getText().toString();
-                        tvMusic.setText(str);
-                        dialog.dismiss();
-
-                        eventMusic = etMusicType.getText().toString(); // saves music as a string
-                    }
-                });
-
-                dialog.show();
-            }
-        });
+//        music_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Dialog dialog = new Dialog(getActivity());
+//                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                dialog.setContentView(R.layout.music_dialog);
+//                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//
+//                EditText etMusicType = dialog.findViewById(R.id.etMusicType);
+//                Button save_btn = dialog.findViewById(R.id.save_btn);
+//
+//                save_btn.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        String str = etMusicType.getText().toString();
+//                        tvMusic.setText(str);
+//                        dialog.dismiss();
+//
+//                        eventMusic = etMusicType.getText().toString(); // saves music as a string
+//                    }
+//                });
+//
+//                dialog.show();
+//            }
+//        });
 
         fee_btn.setOnClickListener(v -> {
 
@@ -400,6 +421,15 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         });
     }
 
+    private void initList() {
+        spinnerItems = new ArrayList<>();
+        spinnerItems.add(new SpinnerItem("Music", R.drawable.ic_music));
+        spinnerItems.add(new SpinnerItem("Sports", R.drawable.ic_sports));
+        spinnerItems.add(new SpinnerItem("Social", R.drawable.ic_user_group));
+
+
+    }
+
     private void CreateEvent() {
         eventDescription = etMultiline.getText().toString().trim();
         eventOrganization = etOrganization.getText().toString().trim();
@@ -407,13 +437,13 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
 
         HashMap<Object, Object> profileMap = new HashMap<>();
         profileMap.put("eventTitle", eventTitle);
-        profileMap.put("eventDescription", eventDescription);
+        //profileMap.put("eventDescription", eventDescription);
         profileMap.put("eventDate", String.valueOf(eventDate));
         profileMap.put("eventTimeStart", String.valueOf(eventTimeStart));
         profileMap.put("eventTimeEnd", String.valueOf(eventTimeEnd));
         profileMap.put("eventPrivacy", eventPrivacy);
         profileMap.put("eventFee", String.valueOf(eventFee));
-        profileMap.put("eventGenre", eventMusic);
+        profileMap.put("eventGenre", eventType);
         profileMap.put("eventImage", eventImage);
         profileMap.put("userID", currentUserID);
         profileMap.put("eventMonth", eventMonth);
@@ -435,8 +465,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                     Toast.makeText(getContext(),
                             "Event successfully created.", Toast.LENGTH_LONG).show();
                 } else {
-                    String message = task.getException().toString();
-                    Toast.makeText(getContext(), "Error" + message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Error" + task.getException().toString(), Toast.LENGTH_LONG).show();
                 }
             }
         });

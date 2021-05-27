@@ -141,7 +141,7 @@ public class UserProfileFragment extends Fragment  {
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(showingFirst == true){
+                if(showingFirst){
                     ObjectAnimator rotate = ObjectAnimator.ofFloat(settings, "rotation", 0f, 180f);
                     ObjectAnimator animateY = ObjectAnimator.ofFloat(logout, "y", 1330f);
                     ObjectAnimator animateY2 = ObjectAnimator.ofFloat(edit, "y", 1200f);
@@ -156,9 +156,9 @@ public class UserProfileFragment extends Fragment  {
                     showingFirst = false;
                 }else{
                     ObjectAnimator rotate = ObjectAnimator.ofFloat(settings, "rotation", 180f, 0f);
-                    ObjectAnimator animateY = ObjectAnimator.ofFloat(logout, "y", 1465f);
-                    ObjectAnimator animateY2 = ObjectAnimator.ofFloat(edit, "y", 1465f);
-                    ObjectAnimator animateY3 = ObjectAnimator.ofFloat(rsvp, "y", 1465f);
+                    ObjectAnimator animateY = ObjectAnimator.ofFloat(logout, "y", 1265f);
+                    ObjectAnimator animateY2 = ObjectAnimator.ofFloat(edit, "y", 1265f);
+                    ObjectAnimator animateY3 = ObjectAnimator.ofFloat(rsvp, "y", 1265f);
                     rotate.setDuration(1000);
                     animateY.setDuration(500);
                     animateY2.setDuration(500);

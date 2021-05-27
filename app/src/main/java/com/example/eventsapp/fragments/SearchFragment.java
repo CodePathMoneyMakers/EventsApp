@@ -125,7 +125,42 @@ public class SearchFragment
 
         geoApiContext = new GeoApiContext.Builder().apiKey(getString(R.string.google_maps_key)).build();
 
+        ImageView locationBtn = view.findViewById(R.id.myLocationBtn);
 
+        locationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+//
+//                try {
+//                    final Task location = mFusedLocationProviderClient.getLastLocation();
+//                    location.addOnCompleteListener(task -> {
+//                        if (task.isSuccessful()) {
+//                            Log.d(TAG, "onComplete: found location!");
+//                            Location currentLocation = (Location) task.getResult();
+//
+//                            currentLat = currentLocation.getLatitude();
+//                            currentLong = currentLocation.getLongitude();
+//
+//                            // try to update the Map View, prevent an error crash
+//                            try {
+//                                LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+//                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+//                            } catch (Exception e) {
+//                                Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
+//                            }
+//
+//                        } else {
+//                            Log.d(TAG, "onComplete: current location is null");
+//                            Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                } catch (SecurityException e) {
+//                    Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
+//                }
+                getMyLocation();
+            }
+        });
     }
 
     @Override
@@ -247,6 +282,18 @@ public class SearchFragment
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+        try{
+            boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.mapstyle));
+
+            if(!success){
+                Log.e("SearchFragment", "Style parsing failed");
+            }
+
+        } catch (Resources.NotFoundException e){
+            Log.e("SearchFragment", "Can't find style");
+        }
+
         mMap = googleMap;
 
         //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
@@ -306,14 +353,33 @@ public class SearchFragment
         });
 
         getDeviceLocation();
+
         //Disable Map Toolbar:
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setMyLocationEnabled(true);
         mMap.setPadding(0,220,20,0);
         mMap.setOnPolylineClickListener(this);
 
+
         init();
 
+    }
+
+    private void getMyLocation() {
+        LatLng latLng = new LatLng(Double.parseDouble(String.valueOf(currentLat)), Double.parseDouble(String.valueOf(currentLong)));
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
+        mMap.animateCamera(cameraUpdate);
+    }
+
+    private BitmapDescriptor bitmapDescriptor(Context context, int vectorResId){
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+
+        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     public void getDeviceLocation() {

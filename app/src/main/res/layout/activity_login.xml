@@ -7,19 +7,19 @@
     tools:context=".LoginActivity"
     >
 
-<!--    <pl.droidsonroids.gif.GifImageView-->
-<!--        android:id="@+id/mappin"-->
-<!--        android:layout_width="100dp"-->
-<!--        android:layout_height="184dp"-->
-<!--        android:layout_alignParentStart="true"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        android:layout_marginStart="308dp"-->
-<!--        android:layout_marginTop="28dp"-->
-<!--        android:cropToPadding="false"-->
-<!--        android:elevation="10dp"-->
-<!--        android:scaleType="centerCrop"-->
-<!--        android:src="@drawable/logohdddd"-->
-<!--        android:transitionName="transition" />-->
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/mappin"
+        android:layout_width="145dp"
+        android:layout_height="232dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="131dp"
+        android:layout_marginTop="38dp"
+        android:cropToPadding="false"
+        android:elevation="10dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/logohdddd"
+        android:transitionName="transition" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -39,29 +39,13 @@
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/banner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:fontFamily="sans-serif-black"
-        android:shadowColor="@color/teal_700"
-        android:shadowRadius="30"
-        android:text="L a n d m a r k"
-        android:textAlignment="center"
-        android:textColor="#BEF3F3F3"
-        android:textSize="54sp"
-        android:textStyle="bold"
-        />
-
-    <TextView
         android:id="@+id/tvEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/banner"
+        android:layout_below="@+id/mappin"
         android:layout_marginStart="42dp"
-        android:layout_marginTop="42dp"
+        android:layout_marginTop="1dp"
         android:fontFamily="sans-serif-medium"
         android:text="Email"
         android:textColor="#B8B8B8" />
@@ -111,7 +95,6 @@
         android:paddingLeft="10dp"
         android:singleLine="true"
         android:textColor="#FFFFFF" />
-
 
     <Button
         android:id="@+id/btnLogin"

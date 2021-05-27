@@ -51,4 +51,7 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="yugugy">yugugy</string>
     <string name="rsvp_s_to">RSVP\'s to</string>
+    <string name="event_name_artist_place">Event name, artist, place</string>
+    <string name="todo">TODO</string>
+    <string name="profilersvp_s">profilersvp\'s</string>
 </resources>

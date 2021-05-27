@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#10181F">
+        android:background="#FFFFFF">
 
 
                 <ImageView
@@ -76,7 +76,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="38dp"
                 app:cardCornerRadius="15dp"
-                app:cardElevation="5dp"
+                app:cardElevation="10dp"
                 app:cardPreventCornerOverlap="true"
                 app:cardUseCompatPadding="false"
                 app:contentPadding="5dp"
@@ -104,7 +104,7 @@
             android:layout_marginTop="200dp"
             android:layout_marginEnd="38dp"
             app:cardCornerRadius="15dp"
-            app:cardElevation="5dp"
+            app:cardElevation="10dp"
             android:fadingEdgeLength="@dimen/cardview_default_elevation">
 
             <TextView
@@ -162,7 +162,7 @@
             android:layout_marginTop="40dp"
             android:layout_marginEnd="38dp"
             app:cardCornerRadius="15dp"
-            app:cardElevation="5dp"
+            app:cardElevation="10dp"
             android:fadingEdgeLength="@dimen/cardview_default_elevation">
 
             <TextView
@@ -202,7 +202,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="170dp"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="30dp"
                 android:textColor="#616368"
                 android:textSize="20dp"
                 android:hint="End Time" />
@@ -212,7 +212,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="170dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="70dp"
                 android:textColor="#616368"
                 android:textSize="20dp"
                 android:hint="Start Time" />
@@ -224,7 +224,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="120dp"
-                android:layout_marginTop="75dp"
+                android:layout_marginTop="35dp"
                 android:text="till"
                 android:textColor="#FC1055" />
 
@@ -233,7 +233,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="120dp"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="75dp"
                 android:text="from"
                 android:textColor="#FC1055" />
 
@@ -252,7 +252,7 @@
             android:layout_marginTop="40dp"
             android:layout_marginEnd="38dp"
             app:cardCornerRadius="15dp"
-            app:cardElevation="5dp"
+            app:cardElevation="10dp"
             android:fadingEdgeLength="@dimen/cardview_default_elevation">
 
             <TextView
@@ -263,7 +263,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:fontFamily="sans-serif-medium"
-                android:text="Music"
+                android:text="Type"
                 android:textColor="#373A42"
                 android:textSize="18dp"
                 android:textStyle="bold" />
@@ -286,15 +286,15 @@
                     android:backgroundTint="#00FFFFFF"
                     app:srcCompat="@drawable/ic_music" />
             </androidx.cardview.widget.CardView>
-            <TextView
-                android:id="@+id/tvMusic"
+
+            <Spinner
+                android:id="@+id/Spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="120dp"
                 android:layout_marginTop="50dp"
                 android:textColor="#616368"
-                android:textSize="20dp"
-                android:hint="Event Music Genre" />
+                android:textSize="20sp" />
 
         </androidx.cardview.widget.CardView>
 
@@ -309,7 +309,7 @@
             android:layout_marginTop="40dp"
             android:layout_marginEnd="38dp"
             app:cardCornerRadius="15dp"
-            app:cardElevation="5dp"
+            app:cardElevation="10dp"
             android:fadingEdgeLength="@dimen/cardview_default_elevation">
 
             <TextView
@@ -366,7 +366,7 @@
             android:layout_marginTop="40dp"
             android:layout_marginEnd="38dp"
             app:cardCornerRadius="15dp"
-            app:cardElevation="5dp"
+            app:cardElevation="10dp"
             android:fadingEdgeLength="@dimen/cardview_default_elevation">
 
             <TextView
@@ -415,7 +415,7 @@
             android:layout_marginTop="40dp"
             android:layout_marginEnd="38dp"
             app:cardCornerRadius="15dp"
-            app:cardElevation="5dp"
+            app:cardElevation="10dp"
             android:fadingEdgeLength="@dimen/cardview_default_elevation">
 
             <TextView
@@ -494,7 +494,7 @@
             android:layout_marginEnd="38dp"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="15dp"
-            app:cardElevation="5dp"
+            app:cardElevation="10dp"
             app:cardPreventCornerOverlap="true"
             app:cardUseCompatPadding="false"
             app:contentPadding="5dp"
@@ -573,25 +573,19 @@
             android:textAlignment="center"
             />
 
-
-
-
-
-
-
         <androidx.cardview.widget.CardView
             android:id="@+id/mapCard"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="10dp"
             android:layout_width="362dp"
             android:layout_height="144dp"
+            android:layout_below="@+id/etLocationTitle"
             android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
             android:layout_gravity="center_horizontal|center_vertical"
             android:layout_marginStart="25dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginTop="50dp"
-            android:layout_marginRight="10dp"
-            android:layout_below="@+id/etLocationTitle">
+            android:layout_marginEnd="25dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="10dp">
 
             <com.google.android.gms.maps.MapView
                 android:id="@+id/mapView"
