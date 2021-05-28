@@ -15,7 +15,7 @@
         android:fitsSystemWindows="true"
         android:scaleType="centerCrop"
         app:layout_collapseMode="parallax"
-        android:src="@drawable/chat_background"/>
+        android:src="@drawable/chat_background_3"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -28,31 +28,42 @@
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="12dp"
         android:layout_marginRight="12dp"
+        android:layout_marginLeft="12dp"
         app:fabSize="mini" />
 
         <EditText
             android:layout_below="@+id/list_of_messages"
             android:layout_toLeftOf="@+id/sendButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="44dp"
             android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
             android:layout_marginBottom="12dp"
-            android:hint="Type a message"
+            android:hint="  Type a message"
             android:id="@+id/input"
             android:background="@drawable/login_et_background_chat"
             android:ems="10"
             />
+<TextView
+    android:id="@+id/chatView_title"
+    android:text="Event Title Here"
+    android:textAlignment="center"
+    android:textStyle="bold"
+    android:textSize="34sp"
+    android:padding="14dp"
+    android:textColor="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    />
 
     <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@id/sendButton"
-        android:dividerHeight="16dp"
-        android:divider="@android:color/transparent"
+        android:layout_below="@+id/chatView_title"
         android:id="@+id/list_of_messages"
-        android:layout_marginBottom="16dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/sendButton"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="16dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="18dp" />
 
 </RelativeLayout>
