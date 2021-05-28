@@ -42,7 +42,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.core.Tag;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Picasso;
 
@@ -54,7 +53,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import io.opencensus.tags.Tag;
+
 public class DetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
+    private static final String TAG = "";
     private ImageView ivEventImage, ivUserImage;
     public LatLng location;
     private FirebaseAuth mAuth;
@@ -351,15 +353,34 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                         mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
                         moveCamera(location, 0, event.getEventTitle());
                     }
-                    else{
-                        Event event = snapshot.getValue(Event.class);
-                        location = new LatLng(event.latitude, event.longitude);
-                        mMap.addCircle(new CircleOptions()
-                                .center(new LatLng(event.latitude, event.longitude))
-                                .radius(10000)
-                                .strokeColor(Color.BLUE)
-                                .fillColor(Color.TRANSPARENT));
-                       moveCamera(location, 8);
+                    if(snapshot.child("eventPrivacy").getValue().toString().equals("true")){
+                        if(snapshot.child("Attendees").exists()) {
+                            if (snapshot.child("Attendees").getValue().toString().contains(currentUserID)) {
+                                Event event = snapshot.getValue(Event.class);
+                                location = new LatLng(event.latitude, event.longitude);
+                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
+                                moveCamera(location, 0, event.getEventTitle());
+                            } else {
+                                Event event = snapshot.getValue(Event.class);
+                                location = new LatLng(event.latitude, event.longitude);
+                                mMap.addCircle(new CircleOptions()
+                                        .center(new LatLng(event.latitude, event.longitude))
+                                        .radius(10000)
+                                        .strokeColor(Color.BLUE)
+                                        .fillColor(Color.TRANSPARENT));
+                                moveCamera(location, 8);
+                            }
+                        }
+                        else {
+                            Event event = snapshot.getValue(Event.class);
+                            location = new LatLng(event.latitude, event.longitude);
+                            mMap.addCircle(new CircleOptions()
+                                    .center(new LatLng(event.latitude, event.longitude))
+                                    .radius(10000)
+                                    .strokeColor(Color.BLUE)
+                                    .fillColor(Color.TRANSPARENT));
+                            moveCamera(location, 8);
+                        }
                     }
                 }
             }

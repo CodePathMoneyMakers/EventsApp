@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -49,6 +50,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -320,13 +322,14 @@ public class SearchFragment
                     for (DataSnapshot s : snapshot.getChildren()) {
                         event = s.getValue(Event.class);
                         LatLng location = new LatLng(event.latitude, event.longitude);
-
-                        if(event.getEventGenre().equals("Sports")){
-                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_sports_mappin1)));
-                        }else if(event.getEventGenre().equals("Music")){
-                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_music_mappin)));
-                        }else{
-                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_user_group)));
+                        if(event.eventPrivacy.equals("false")) {
+                            if (event.getEventGenre().equals("Sports")) {
+                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_sports_mappin1)));
+                            } else if (event.getEventGenre().equals("Music")) {
+                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_music_mappin)));
+                            } else {
+                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_user_group)));
+                            }
                         }
 
                     }
@@ -351,7 +354,9 @@ public class SearchFragment
         init();
 
     }
-
+    public void moveCamera(LatLng location, int i) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, i));
+    }
     private void getMyLocation() {
         LatLng latLng = new LatLng(Double.parseDouble(String.valueOf(currentLat)), Double.parseDouble(String.valueOf(currentLong)));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
