@@ -54,4 +54,6 @@
     <string name="event_name_artist_place">Event name, artist, place</string>
     <string name="todo">TODO</string>
     <string name="profilersvp_s">profilersvp\'s</string>
+    <string name="readmore">Readmore</string>
+    <string name="rsvp">RSVP</string>
 </resources>

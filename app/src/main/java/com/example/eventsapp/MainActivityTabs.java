@@ -1,6 +1,11 @@
 package com.example.eventsapp;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+
 import com.example.eventsapp.adapters.vViewPagerAdapter;
 import com.example.eventsapp.fragments.ComposeFragment;
 import com.example.eventsapp.fragments.HomeFragment;
@@ -18,7 +23,7 @@ public class MainActivityTabs extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tab);
         setUpTabs();
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     private void setUpTabs() {

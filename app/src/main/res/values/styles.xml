@@ -27,4 +27,27 @@
         <item name="android:background">@drawable/label_back</item>
         <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="Widget.App.ButtonStyle"
+        parent="Widget.MaterialComponents.Button">
+        <item name="materialThemeOverlay">@style/ButtonThemeOverlay</item>
+
+    </style>
+
+    <style name="Widget.App.ButtonStyle1"
+        parent="Widget.MaterialComponents.Button">
+        <item name="materialThemeOverlay">@style/ButtonThemeOverlay1</item>
+
+    </style>
+
+    <style name="ButtonThemeOverlay">
+        <item name="colorPrimary">@color/white</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="ButtonThemeOverlay1">
+        <item name="colorPrimary">@color/red</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

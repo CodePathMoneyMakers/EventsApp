@@ -40,6 +40,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.R;
@@ -147,6 +148,14 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        view.findViewById(R.id.scrollable).setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+
+            public void onSwipeBottom() {
+                Toast.makeText(getContext(), "bottom", Toast.LENGTH_SHORT).show();
+            }
+
+        });
 
         tvDate = view.findViewById(R.id.tvDate);
         calendar_btn = view.findViewById(R.id.calender_logo);
@@ -443,7 +452,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         profileMap.put("eventTimeEnd", String.valueOf(eventTimeEnd));
         profileMap.put("eventPrivacy", eventPrivacy);
         profileMap.put("eventFee", String.valueOf(eventFee));
-        profileMap.put("eventGenre", eventType);
+        profileMap.put("eventGenre", selectedItemEventType);
         profileMap.put("eventImage", eventImage);
         profileMap.put("userID", currentUserID);
         profileMap.put("eventMonth", eventMonth);
@@ -587,28 +596,29 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         mMap.setMyLocationEnabled(true);
     }
 
-    public static class OnSwipeTouchListener implements View.OnTouchListener {
+    public class OnSwipeTouchListener implements View.OnTouchListener {
+
         private final GestureDetector gestureDetector;
-        Context context;
-        OnSwipeTouchListener(Context ctx, View mainView) {
+
+        public OnSwipeTouchListener (Context ctx){
             gestureDetector = new GestureDetector(ctx, new GestureListener());
-            mainView.setOnTouchListener(this);
-            context = ctx;
         }
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             return gestureDetector.onTouchEvent(event);
         }
 
-        public class GestureListener extends
-                GestureDetector.SimpleOnGestureListener {
+        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
             private static final int SWIPE_THRESHOLD = 100;
             private static final int SWIPE_VELOCITY_THRESHOLD = 100;
-            View view;
+
             @Override
             public boolean onDown(MotionEvent e) {
                 return true;
             }
+
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 boolean result = false;
@@ -633,40 +643,27 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                         }
                         result = true;
                     }
-                }
-                catch (Exception exception) {
+                } catch (Exception exception) {
                     exception.printStackTrace();
                 }
                 return result;
             }
         }
-        void onSwipeRight() {
-            //Toast.makeText(context, "Swiped Right", Toast.LENGTH_SHORT).show();
-            this.onSwipe.swipeRight();
-        }
-        boolean onSwipeLeft() {
-            //Toast.makeText(context, "Swiped Left", Toast.LENGTH_SHORT).show();
-            this.onSwipe.swipeLeft();
-            return true;
-        }
-        void onSwipeTop() {
-            //Toast.makeText(context, "Swiped Up", Toast.LENGTH_SHORT).show();
-            this.onSwipe.swipeTop();
-        }
-        void onSwipeBottom() {
 
-            //Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
-            this.onSwipe.swipeBottom();
+        public void onSwipeRight() {
         }
-        interface onSwipeListener {
-            void swipeRight();
-            void swipeTop();
-            void swipeBottom();
-            void swipeLeft();
+
+        public void onSwipeLeft() {
         }
-        onSwipeListener onSwipe;
+
+        public void onSwipeTop() {
+        }
+
+        public void onSwipeBottom() {
+        }
     }
-}
+    }
+
 
 
 

@@ -66,7 +66,7 @@ dependencies {
     // Google Directions
     implementation 'com.google.maps:google-maps-services:0.10.0'
     implementation 'org.slf4j:slf4j-simple:1.7.25'
-   // compile 'com.google.maps.android:android-maps-utils:0.3+'
+    // compile 'com.google.maps.android:android-maps-utils:0.3+'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.17'
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.5"
     implementation "androidx.navigation:navigation-ui-ktx:2.3.1"
@@ -79,5 +79,7 @@ dependencies {
 
     // Blur image - SplashScreen
     implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
+    implementation 'com.github.SanojPunchihewa:GlowButton:1.0.1'
+    implementation 'com.ms-square:expandableTextView:0.1.4'
 
 }
