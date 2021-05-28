@@ -353,14 +353,18 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                     }
                     else{
                         Event event = snapshot.getValue(Event.class);
-                        Circle circle = mMap.addCircle(new CircleOptions()
+                        location = new LatLng(event.latitude, event.longitude);
+                        mMap.addCircle(new CircleOptions()
                                 .center(new LatLng(event.latitude, event.longitude))
                                 .radius(10000)
-                                .strokeColor(Color.RED)
-                                .fillColor(Color.BLUE));
+                                .strokeColor(Color.BLUE)
+                                .fillColor(Color.TRANSPARENT));
+                       moveCamera(location, 8);
                     }
                 }
             }
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -369,6 +373,9 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         });
 
         mMap.setMyLocationEnabled(true);
+    }
+    public void moveCamera(LatLng location, int i) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, i));
     }
     public void moveCamera(LatLng latLng, float zoom, String title){
         //Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
