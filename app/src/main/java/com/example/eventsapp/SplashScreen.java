@@ -39,7 +39,7 @@ public class SplashScreen extends AppCompatActivity {
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         };
-        handler.postDelayed(runnable , 10000);
+        handler.postDelayed(runnable , 5500);
 
 //        GifImageView gifImageView = findViewById(R.id.mappin);
 //        gifImageView.setOnClickListener(new View.OnClickListener() {

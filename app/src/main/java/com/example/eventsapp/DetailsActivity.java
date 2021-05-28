@@ -4,10 +4,15 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,9 +21,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.eventsapp.fragments.ComposeFragment;
 import com.example.eventsapp.models.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,6 +42,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.core.Tag;
+import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -73,21 +81,37 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         tvEventDate = findViewById(R.id.eventDate);
         tvEventFee = findViewById(R.id.eventFee);
         tvEventTime = findViewById(R.id.eventTime);
+        TextView tvEventTime1 = findViewById(R.id.eventTime1);
         tveventFee2 = findViewById(R.id.eventFee2);
         tvEventGenre = findViewById(R.id.eventGenre);
         ivEventImage = findViewById(R.id.eventImage);
-        tvEventDescription = findViewById(R.id.eventDescription);
+        tvEventDescription = findViewById(R.id.expandable_text);
         tvEventOrganizer = findViewById(R.id.eventOrganizer);
         tvEventOrganization = findViewById(R.id.eventOrganization);
         tvUserBio = findViewById(R.id.userBio);
         ivUserImage = findViewById(R.id.userImage);
         tvEventLocation = findViewById(R.id.eventLocation);
 
-
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
+        // sample code snippet to set the text content on the ExpandableTextView
+        ExpandableTextView expTv1 = findViewById(R.id.expand_text_view);
+
+//        findViewById(R.id.coordinator).setOnTouchListener(new DetailsActivity.OnSwipeTouchListener(this){
+//
+//            @SuppressLint("ResourceAsColor")
+//            public void onSwipeTop() {
+//                Toast.makeText(DetailsActivity.this, "top", Toast.LENGTH_SHORT).show();
+//                Button buyTicket = findViewById(R.id.buyTicket);
+//                       buyTicket.setTextColor(R.color.white);
+//                       buyTicket.setBackgroundColor(R.color.red);
+//                       buyTicket.setBackgroundResource(R.drawable.btn_background_red);
+//                       //TextView(getApplicationContext(), R.style.Widget_App_ButtonStyle1);
+//            }
+//
+//        });
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -141,6 +165,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                     String eventFee2 = snapshot.child("eventFee").getValue().toString();
                     String eventDate = snapshot.child("eventDate").getValue().toString();
                     String eventTime = snapshot.child("eventTimeStart").getValue().toString();
+                    String eventTime1 = snapshot.child("eventTimeEnd").getValue().toString();
                     String eventGenre = snapshot.child("eventGenre").getValue().toString();
                     String imageUrl = snapshot.child("eventImage").getValue().toString();
                     String eventOrganization = snapshot.child("eventOrganization").getValue().toString();
@@ -178,10 +203,11 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                     else tveventFee2.setText("Event Fee: $" + eventFee2);
 
                     tvEventDate.setText(eventDate);
-                    tvEventTime.setText(eventTime);
+                    tvEventTime.setText(" • " + eventTime + " ⁃ ");
+                    tvEventTime1.setText(eventTime1);
                     tvEventGenre.setText(eventGenre);
                     tvEventOrganization.setText(eventOrganization);
-                    tvEventDescription.setText("Description: " + eventDescription);
+                    //tvEventDescription.setText();
                     tvEventOrganizer.setText(username);
                     tvUserBio.setText(userBio);
                     if(snapshot.child("eventPrivacy").getValue().toString().equals("true")){
@@ -199,6 +225,9 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                     else{
                         tvEventLocation.setText(address);
                     }
+
+                    // IMPORTANT - call setText on the ExpandableTextView to set the text content to display
+                    expTv1.setText(eventDescription);
 
 
                     bnBuyTicket.setOnClickListener(new View.OnClickListener() {
@@ -351,5 +380,71 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                 .title(title);
         mMap.addMarker(options);
         //   }
+    }
+    public class OnSwipeTouchListener implements View.OnTouchListener {
+
+        private final GestureDetector gestureDetector;
+
+        public OnSwipeTouchListener (Context ctx){
+            gestureDetector = new GestureDetector(ctx, new OnSwipeTouchListener.GestureListener());
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            return gestureDetector.onTouchEvent(event);
+        }
+
+        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+            private static final int SWIPE_THRESHOLD = 100;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                boolean result = false;
+                try {
+                    float diffY = e2.getY() - e1.getY();
+                    float diffX = e2.getX() - e1.getX();
+                    if (Math.abs(diffX) > Math.abs(diffY)) {
+                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                            if (diffX > 0) {
+                                onSwipeRight();
+                            } else {
+                                onSwipeLeft();
+                            }
+                            result = true;
+                        }
+                    }
+                    else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffY > 0) {
+                            onSwipeBottom();
+                        } else {
+                            onSwipeTop();
+                        }
+                        result = true;
+                    }
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                return result;
+            }
+        }
+
+        public void onSwipeRight() {
+        }
+
+        public void onSwipeLeft() {
+        }
+
+        public void onSwipeTop() {
+        }
+
+        public void onSwipeBottom() {
+        }
     }
 }
