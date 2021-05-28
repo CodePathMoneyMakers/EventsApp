@@ -1,15 +1,13 @@
 package com.example.eventsapp.fragments;
-
+import android.content.Context;
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -26,7 +24,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +37,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.eventsapp.Event;
+import com.example.eventsapp.EventLocation;
 import com.example.eventsapp.PolylineData;
 import com.example.eventsapp.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -48,8 +49,6 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -57,6 +56,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -72,8 +72,10 @@ import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SearchFragment
         extends Fragment
@@ -89,11 +91,10 @@ public class SearchFragment
     EditText etLocationTitle;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     public static final String TAG = "SearchFragment";
-//    private ImageButton location_btn;
-    private DatabaseReference EventsRef, RsvpRef;
+    //    private ImageButton location_btn;
+    private DatabaseReference EventsRef;
     private double currentLat = 0.0;
     private double currentLong = 0.0;
-    String currentUserID;
 
     private GeoApiContext geoApiContext = null;
     private ArrayList<PolylineData> polylineData = new ArrayList<>();
@@ -129,8 +130,6 @@ public class SearchFragment
         etLocationTitle = view.findViewById(R.id.etLocationTitle);
 
         EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
-        RsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
-        currentUserID =  FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         geoApiContext = new GeoApiContext.Builder().apiKey(getString(R.string.google_maps_key)).build();
 
@@ -318,46 +317,18 @@ public class SearchFragment
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Event event;
                 try {
-                    Log.d(TAG, "Entering try method");
                     for (DataSnapshot s : snapshot.getChildren()) {
                         event = s.getValue(Event.class);
-                        if(event.eventPrivacy == "false") {
-                            Log.d(TAG, "Location testing ");
-                            LatLng location = new LatLng(event.latitude, event.longitude);
-                            if(event.eventGenre.equals("Sports")){
-                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_sports_mappin1)));
-                            }else if(event.eventGenre.equals("Music")){
-                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_music_mappin)));
-                            }else{
-                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_user_group)));
-                            }
+                        LatLng location = new LatLng(event.latitude, event.longitude);
 
-                           // mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
+                        if(event.getEventGenre().equals("Sports")){
+                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_sports_mappin1)));
+                        }else if(event.getEventGenre().equals("Music")){
+                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_music_mappin)));
+                        }else{
+                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_user_group)));
                         }
-                        if (event.eventPrivacy == "true"){
-                            if(s.child("Attendees").getValue().equals(currentUserID)) {
-                                Log.d(TAG, "Location testing2 ");
-                                LatLng location = new LatLng(event.latitude, event.longitude);
-                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
 
-//                                LatLng location = new LatLng(event.latitude, event.longitude);
-//                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
-//
-                            }
-//                            else{
-//                                LatLng location = new LatLng(event.latitude, event.longitude);
-//                                Circle circle = mMap.addCircle(new CircleOptions()
-//                                        .center(location)
-//                                        .radius(10000)
-//                                        .strokeColor(Color.RED)
-//                                        .fillColor(Color.BLUE));
-//                            }
-
-                        }
-                        else{
-                            LatLng location = new LatLng(event.latitude, event.longitude);
-                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
-                        }
                     }
                 } catch (NullPointerException e) {
                     Toast.makeText(getActivity(), "An event was not able to load.", Toast.LENGTH_SHORT).show();
@@ -370,13 +341,12 @@ public class SearchFragment
         });
 
         getDeviceLocation();
-
         //Disable Map Toolbar:
         mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.setMyLocationEnabled(true);
         mMap.setPadding(0,220,20,0);
         mMap.setOnPolylineClickListener(this);
-
 
         init();
 
@@ -486,11 +456,11 @@ public class SearchFragment
                 Log.d(TAG, "run: result routes: " + result.routes.length);
 
                 if(polylineData.size() > 0) {
-                   for(PolylineData data: polylineData) {
-                       data.getPolyline().remove();
-                   }
-                   polylineData.clear();
-                   polylineData = new ArrayList<>();
+                    for(PolylineData data: polylineData) {
+                        data.getPolyline().remove();
+                    }
+                    polylineData.clear();
+                    polylineData = new ArrayList<>();
                 }
 
                 double duration = 999999999;
@@ -500,7 +470,7 @@ public class SearchFragment
                     List<LatLng> newDecodedPath = new ArrayList<>();
                     // This loops through all the LatLng coordinates of ONE polyline.
                     for(com.google.maps.model.LatLng latLng: decodedPath){
-                    // Log.d(TAG, "run: latlng: " + latLng.toString());
+                        // Log.d(TAG, "run: latlng: " + latLng.toString());
                         newDecodedPath.add(new LatLng(
                                 latLng.lat,
                                 latLng.lng
@@ -595,9 +565,9 @@ public class SearchFragment
                 );
 
                 Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(endLocation)
-                .title("Navigate to " + selectedMarker.getTitle())
-                .snippet("Duration: " + data.getLeg().duration));
+                        .position(endLocation)
+                        .title("Navigate to " + selectedMarker.getTitle())
+                        .snippet("Duration: " + data.getLeg().duration));
 
                 marker.showInfoWindow();
             }

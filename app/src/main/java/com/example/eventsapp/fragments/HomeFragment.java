@@ -94,7 +94,27 @@ public class HomeFragment extends Fragment {
 
         LoadData("");
 
-        LoadRsvpdEvents();
+       // LoadRsvpdEvents();
+
+        rsvpRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if (snapshot.hasChild(currentUserID)){
+                    horizontalView.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.INVISIBLE);
+                    LoadRsvpdEvents();
+                }
+                else{
+                    horizontalView.setVisibility(View.INVISIBLE);
+                    emptyView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
 
         inputSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -159,15 +179,6 @@ public class HomeFragment extends Fragment {
                 return new ForYouAdapter(v);
             }
         };
-
-        if(checkEmpty.isEmpty()){
-            horizontalView.setVisibility(View.INVISIBLE);
-            emptyView.setVisibility(View.VISIBLE);
-        }
-        else {
-            horizontalView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.VISIBLE);
-        }
 
         adapter2.startListening();
         horizontalView.setAdapter(adapter2);

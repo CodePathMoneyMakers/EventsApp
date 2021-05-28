@@ -464,13 +464,14 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 if (task.isSuccessful()) {
                     Toast.makeText(getContext(),
                             "Event successfully created.", Toast.LENGTH_LONG).show();
+                    UsersRef.child(currentUserID).child("Created").child(eventTitle).setValue(currentUserID);
                 } else {
                     Toast.makeText(getContext(), "Error" + task.getException().toString(), Toast.LENGTH_LONG).show();
                 }
             }
         });
 
-        UsersRef.child(currentUserID).child("Created").child(eventTitle).setValue(currentUserID);
+
     }
 
     public void openCamera(View view){
