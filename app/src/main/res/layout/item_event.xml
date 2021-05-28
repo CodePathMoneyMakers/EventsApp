@@ -151,7 +151,6 @@
 
         <TextView
             android:id="@+id/eventGenre"
-
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
