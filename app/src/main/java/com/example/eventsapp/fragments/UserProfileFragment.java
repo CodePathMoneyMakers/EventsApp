@@ -92,7 +92,7 @@ public class UserProfileFragment extends Fragment  {
     FirebaseRecyclerOptions<Event> options;
     FirebaseRecyclerAdapter<Event, EventsAdapter> adapter;
     boolean isImageAdded = false;
-    ArrayList<String> keyList, idList;
+    ArrayList<String> keyList, idList, eventList;
 
     private ImageButton settings;
     String TAG = "UserProfileFragment";
@@ -222,6 +222,7 @@ public class UserProfileFragment extends Fragment  {
         DataRef = FirebaseDatabase.getInstance().getReference().child("Events");
         keyList = new ArrayList<>();
         idList = new ArrayList<>();
+        eventList = new ArrayList<>();
 
 
         userID = user.getUid();
@@ -229,7 +230,7 @@ public class UserProfileFragment extends Fragment  {
         // TODO FIX ME
         rsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
         requestsRef = FirebaseDatabase.getInstance().getReference().child("Requests");
-        EventsRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
         //      test = "hello";
 
         //  final TextView greetingTextView = (TextView) view.findViewById(R.id.welcome);
@@ -343,6 +344,7 @@ public class UserProfileFragment extends Fragment  {
                             String image = snapshot.child("image").getValue().toString();
                             String email = snapshot.child("email").getValue().toString();
                             String uid = snapshot.child("UID").getValue().toString();
+                            String EventID = snapshot.child("eventID").getValue().toString();
 
                             rsvpRecyclerAdapter.tvFullName.setText(name);
                             rsvpRecyclerAdapter.tvEmail.setText(email);
@@ -350,6 +352,7 @@ public class UserProfileFragment extends Fragment  {
                             Picasso.get().load(image).into(rsvpRecyclerAdapter.profileImage);
 
                             idList.add(uid);
+                            eventList.add(EventID);
                         }
                     }
 
@@ -389,22 +392,30 @@ public class UserProfileFragment extends Fragment  {
                             Log.d(TAG, "ArrayList + " + keyList);
                             requestsRef.child(currentUserID).child(keyList.get(position)).removeValue();
 
-                            keyList.remove(position);
-                            idList.remove(position);
-
                             Log.d(TAG, "KeyList + " + keyList);
                             Log.d(TAG, "IDList + " + idList);
+
+                            keyList.remove(position);
+                            idList.remove(position);
+                            eventList.remove(position);
+
 
 
                             break;
                         case ItemTouchHelper.RIGHT:
                             Toast.makeText(getContext(), "swiped right", Toast.LENGTH_SHORT).show();
                             //rsvpRef.child(keyList.get(position)).child(idList.get(position)).setValue(idList.get(position));
-                            EventsRef.child(keyList.get(position)).child("Attendees").child(idList.get(position)).setValue(idList.get(position));
+                            EventsRef.child(eventList.get(position)).child("Attendees").child(idList.get(position)).setValue(idList.get(position));
                             requestsRef.child(currentUserID).child(keyList.get(position)).removeValue();
+                            rsvpRef.child(eventList.get(position)).child(currentUserID).setValue(currentUserID);
+                            UsersRef.child(idList.get(position)).child("Attending").child(eventList.get(position)).setValue(eventList.get(position));
+
+                            Log.d(TAG, "KeyList + " + keyList);
+                            Log.d(TAG, "IDList + " + idList);
 
                             keyList.remove(position);
                             idList.remove(position);
+                            eventList.remove(position);
                             break;
                     }
 

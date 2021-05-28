@@ -61,6 +61,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragments_home, container, false);
 
+
     }
 
     @Override
@@ -93,7 +94,7 @@ public class HomeFragment extends Fragment {
 
         LoadData("");
 
-        // LoadRsvpdEvents();
+       // LoadRsvpdEvents();
 
         rsvpRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -118,10 +119,12 @@ public class HomeFragment extends Fragment {
         inputSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
             }
 
             @Override
@@ -176,15 +179,6 @@ public class HomeFragment extends Fragment {
                 return new ForYouAdapter(v);
             }
         };
-//
-//        if(checkEmpty.isEmpty()){
-//            horizontalView.setVisibility(View.INVISIBLE);
-//            emptyView.setVisibility(View.VISIBLE);
-//        }
-//        else {
-//            horizontalView.setVisibility(View.VISIBLE);
-//            emptyView.setVisibility(View.INVISIBLE);
-//        }
 
         adapter2.startListening();
         horizontalView.setAdapter(adapter2);

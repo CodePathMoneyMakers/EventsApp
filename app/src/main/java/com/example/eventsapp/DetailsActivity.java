@@ -3,6 +3,7 @@ package com.example.eventsapp;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -181,7 +184,21 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                     tvEventDescription.setText("Description: " + eventDescription);
                     tvEventOrganizer.setText(username);
                     tvUserBio.setText(userBio);
-                    tvEventLocation.setText(address);
+                    if(snapshot.child("eventPrivacy").getValue().toString().equals("true")){
+                        if(snapshot.child("Attendees").hasChild(currentUserID)){
+                            tvEventLocation.setText(address);
+                        }
+                        else{
+                            tvEventLocation.setText("Private event: address is hidden");
+                        }
+
+                    }
+                    else if(snapshot.child("eventPrivacy").getValue().toString().equals("false")){
+                        tvEventLocation.setText(address);
+                    }
+                    else{
+                        tvEventLocation.setText(address);
+                    }
 
 
                     bnBuyTicket.setOnClickListener(new View.OnClickListener() {
@@ -223,12 +240,14 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                                                         profileMap.put("email", specificEmail);
                                                         profileMap.put("image", specificImage);
                                                         profileMap.put("event", eventName);
+                                                        profileMap.put("eventID", EventID);
                                                         profileMap.put("UID", currentUserID);
                                                         requestRef.child(peanut).push().updateChildren(profileMap);
                                                     }
                                                     else if(event.eventPrivacy.equals("false")){
-                                                        //rsvpRef.child(EventID).child(currentUserID).setValue(currentUserID);
+                                                        rsvpRef.child(EventID).child(currentUserID).setValue(currentUserID);
                                                         EventsRef.child(EventID).child("Attendees").child(currentUserID).setValue(currentUserID);
+                                                        UsersRef.child(currentUserID).child("Attending").child(EventID).setValue(EventID);
                                                     }
                                             }
 
@@ -296,10 +315,20 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                    Event event = snapshot.getValue(Event.class);
-                    location = new LatLng(event.latitude, event.longitude);
-                    mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
-                    moveCamera(location, 0, event.getEventTitle());
+                    if(snapshot.child("eventPrivacy").getValue().toString().equals("false")) {
+                        Event event = snapshot.getValue(Event.class);
+                        location = new LatLng(event.latitude, event.longitude);
+                        mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
+                        moveCamera(location, 0, event.getEventTitle());
+                    }
+                    else{
+                        Event event = snapshot.getValue(Event.class);
+                        Circle circle = mMap.addCircle(new CircleOptions()
+                                .center(new LatLng(event.latitude, event.longitude))
+                                .radius(10000)
+                                .strokeColor(Color.RED)
+                                .fillColor(Color.BLUE));
+                    }
                 }
             }
 
