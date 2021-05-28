@@ -52,8 +52,8 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
     private GoogleMap mMap;
     private MapView mapView;
     Button bnBuyTicket;
-    DatabaseReference reference, EventsRef, UsersRef, rsvpRef, CurrentUserReference;
-    String currentUserID, eventOrganizer, EventID, eventTitle;
+    DatabaseReference reference, EventsRef, UsersRef, rsvpRef, requestRef, CurrentUserReference;
+    String currentUserID, eventOrganizer, EventID, eventTitle, specificEmail, specificName, specificImage;
     private String address;
 
     // chatroom
@@ -94,6 +94,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         CurrentUserReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID);
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         rsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
+        requestRef = FirebaseDatabase.getInstance().getReference().child("Requests");
 
         EventID = getIntent().getStringExtra("EventID");
 
@@ -183,14 +184,62 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                     bnBuyTicket.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Map<String, Object> taskMap = new HashMap<>();
-                            taskMap.put(currentUserID, currentUserID);
-
-                            EventsRef.child(EventID).child("Attendees").updateChildren(taskMap);
-
                             // EventsRef.child(EventID).child("Attendees").child("currentUserID").setValue(currentUserID);
-                            UsersRef.child(currentUserID).child("Attending").child("EventID").setValue(EventID);
-                            rsvpRef.child(currentUserID).child("username").setValue(EventID);
+                           // UsersRef.child(currentUserID).child("Attending").child("EventID").setValue(EventID);
+                            // rsvpRef.child(currentUserID).child("username").setValue(EventID);
+                          //  rsvpRef.child(EventID).child(currentUserID).setValue(currentUserID);
+
+                            UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                                    specificEmail = snapshot.child("email").getValue().toString();
+                                    specificName = snapshot.child("fullName").getValue().toString();
+                                    specificImage = snapshot.child("userImage").getValue().toString();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                                }
+                            });
+
+                            EventsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Event event;
+                                    try {
+                                        for (DataSnapshot s : snapshot.getChildren()) {
+                                            event = s.getValue(Event.class);
+                                            String eventName = event.eventTitle;
+
+                                                if(s.getKey().equals(EventID)){
+                                                    if(event.eventPrivacy.equals( "true")) {
+                                                        String peanut = event.userID;
+                                                        HashMap<String, Object> profileMap = new HashMap<>();
+                                                        profileMap.put("name", specificName);
+                                                        profileMap.put("email", specificEmail);
+                                                        profileMap.put("image", specificImage);
+                                                        profileMap.put("event", eventName);
+                                                        profileMap.put("UID", currentUserID);
+                                                        requestRef.child(peanut).push().updateChildren(profileMap);
+                                                    }
+                                                    else if(event.eventPrivacy.equals("false")){
+                                                        //rsvpRef.child(EventID).child(currentUserID).setValue(currentUserID);
+                                                        EventsRef.child(EventID).child("Attendees").child(currentUserID).setValue(currentUserID);
+                                                    }
+                                            }
+
+                                        }
+                                    } catch (NullPointerException e) {
+                                        Toast.makeText(getApplicationContext(), "An event was not able to load.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                                }
+                            });
 
                             Toast.makeText(getApplicationContext(), "You have successfully registered", Toast.LENGTH_LONG).show();
                         }

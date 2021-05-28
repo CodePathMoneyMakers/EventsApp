@@ -30,6 +30,7 @@ public class User {
         avatar = in.readString();
     }
 
+
     public String getUser_id() {
         return user_id;
     }
@@ -38,12 +39,12 @@ public class User {
         return username;
     }
 
-    public String getFullName(){
-        return  fullName;
-    }
-
     public String getEmail() {
         return email;
+    }
+
+    public String getFullName(){
+        return fullName;
     }
 
     public String getUserImage(){

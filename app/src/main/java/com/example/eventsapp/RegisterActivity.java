@@ -129,7 +129,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 progressBar.setVisibility(View.VISIBLE);
                                 fbUser.sendEmailVerification();
                                 Toast.makeText(RegisterActivity.this,
-                                        "You have been registered Successfully!", Toast.LENGTH_LONG).show();
+                                        "You have been registered successfully!", Toast.LENGTH_LONG).show();
                                 Toast.makeText(RegisterActivity.this,
                                         "Please check your email to complete sign up!", Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));

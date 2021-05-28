@@ -152,8 +152,8 @@
             android:adjustViewBounds="false"
             android:cropToPadding="false"
             android:scaleType="centerCrop"
-            android:src="@drawable/loginback" />
-        <!-- android:foreground="@drawable/profile_gradient_overlay"
+            android:src="@drawable/loginback"/>
+           <!-- android:foreground="@drawable/profile_gradient_overlay"
            -->
         <View
             android:layout_width="match_parent"
