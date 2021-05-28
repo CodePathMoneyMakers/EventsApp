@@ -426,8 +426,6 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         spinnerItems.add(new SpinnerItem("Music", R.drawable.ic_music));
         spinnerItems.add(new SpinnerItem("Sports", R.drawable.ic_sports));
         spinnerItems.add(new SpinnerItem("Social", R.drawable.ic_user_group));
-
-
     }
 
     private void CreateEvent() {
@@ -443,7 +441,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         profileMap.put("eventTimeEnd", String.valueOf(eventTimeEnd));
         profileMap.put("eventPrivacy", eventPrivacy);
         profileMap.put("eventFee", String.valueOf(eventFee));
-        profileMap.put("eventGenre", eventType);
+        profileMap.put("eventGenre", selectedItemEventType);
         profileMap.put("eventImage", eventImage);
         profileMap.put("userID", currentUserID);
         profileMap.put("eventMonth", eventMonth);

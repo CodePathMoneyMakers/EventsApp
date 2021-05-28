@@ -77,7 +77,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String password = editTextPassword.getText().toString().trim();
         String fullName = editTextUsername.getText().toString().trim();
         String age = editTextAge.getText().toString().trim();
-        String image = "https://firebasestorage.googleapis.com/v0/b/landmark-d0e1d.appspot.com/o/UserImage%2F-MZd5irMdbKGZ4xNGWbl.jpg?alt=media&token=64faaa7f-9b1c-4638-9567-df96cc9002ce";
+        String bio = "hi there!";
+        String image = "https://firebasestorage.googleapis.com/v0/b/landmark-d0e1d.appspot.com/o/UserImage%2F-MZbm49GJ5MNFLRKRyW0.jpg?alt=media&token=fc330a3d-d3f1-4512-a7d9-cf4005cc80a2";
 
         if (fullName.isEmpty()) {
             editTextUsername.setError("Full name is required.");
@@ -114,7 +115,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (task.isSuccessful()) {
 
                     // create an android studio User object
-                    User user = new User(fullName, age, email, image);
+                    User user = new User(fullName, age, email, image, bio);
 
                     // create a firebase User Object
                     FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
