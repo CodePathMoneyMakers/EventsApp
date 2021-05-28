@@ -1,5 +1,6 @@
 package com.example.eventsapp;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.format.DateFormat;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.example.eventsapp.adapters.MessageAdapter;
 import com.example.eventsapp.models.ChatMessage;
@@ -37,10 +39,11 @@ public class ChatroomActivity extends AppCompatActivity {
     private static final String TAG = "ChatroomActivity";
 
     private Button sendBtn;
-    String currentUserID, EventID, Username;
+    private String currentUserID, EventID, EventTitle, Username;
     private FirebaseListAdapter<ChatMessage> adapter;
     private FirebaseListOptions<ChatMessage> options;
-    private DatabaseReference CurrentUserReference;
+    private DatabaseReference CurrentUserReference, CurrentEventReference;
+    private TextView chatTitle;
     //private String userProfileImage;
 
     //FirebaseRecyclerAdapter<ChatMessage, MessageAdapter> adapter;
@@ -49,10 +52,26 @@ public class ChatroomActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_chatroom);
+
         currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         EventID = getIntent().getStringExtra("EventID");
+
+        chatTitle = findViewById(R.id.chatView_title);
+
+        CurrentEventReference = FirebaseDatabase.getInstance().getReference().child("Events").child(EventID);
+        CurrentEventReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                EventTitle = snapshot.child("eventTitle").getValue().toString();
+                chatTitle.setText(EventTitle);
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                chatTitle.setText("Welcome to the Chat");
+            }
+        });
 
         CurrentUserReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID);
         CurrentUserReference.addValueEventListener(new ValueEventListener() {
@@ -109,16 +128,15 @@ public class ChatroomActivity extends AppCompatActivity {
                 TextView messageText = (TextView)v.findViewById(R.id.chat_message);
                 TextView messageUser = (TextView)v.findViewById(R.id.chat_user);
                 TextView messageTime = (TextView)v.findViewById(R.id.chat_message_time);
-                ImageView messageImage = (ImageView)v.findViewById(R.id.message_profile_image);
+                //ImageView messageImage = (ImageView)v.findViewById(R.id.message_profile_image);
 
                 // Set their text
                 messageText.setText(chatModel.getMessageText());
                 messageUser.setText(chatModel.getMessageUser());
 
                 // Format the date before showing it
-                messageTime.setText(DateFormat.format("h:m a",
+                messageTime.setText(DateFormat.format("h:mm a",
                         chatModel.getMessageTime()));
-
             }
         };
         listOfMessages.setAdapter(adapter);

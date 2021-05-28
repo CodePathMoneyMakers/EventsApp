@@ -170,7 +170,10 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                     Picasso.get().load(userImage).into(ivUserImage);
                     tvEventTitle.setText(eventTitle);
                     tvEventFee.setText(eventFee);
-                    tveventFee2.setText("Fee: " + eventFee2);
+
+                    if(eventFee2.equals("0")) tveventFee2.setText("Free Event!");
+                    else tveventFee2.setText("Event Fee: $" + eventFee2);
+
                     tvEventDate.setText(eventDate);
                     tvEventTime.setText(eventTime);
                     tvEventGenre.setText(eventGenre);

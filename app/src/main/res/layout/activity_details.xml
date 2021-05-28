@@ -59,39 +59,37 @@
 
         <Button
             android:id="@+id/buyTicket"
-            android:layout_width="wrap_content"
+            android:layout_width="116dp"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:text="RSVP"
-            android:layout_marginStart="200dp"
             android:layout_marginTop="12dp"
             android:textColor="#FFFFFF"
             android:background="@drawable/btn_background"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
             android:textStyle="bold"/>
 
         <Button
             android:id="@+id/joinChatroomBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="116dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="16dp"
             android:layout_marginTop="12dp"
-            android:text="Join\nChat"
-            android:layout_toRightOf="@+id/buyTicket"
+            android:text="Chat"
             android:textColor="#FFFFFF"
             android:background="@drawable/btn_background"
-            android:textStyle="bold"
-            android:textSize="12sp"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/eventFee2"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="25dp"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
-            tools:text="eventFee" />
+            tools:text="Event Fee: " />
 
     </RelativeLayout>
 
