@@ -18,18 +18,56 @@
         android:paddingRight="10dp"
         android:background="@drawable/input_search"
         />
+    <TextView
+        android:id="@+id/yourEvents"
+        android:layout_width="wrap_content"
+        android:paddingLeft="20dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/inputSearch"
+        android:alpha="0.90"
+        android:fontFamily="@font/amaranth_bold"
+        android:lineSpacingExtra="10sp"
+        android:text="Your Events"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="12sp"
+        android:typeface="monospace" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@+id/inputSearch"
+        android:layout_below="@+id/yourEvents"
         android:layout_width="match_parent"
-        android:layout_height="232dp"
+        android:layout_height="138dp"
         android:paddingTop="8dp"
         android:id="@+id/horizontalView"
+        android:visibility="visible"
         android:layout_marginBottom="8dp"
         />
 
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_below="@id/inputSearch"
+        android:layout_width="match_parent"
+        android:padding="20dp"
+        android:layout_height="138dp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="You have not rsvp'd to any events. Check out the events below to see what's happening in your area!" />
+
+    <TextView
+        android:id="@+id/allEvents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="260dp"
+        android:paddingLeft="20dp"
+        android:alpha="0.90"
+        android:fontFamily="@font/amaranth_bold"
+        android:lineSpacingExtra="10sp"
+        android:text="All Events"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="12sp"
+        android:typeface="monospace" />
+
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@+id/horizontalView"
+        android:layout_below="@+id/allEvents"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="8dp"

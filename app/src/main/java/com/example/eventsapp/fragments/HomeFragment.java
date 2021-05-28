@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.eventsapp.DetailsActivity;
 import com.example.eventsapp.Event;
 import com.example.eventsapp.EventsAdapter;
+import com.example.eventsapp.ForYouAdapter;
 import com.example.eventsapp.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -32,15 +34,22 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+
 public class HomeFragment extends Fragment {
     EditText inputSearch;
     RecyclerView recyclerView, horizontalView;
+    TextView emptyView;
     FirebaseAuth mAuth;
     String currentUserID;
 
     FirebaseRecyclerOptions<Event> options;
     FirebaseRecyclerAdapter<Event, EventsAdapter> adapter;
+    FirebaseRecyclerAdapter<Event, ForYouAdapter> adapter2;
     DatabaseReference DataRef, rsvpRef;
+    ArrayList<String> checkEmpty;
 
     public static final String TAG = "HomeFragment";
 
@@ -77,11 +86,14 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         horizontalView = view.findViewById(R.id.horizontalView);
+        emptyView = view.findViewById(R.id.empty_view);
         horizontalView.setLayoutManager(new LinearLayoutManager(getContext()));
         horizontalView.setHasFixedSize(true);
         inputSearch = view.findViewById(R.id.inputSearch);
-        
+        checkEmpty = new ArrayList<>();
+
         LoadData("");
+
         LoadRsvpdEvents();
 
         inputSearch.addTextChangedListener(new TextWatcher() {
@@ -111,23 +123,26 @@ public class HomeFragment extends Fragment {
         Query query = rsvpRef.orderByChild(currentUserID).equalTo(currentUserID);
 
         options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
-        adapter = new FirebaseRecyclerAdapter<Event, EventsAdapter>(options) {
+        adapter2 = new FirebaseRecyclerAdapter<Event, ForYouAdapter>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull EventsAdapter eventsAdapter, int i, @NonNull Event event) {
-                final String eventIds = getRef(i).getKey();
+            protected void onBindViewHolder(@NonNull @NotNull ForYouAdapter forYouAdapter, int i, @NonNull @NotNull Event event) {
+                 String eventIds = getRef(i).getKey();
+                checkEmpty.add(eventIds);
+                Log.d(TAG, "CHecking if work: " + eventIds);
                 DataRef.child(eventIds).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String day = snapshot.child("eventDay").getValue().toString();
+                        String day = snapshot.child("eventDate").getValue().toString();
                         String month = snapshot.child("eventMonth").getValue().toString();
                         String fee = snapshot.child("eventFee").getValue().toString();
                         String image = snapshot.child("eventImage").getValue().toString();
                         String genre = snapshot.child("eventGenre").getValue().toString();
-                        eventsAdapter.eventDay.setText(day);
-                        eventsAdapter.eventGenre.setText(genre);
-                        eventsAdapter.eventFee.setText(fee);
-                        eventsAdapter.eventMonth.setText(month);
-                        Picasso.get().load(image).into(eventsAdapter.eventImage);
+                        String title = snapshot.child("eventTitle").getValue().toString();
+                        forYouAdapter.eventDay.setText(day);
+                        forYouAdapter.eventGenre.setText(genre);
+                        forYouAdapter.eventFee.setText(fee);
+                        forYouAdapter.eventTitle.setText(title);
+                        Picasso.get().load(image).into(forYouAdapter.eventImage);
                     }
 
                     @Override
@@ -135,19 +150,27 @@ public class HomeFragment extends Fragment {
 
                     }
                 });
-
             }
 
             @NonNull
             @Override
-            public EventsAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event2, parent, false);
-                return new EventsAdapter(v);
+            public ForYouAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.for_you_layout, parent, false);
+                return new ForYouAdapter(v);
             }
         };
 
-        adapter.startListening();
-        horizontalView.setAdapter(adapter);
+        if(checkEmpty.isEmpty()){
+            horizontalView.setVisibility(View.INVISIBLE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            horizontalView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+
+        adapter2.startListening();
+        horizontalView.setAdapter(adapter2);
         horizontalView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     }
 

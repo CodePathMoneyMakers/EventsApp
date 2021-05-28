@@ -6,7 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -22,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,14 +41,18 @@ import com.example.eventsapp.PolylineData;
 import com.example.eventsapp.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -315,9 +324,17 @@ public class SearchFragment
                         if(event.eventPrivacy == "false") {
                             Log.d(TAG, "Location testing ");
                             LatLng location = new LatLng(event.latitude, event.longitude);
-                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
+                            if(event.eventGenre.equals("Sports")){
+                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_sports_mappin1)));
+                            }else if(event.eventGenre.equals("Music")){
+                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_music_mappin)));
+                            }else{
+                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_user_group)));
+                            }
+
+                           // mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
                         }
-                        else if (event.eventPrivacy == "true"){
+                        if (event.eventPrivacy == "true"){
                             if(s.child("Attendees").getValue().equals(currentUserID)) {
                                 Log.d(TAG, "Location testing2 ");
                                 LatLng location = new LatLng(event.latitude, event.longitude);
@@ -327,14 +344,14 @@ public class SearchFragment
 //                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
 //
                             }
-                            else{
-                                LatLng location = new LatLng(event.latitude, event.longitude);
-                                Circle circle = mMap.addCircle(new CircleOptions()
-                                        .center(location)
-                                        .radius(10000)
-                                        .strokeColor(Color.RED)
-                                        .fillColor(Color.BLUE));
-                            }
+//                            else{
+//                                LatLng location = new LatLng(event.latitude, event.longitude);
+//                                Circle circle = mMap.addCircle(new CircleOptions()
+//                                        .center(location)
+//                                        .radius(10000)
+//                                        .strokeColor(Color.RED)
+//                                        .fillColor(Color.BLUE));
+//                            }
 
                         }
                         else{
