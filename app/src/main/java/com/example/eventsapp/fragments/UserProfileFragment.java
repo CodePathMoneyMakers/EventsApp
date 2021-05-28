@@ -407,7 +407,7 @@ public class UserProfileFragment extends Fragment  {
                             //rsvpRef.child(keyList.get(position)).child(idList.get(position)).setValue(idList.get(position));
                             EventsRef.child(eventList.get(position)).child("Attendees").child(idList.get(position)).setValue(idList.get(position));
                             requestsRef.child(currentUserID).child(keyList.get(position)).removeValue();
-                            rsvpRef.child(eventList.get(position)).child(currentUserID).setValue(currentUserID);
+                            rsvpRef.child(eventList.get(position)).child(idList.get(position)).setValue(idList.get(position));
                             UsersRef.child(idList.get(position)).child("Attending").child(eventList.get(position)).setValue(eventList.get(position));
 
                             Log.d(TAG, "KeyList + " + keyList);

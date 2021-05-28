@@ -263,7 +263,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                                 }
                             });
 
-                            Toast.makeText(getApplicationContext(), "You have successfully registered", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "You have successfully RSVP'd", Toast.LENGTH_LONG).show();
                         }
                     });
                 }
