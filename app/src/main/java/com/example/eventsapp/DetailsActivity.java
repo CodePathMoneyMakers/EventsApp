@@ -201,7 +201,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                     tvEventFee.setText(eventFee);
 
                     if(eventFee2.equals("0")) tveventFee2.setText("Free Event!");
-                    else tveventFee2.setText("Event Fee: $" + eventFee2);
+                    else tveventFee2.setText("Fee: $" + eventFee2);
 
                     tvEventDate.setText(eventDate);
                     tvEventTime.setText(" • " + eventTime + " ⁃ ");
