@@ -77,25 +77,23 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String password = editTextPassword.getText().toString().trim();
         String fullName = editTextUsername.getText().toString().trim();
         String age = editTextAge.getText().toString().trim();
-        String image = "https://firebasestorage.googleapis.com/v0/b/landmark-d0e1d.appspot.com/o/UserImage%2F-MZd5irMdbKGZ4xNGWbl.jpg?alt=media&token=64faaa7f-9b1c-4638-9567-df96cc9002ce";
+        String bio = "hi there!";
+        String image = "https://firebasestorage.googleapis.com/v0/b/landmark-d0e1d.appspot.com/o/UserImage%2F-MZbm49GJ5MNFLRKRyW0.jpg?alt=media&token=fc330a3d-d3f1-4512-a7d9-cf4005cc80a2";
 
         if (fullName.isEmpty()) {
             editTextUsername.setError("Full name is required.");
             // refocus on the field
             editTextUsername.requestFocus();
             return;
-        }
-        else if (age.isEmpty()) {
+        } else if (age.isEmpty()) {
             editTextAge.setError("Age is required.");
             editTextAge.requestFocus();
             return;
-        }
-        else if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             editTextEmail.setError("Please provide a valid email address.");
             editTextEmail.requestFocus();
             return;
-        }
-        else if (password.isEmpty() || password.length() < 6) {
+        } else if (password.isEmpty() || password.length() < 6) {
             editTextPassword.setError("Please provide a password of at least 6 characters.");
             editTextPassword.requestFocus();
             return;
@@ -107,45 +105,45 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         // firebase object authentication
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
 
-                // check if user is registered
-                if (task.isSuccessful()) {
+                        // check if user is registered
+                        if (task.isSuccessful()) {
 
-                    // create an android studio User object
-                    User user = new User(fullName, age, email, image);
+                            // create an android studio User object
+                            User user = new User(fullName, age, email, image, bio);
 
-                    // create a firebase User Object
-                    FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
+                            // create a firebase User Object
+                            FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
 
-                    // send user object to real time database
-                    FirebaseDatabase.getInstance().getReference("Users")
-                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                progressBar.setVisibility(View.VISIBLE);
-                                fbUser.sendEmailVerification();
-                                Toast.makeText(RegisterActivity.this,
-                                        "You have been registered successfully!", Toast.LENGTH_LONG).show();
-                                Toast.makeText(RegisterActivity.this,
-                                        "Please check your email to complete sign up!", Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                            } else {
-                                Toast.makeText(RegisterActivity.this,
-                                        "Failed to register :( Please try again.", Toast.LENGTH_LONG).show();
-                                progressBar.setVisibility(View.GONE);
-                            }
+                            // send user object to real time database
+                            FirebaseDatabase.getInstance().getReference("Users")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        progressBar.setVisibility(View.VISIBLE);
+                                        fbUser.sendEmailVerification();
+                                        Toast.makeText(RegisterActivity.this,
+                                                "You have been registered successfully!", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(RegisterActivity.this,
+                                                "Please check your email to complete sign up!", Toast.LENGTH_LONG).show();
+                                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                                    } else {
+                                        Toast.makeText(RegisterActivity.this,
+                                                "Failed to register :( Please try again.", Toast.LENGTH_LONG).show();
+                                        progressBar.setVisibility(View.GONE);
+                                    }
+                                }
+                            });
+                        } else {
+                            Toast.makeText(RegisterActivity.this,
+                                    "Failed to register :(, Please try again.", Toast.LENGTH_LONG).show();
+                            progressBar.setVisibility(View.GONE);
                         }
-                    });
-                } else {
-                    Toast.makeText(RegisterActivity.this,
-                            "Failed to register :(, Please try again.", Toast.LENGTH_LONG).show();
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
-        });
+                    }
+                });
     }
 }
