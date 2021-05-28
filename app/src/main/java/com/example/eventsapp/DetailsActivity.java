@@ -245,7 +245,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                                                         requestRef.child(peanut).push().updateChildren(profileMap);
                                                     }
                                                     else if(event.eventPrivacy.equals("false")){
-                                                        rsvpRef.child(EventID).child(currentUserID).setValue(currentUserID);
+                                                        rsvpRef.child(currentUserID).setValue(currentUserID);
                                                         EventsRef.child(EventID).child("Attendees").child(currentUserID).setValue(currentUserID);
                                                         UsersRef.child(currentUserID).child("Attending").child(EventID).setValue(EventID);
                                                     }
