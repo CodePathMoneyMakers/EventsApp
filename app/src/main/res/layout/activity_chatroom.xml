@@ -41,7 +41,6 @@
         android:layout_toLeftOf="@+id/sendButton"
         android:background="@drawable/login_et_background_chat"
         android:ems="10"
-        android:inputType="text"
         android:hint="  Type a message"
         android:imeOptions="actionSend" />
 
