@@ -326,13 +326,13 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                         c.set(0, 0, 0, t1Hour, t1Minute);
 
                         if (counter % 2 == 0) {
-                            tvTime1.setText(DateFormat.format("hh:mm aa", c));
+                            tvTime.setText(DateFormat.format("hh:mm aa", c));
                             till.setText("till");
 
-                            eventTimeStart = tvTime.getText().toString().trim(); // saves event time start as a string
-                            eventTimeEnd = tvTime1.getText().toString().trim(); // saves event end time as a string
+                            eventTimeStart = tvTime1.getText().toString().trim(); // saves event time start as a string
+                            eventTimeEnd = tvTime.getText().toString().trim(); // saves event end time as a string
                         } else {
-                            tvTime.setText(DateFormat.format("hh:mm aa", c));
+                            tvTime1.setText(DateFormat.format("hh:mm aa", c));
                             from.setText("from");
                         }
 

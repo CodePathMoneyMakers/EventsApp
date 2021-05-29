@@ -89,6 +89,8 @@ public class SearchFragment
     private static final float DEFAULT_ZOOM = 15f;
     MapView mapView;
     private GoogleMap mMap;
+    public String currentUserID;
+    private FirebaseAuth mAuth;
     TextView textView;
     EditText etLocationTitle;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -132,6 +134,8 @@ public class SearchFragment
         etLocationTitle = view.findViewById(R.id.etLocationTitle);
 
         EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
+        mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
 
         geoApiContext = new GeoApiContext.Builder().apiKey(getString(R.string.google_maps_key)).build();
 
@@ -331,6 +335,19 @@ public class SearchFragment
                                 mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_user_group)));
                             }
                         }
+//                        if(event.eventPrivacy.equals("true")) {
+//                            if (snapshot.child("Attendees").exists()) {
+//                                if (snapshot.child("Attendees").getValue().toString().contains(currentUserID)){
+//                                    if (event.getEventGenre().equals("Sports")) {
+//                                        mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_sports_mappin1)));
+//                                    } else if (event.getEventGenre().equals("Music")) {
+//                                        mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_music_mappin)));
+//                                    } else {
+//                                        mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_user_group)));
+//                                    }
+//                                }
+//                            }
+//                        }
 
                     }
                 } catch (NullPointerException e) {
