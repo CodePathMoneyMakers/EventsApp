@@ -3,76 +3,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="175dp"
+        android:layout_height="108dp"
+        android:padding="5dp"
         app:cardCornerRadius="10dp"
-        app:cardElevation="60dp"
-        android:padding="5dp">
+        app:cardElevation="60dp">
 
         <ImageView
             android:id="@+id/eventImage"
-            android:layout_width="300dp"
-            android:layout_height="200dp"
-            tools:srcCompat="@drawable/building"
+            android:layout_width="175dp"
+            android:layout_height="107dp"
+            android:foreground="@drawable/for_you_transparent"
             android:scaleType="centerCrop"
             tools:ignore="ContentDescription"
-            android:foreground="@drawable/for_you_transparent"/>
+            tools:srcCompat="@drawable/building" />
+
 
         <TextView
             android:id="@+id/eventTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="125dp"
             android:layout_marginStart="110dp"
-            tools:text="9PM"
-            android:textSize="12sp"
+            android:layout_marginTop="125dp"
+            android:fontFamily="@font/averia_libre_bold"
             android:textColor="#FFFFFF"
+            android:textSize="12sp"
             android:textStyle="normal"
-            android:fontFamily="@font/averia_libre_bold"/>
-
+            tools:text="9PM" />
 
         <TextView
             android:id="@+id/eventDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="45dp"
             android:fontFamily="@font/averia_libre_bold"
             android:textColor="#FFFFFF"
+            android:textSize="10sp"
             android:textStyle="normal"
-            tools:text="FRIDAY MAR 12, "
-            android:textSize="12sp"
-            android:layout_marginTop="125dp"
-            android:layout_marginStart="16dp"/>
-
+            tools:text="FRIDAY MAR 12, " />
 
         <TextView
             android:id="@+id/eventTitle"
-            android:layout_width="250dp"
+            android:layout_width="147dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="60dp"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:textSize="12sp"
             android:textStyle="bold"
-            tools:text="Saturday Nights at Danny's"
-            android:layout_marginTop="140dp"
-            android:layout_marginStart="16dp"/>
+            tools:text="Saturday Nights at Danny's" />
 
         <TextView
             android:id="@+id/eventGenre"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="170dp"
-            android:drawableLeft="@drawable/ic_music_recycler"
+            android:layout_marginTop="80dp"
+            android:alpha="0.7"
+            android:drawableLeft="@drawable/ic_music_recycler2"
             android:drawablePadding="5dp"
             android:fontFamily="sans-serif-condensed-medium"
             android:textColor="#FFFFFF"
-            android:textSize="12sp"
+            android:textSize="10sp"
             android:typeface="sans"
-            tools:text="Indie Rock"
-            android:alpha="0.7"/>
+            tools:text="Indie Rock" />
 
         <TextView
             android:id="@+id/eventFee"
@@ -80,16 +80,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="120dp"
-            android:layout_marginTop="170dp"
-            android:drawableLeft="@drawable/ic_ticket_recycler"
+            android:layout_marginStart="90dp"
+            android:layout_marginTop="80dp"
+            android:alpha="0.7"
+            android:drawableLeft="@drawable/ic_ticket_recycler2"
+            android:drawablePadding="5dp"
             android:fontFamily="sans-serif-condensed-medium"
             android:textColor="#FFFFFF"
-            android:textSize="12sp"
+            android:textSize="10sp"
             android:typeface="sans"
-            tools:text="$10"
-            android:drawablePadding="5dp"
-            android:alpha="0.7"/>
+            tools:text="$10" />
 
     </androidx.cardview.widget.CardView>
 

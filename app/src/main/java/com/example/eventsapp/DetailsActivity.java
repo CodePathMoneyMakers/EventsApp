@@ -1,9 +1,10 @@
 package com.example.eventsapp;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
@@ -15,6 +16,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +32,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,9 +42,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.core.Tag;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Picasso;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -48,7 +53,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import io.opencensus.tags.Tag;
+
 public class DetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
+    private static final String TAG = "";
     private ImageView ivEventImage, ivUserImage;
     public LatLng location;
     private FirebaseAuth mAuth;
@@ -58,9 +66,12 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
     private GoogleMap mMap;
     private MapView mapView;
     Button bnBuyTicket;
-    DatabaseReference reference, EventsRef, UsersRef, rsvpRef;
-    String currentUserID, eventOrganizer, EventID, eventTitle;
+    DatabaseReference reference, EventsRef, UsersRef, rsvpRef, requestRef, CurrentUserReference;
+    String currentUserID, eventOrganizer, EventID, eventTitle, specificEmail, specificName, specificImage;
     private String address;
+
+    // chatroom
+    private Button joinChatroom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,10 +121,43 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         reference = FirebaseDatabase.getInstance().getReference().child("Events");
         currentUserID = mAuth.getCurrentUser().getUid();
         EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
+        CurrentUserReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID);
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         rsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
+        requestRef = FirebaseDatabase.getInstance().getReference().child("Requests");
 
         EventID = getIntent().getStringExtra("EventID");
+
+
+        // Chatroom
+        joinChatroom = (Button)findViewById(R.id.joinChatroomBtn);
+        joinChatroom.setOnClickListener(v -> {
+            Intent chatroomIntent = new Intent(this, ChatroomActivity.class);
+            chatroomIntent.putExtra("EventID", EventID);
+            // Can only enter chatroom if user RSVP to event
+            FirebaseDatabase.getInstance().getReference()
+                    .child("Events")
+                    .child(EventID)
+                    .child("Attendees")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                            for (DataSnapshot snaps : snapshot.getChildren()) {
+                                if(currentUserID.equals(snaps.getValue().toString())) {
+                                    startActivity(chatroomIntent);
+                                    return;
+                                }
+                            }
+                            Toast.makeText(DetailsActivity.this, "You must RSVP to enter the chatroom.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                            Toast.makeText(DetailsActivity.this, "Error getting info from the database.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        });
+
 
         reference.child(EventID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -157,7 +201,10 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                     Picasso.get().load(userImage).into(ivUserImage);
                     tvEventTitle.setText(eventTitle);
                     tvEventFee.setText(eventFee);
-                    tveventFee2.setText(eventFee2);
+
+                    if(eventFee2.equals("0")) tveventFee2.setText("Free Event!");
+                    else tveventFee2.setText("Fee: $" + eventFee2);
+
                     tvEventDate.setText(eventDate);
                     tvEventTime.setText(" • " + eventTime + " ⁃ ");
                     tvEventTime1.setText(eventTime1);
@@ -166,7 +213,21 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                     //tvEventDescription.setText();
                     tvEventOrganizer.setText(username);
                     tvUserBio.setText(userBio);
-                    tvEventLocation.setText(address);
+                    if(snapshot.child("eventPrivacy").getValue().toString().equals("true")){
+                        if(snapshot.child("Attendees").hasChild(currentUserID)){
+                            tvEventLocation.setText(address);
+                        }
+                        else{
+                            tvEventLocation.setText("Private event: address is hidden");
+                        }
+
+                    }
+                    else if(snapshot.child("eventPrivacy").getValue().toString().equals("false")){
+                        tvEventLocation.setText(address);
+                    }
+                    else{
+                        tvEventLocation.setText(address);
+                    }
 
                     // IMPORTANT - call setText on the ExpandableTextView to set the text content to display
                     expTv1.setText(eventDescription);
@@ -175,16 +236,67 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
                     bnBuyTicket.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Map<String, Object> taskMap = new HashMap<>();
-                            taskMap.put(currentUserID, currentUserID);
-
-                            EventsRef.child(EventID).child("Attendees").updateChildren(taskMap);
-
                             // EventsRef.child(EventID).child("Attendees").child("currentUserID").setValue(currentUserID);
-                            UsersRef.child(currentUserID).child("Attending").child("EventID").setValue(EventID);
-                            rsvpRef.child(currentUserID).child("username").setValue(EventID);
+                           // UsersRef.child(currentUserID).child("Attending").child("EventID").setValue(EventID);
+                            // rsvpRef.child(currentUserID).child("username").setValue(EventID);
+                          //  rsvpRef.child(EventID).child(currentUserID).setValue(currentUserID);
 
-                            Toast.makeText(getApplicationContext(), "You have successfully registered", Toast.LENGTH_LONG).show();
+                            UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                                    specificEmail = snapshot.child("email").getValue().toString();
+                                    specificName = snapshot.child("fullName").getValue().toString();
+                                    specificImage = snapshot.child("userImage").getValue().toString();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                                }
+                            });
+
+                            EventsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Event event;
+                                    try {
+                                        for (DataSnapshot s : snapshot.getChildren()) {
+                                            event = s.getValue(Event.class);
+                                            String eventName = event.eventTitle;
+
+                                                if(s.getKey().equals(EventID)){
+                                                    if(event.eventPrivacy.equals( "true")) {
+                                                        String peanut = event.userID;
+                                                        HashMap<String, Object> profileMap = new HashMap<>();
+                                                        profileMap.put("name", specificName);
+                                                        profileMap.put("email", specificEmail);
+                                                        profileMap.put("image", specificImage);
+                                                        profileMap.put("event", eventName);
+                                                        profileMap.put("eventID", EventID);
+                                                        profileMap.put("UID", currentUserID);
+                                                        requestRef.child(peanut).push().updateChildren(profileMap);
+                                                    }
+                                                    else if(event.eventPrivacy.equals("false")){
+                                                        rsvpRef.child(currentUserID).setValue(currentUserID);
+                                                        rsvpRef.child(EventID).child(currentUserID).setValue(currentUserID);
+                                                        EventsRef.child(EventID).child("Attendees").child(currentUserID).setValue(currentUserID);
+                                                        UsersRef.child(currentUserID).child("Attending").child(EventID).setValue(EventID);
+                                                    }
+                                            }
+
+                                        }
+                                    } catch (NullPointerException e) {
+                                        Toast.makeText(getApplicationContext(), "An event was not able to load.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                                }
+                            });
+
+                            Toast.makeText(getApplicationContext(), "You have successfully RSVP'd", Toast.LENGTH_LONG).show();
                         }
                     });
                 }
@@ -236,12 +348,45 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                    Event event = snapshot.getValue(Event.class);
-                    location = new LatLng(event.latitude, event.longitude);
-                    mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
-                    moveCamera(location, 0, event.getEventTitle());
+                    if(snapshot.child("eventPrivacy").getValue().toString().equals("false")) {
+                        Event event = snapshot.getValue(Event.class);
+                        location = new LatLng(event.latitude, event.longitude);
+                        mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
+                        moveCamera(location, 0, event.getEventTitle());
+                    }
+                    if(snapshot.child("eventPrivacy").getValue().toString().equals("true")){
+                        if(snapshot.child("Attendees").exists()) {
+                            if (snapshot.child("Attendees").getValue().toString().contains(currentUserID)) {
+                                Event event = snapshot.getValue(Event.class);
+                                location = new LatLng(event.latitude, event.longitude);
+                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()));
+                                moveCamera(location, 0, event.getEventTitle());
+                            } else {
+                                Event event = snapshot.getValue(Event.class);
+                                location = new LatLng(event.latitude, event.longitude);
+                                mMap.addCircle(new CircleOptions()
+                                        .center(new LatLng(event.latitude, event.longitude))
+                                        .radius(10000)
+                                        .strokeColor(Color.BLUE)
+                                        .fillColor(Color.TRANSPARENT));
+                                moveCamera(location, 8);
+                            }
+                        }
+                        else {
+                            Event event = snapshot.getValue(Event.class);
+                            location = new LatLng(event.latitude, event.longitude);
+                            mMap.addCircle(new CircleOptions()
+                                    .center(new LatLng(event.latitude, event.longitude))
+                                    .radius(10000)
+                                    .strokeColor(Color.BLUE)
+                                    .fillColor(Color.TRANSPARENT));
+                            moveCamera(location, 8);
+                        }
+                    }
                 }
             }
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -250,6 +395,9 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
         });
 
         mMap.setMyLocationEnabled(true);
+    }
+    public void moveCamera(LatLng location, int i) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, i));
     }
     public void moveCamera(LatLng latLng, float zoom, String title){
         //Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );

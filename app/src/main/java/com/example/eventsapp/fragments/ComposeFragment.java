@@ -319,13 +319,13 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                         c.set(0, 0, 0, t1Hour, t1Minute);
 
                         if (counter % 2 == 0) {
-                            tvTime1.setText(DateFormat.format("hh:mm aa", c));
+                            tvTime.setText(DateFormat.format("hh:mm aa", c));
                             till.setText("till");
 
-                            eventTimeStart = tvTime.getText().toString().trim(); // saves event time start as a string
-                            eventTimeEnd = tvTime1.getText().toString().trim(); // saves event end time as a string
+                            eventTimeStart = tvTime1.getText().toString().trim(); // saves event time start as a string
+                            eventTimeEnd = tvTime.getText().toString().trim(); // saves event end time as a string
                         } else {
-                            tvTime.setText(DateFormat.format("hh:mm aa", c));
+                            tvTime1.setText(DateFormat.format("hh:mm aa", c));
                             from.setText("from");
                         }
 
@@ -428,8 +428,6 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         spinnerItems.add(new SpinnerItem("Music", R.drawable.ic_music));
         spinnerItems.add(new SpinnerItem("Sports", R.drawable.ic_sports));
         spinnerItems.add(new SpinnerItem("Social", R.drawable.ic_user_group));
-
-
     }
 
     private void CreateEvent() {
@@ -466,13 +464,14 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                 if (task.isSuccessful()) {
                     Toast.makeText(getContext(),
                             "Event successfully created.", Toast.LENGTH_LONG).show();
+                    UsersRef.child(currentUserID).child("Created").child(eventTitle).setValue(currentUserID);
                 } else {
                     Toast.makeText(getContext(), "Error" + task.getException().toString(), Toast.LENGTH_LONG).show();
                 }
             }
         });
 
-        UsersRef.child(currentUserID).child("Created").child(eventTitle).setValue(currentUserID);
+
     }
 
     public void openCamera(View view){

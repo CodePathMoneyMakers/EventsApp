@@ -1,62 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/White">
+    tools:context=".ChatroomActivity">
 
-    <RelativeLayout
+    <ImageView
+        android:id="@+id/eventImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="40dp"
-        >
+        android:fitsSystemWindows="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/chat_background_4"
+        app:layout_collapseMode="parallax" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/chatmessage_recycler_view">
-
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
+    <Button
+        android:id="@+id/sendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/grey_border_top">
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="12dp"
+        android:clickable="true"
+        android:text="Send"
+        android:tint="@android:color/white"
+        app:fabSize="mini" />
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_check_green_24dp"
-            android:id="@+id/checkmark"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/input_message"
-            android:background="@null"
-            android:layout_toLeftOf="@+id/checkmark"
-            android:gravity="center_vertical"
-            android:textSize="14sp"
-            android:hint="new message..."
-            android:textColor="@color/Black"
-            android:layout_marginLeft="5dp"/>
-
-
-    </RelativeLayout>
-
-    <FrameLayout
+    <EditText
+        android:id="@+id/input"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/user_list_container">
+        android:layout_height="44dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/list_of_messages"
+        android:layout_marginLeft="12dp"
+        android:layout_marginBottom="12dp"
+        android:layout_toLeftOf="@+id/sendButton"
+        android:background="@drawable/login_et_background_chat"
+        android:ems="10"
+        android:hint="  Type a message"
+        android:imeOptions="actionSend" />
 
-    </FrameLayout>
+    <TextView
+        android:id="@+id/chatView_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="14dp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="34sp"
+        android:textStyle="bold" />
+
+    <ListView
+        android:id="@+id/list_of_messages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/sendButton"
+        android:layout_below="@+id/chatView_title"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="16dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="18dp" />
 
 </RelativeLayout>

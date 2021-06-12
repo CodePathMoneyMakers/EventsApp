@@ -460,7 +460,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="790dp"
             android:layout_marginRight="10dp"
-            android:layout_below="@+id/etAddress">
+            android:layout_below="@+id/etLocation">
 
             <com.google.android.gms.maps.MapView
                 android:id="@+id/mapView"

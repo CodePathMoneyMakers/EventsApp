@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,6 +41,7 @@ import com.example.eventsapp.Event;
 import com.example.eventsapp.EventsAdapter;
 import com.example.eventsapp.LoginActivity;
 import com.example.eventsapp.R;
+import com.example.eventsapp.RequestsActivity;
 import com.example.eventsapp.adapters.RSVPRecyclerAdapter;
 import com.example.eventsapp.models.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -62,8 +64,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
@@ -71,6 +76,8 @@ import static android.app.Activity.RESULT_OK;
 public class UserProfileFragment extends Fragment  {
     private boolean showingFirst = true;
     private FirebaseUser user;
+    FirebaseRecyclerOptions<User> options2;
+    FirebaseRecyclerAdapter<User, RSVPRecyclerAdapter> adapter2;
     RecyclerView profileRecycler;
     RecyclerView rsvpRecyclerView;
     RSVPRecyclerAdapter rsvpRecyclerAdapter;
@@ -83,6 +90,7 @@ public class UserProfileFragment extends Fragment  {
     private FirebaseAuth mAuth;
     private StorageReference storageReference;
     public DatabaseReference UsersRef, DataRef, EventsRef, eventID, rsvpRef;
+    DatabaseReference requestsRef;
     private ImageButton btnEdit, btnSettings;
     private EditText etBio;
     private TextView numAttending, numCreated;
@@ -91,8 +99,8 @@ public class UserProfileFragment extends Fragment  {
     FirebaseRecyclerOptions<Event> options;
     FirebaseRecyclerAdapter<Event, EventsAdapter> adapter;
     boolean isImageAdded = false;
-    Query query;
-    String retrieveUserName;
+    ArrayList<String> keyList, idList, eventList;
+
     private ImageButton settings;
     String TAG = "UserProfileFragment";
     public StorageReference Storageref;
@@ -106,7 +114,7 @@ public class UserProfileFragment extends Fragment  {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -120,6 +128,7 @@ public class UserProfileFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragments_profile, container,false);
     }
 
@@ -196,14 +205,19 @@ public class UserProfileFragment extends Fragment  {
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
                 rsvpRecyclerView = dialog.findViewById(R.id.rsvp_recycler);
-                rsvpRecyclerAdapter = new RSVPRecyclerAdapter();
-                rsvpRecyclerView.setAdapter(rsvpRecyclerAdapter);
+                rsvpRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                rsvpRecyclerView.setHasFixedSize(true);
+
+//                rsvpRecyclerView = dialog.findViewById(R.id.rsvp_recycler);
+//                rsvpRecyclerAdapter = new RSVPRecyclerAdapter();
+//                rsvpRecyclerView.setAdapter(rsvpRecyclerAdapter);
 
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
                 itemTouchHelper.attachToRecyclerView(rsvpRecyclerView);
 
-
+                LoadData();
                 dialog.show();
+
             }
         });
 
@@ -213,13 +227,17 @@ public class UserProfileFragment extends Fragment  {
         reference = FirebaseDatabase.getInstance().getReference("Users");
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         DataRef = FirebaseDatabase.getInstance().getReference().child("Events");
+        keyList = new ArrayList<>();
+        idList = new ArrayList<>();
+        eventList = new ArrayList<>();
 
 
         userID = user.getUid();
         currentUserID = mAuth.getCurrentUser().getUid();
         // TODO FIX ME
         rsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
-        EventsRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        requestsRef = FirebaseDatabase.getInstance().getReference().child("Requests");
+        EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
         //      test = "hello";
 
         //  final TextView greetingTextView = (TextView) view.findViewById(R.id.welcome);
@@ -313,6 +331,58 @@ public class UserProfileFragment extends Fragment  {
         });
     }
 
+    private void LoadData() {
+        Query query = requestsRef.child(currentUserID);
+
+        options2 = new FirebaseRecyclerOptions.Builder<User>().setQuery(query, User.class).build();
+        adapter2 = new FirebaseRecyclerAdapter<User, RSVPRecyclerAdapter>(options2) {
+            @Override
+            protected void onBindViewHolder(@NonNull @NotNull RSVPRecyclerAdapter rsvpRecyclerAdapter, int i, @NonNull @NotNull User user) {
+                String eventID = getRef(i).getKey();
+                keyList.add(eventID);
+                Log.d(TAG, "Look here: " + i);
+
+                assert eventID != null;
+                requestsRef.child(currentUserID).child(eventID).addValueEventListener(new ValueEventListener(){
+                    @Override
+                    public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                        if(snapshot.exists()) {
+                            String name = snapshot.child("name").getValue().toString();
+                            String event = snapshot.child("event").getValue().toString();
+                            String image = snapshot.child("image").getValue().toString();
+                            String email = snapshot.child("email").getValue().toString();
+                            String uid = snapshot.child("UID").getValue().toString();
+                            String EventID = snapshot.child("eventID").getValue().toString();
+
+                            rsvpRecyclerAdapter.tvFullName.setText(name);
+                            rsvpRecyclerAdapter.tvEmail.setText(email);
+                            rsvpRecyclerAdapter.tvEventTitle.setText(event);
+                            Picasso.get().load(image).into(rsvpRecyclerAdapter.profileImage);
+
+                            idList.add(uid);
+                            eventList.add(EventID);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public RSVPRecyclerAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.rsvp_recycler_layout, parent, false);
+                return new RSVPRecyclerAdapter(v);
+            }
+        };
+
+        adapter2.startListening();
+        rsvpRecyclerView.setAdapter(adapter2);
+    }
+
 
             ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
                 @Override
@@ -323,15 +393,40 @@ public class UserProfileFragment extends Fragment  {
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     int position = viewHolder.getAdapterPosition();
+
                     switch (direction){
                         case ItemTouchHelper.LEFT:
                             Toast.makeText(getContext(), "swiped left", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "ArrayList + " + keyList);
+                            requestsRef.child(currentUserID).child(keyList.get(position)).removeValue();
+
+                            Log.d(TAG, "KeyList + " + keyList);
+                            Log.d(TAG, "IDList + " + idList);
+
+                            keyList.remove(position);
+                            idList.remove(position);
+                            eventList.remove(position);
+
+
+
                             break;
                         case ItemTouchHelper.RIGHT:
-
                             Toast.makeText(getContext(), "swiped right", Toast.LENGTH_SHORT).show();
+                            rsvpRef.child(eventList.get(position)).child(idList.get(position)).setValue(idList.get(position));
+                            EventsRef.child(eventList.get(position)).child("Attendees").child(idList.get(position)).setValue(idList.get(position));
+                            requestsRef.child(currentUserID).child(keyList.get(position)).removeValue();
+                            rsvpRef.child(idList.get(position)).setValue(idList.get(position));
+                            UsersRef.child(idList.get(position)).child("Attending").child(eventList.get(position)).setValue(eventList.get(position));
+
+                            Log.d(TAG, "KeyList + " + keyList);
+                            Log.d(TAG, "IDList + " + idList);
+
+                            keyList.remove(position);
+                            idList.remove(position);
+                            eventList.remove(position);
                             break;
                     }
+
                 }
             };
 
@@ -364,6 +459,14 @@ public class UserProfileFragment extends Fragment  {
                     eventsAdapter.eventDay.setText(event.getEventDay());
                     eventsAdapter.eventMonth.setText(event.getEventMonth());
                     Picasso.get().load(event.getEventImage()).into(eventsAdapter.eventImage);
+                    eventsAdapter.view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent (getContext(), RequestsActivity.class);
+                            intent.putExtra("EventID", getRef(i).getKey());
+                            startActivity(intent);
+                        }
+                    });
 
                 }
 
@@ -406,12 +509,8 @@ public class UserProfileFragment extends Fragment  {
                     numAttending.setText(String.valueOf(value));
                     numCreated.setText(String.valueOf(created));
                 }
-                else if(snapshot.exists() && (snapshot.hasChild("userImage"))){
-                    try{
-                        retrieveUserName = snapshot.child("bio").getValue().toString();
-                    }catch(NullPointerException e){
-                        e.printStackTrace();
-                    }
+                else if(snapshot.exists()  && (snapshot.hasChild("userImage"))){
+                    String retrieveUserName = snapshot.child("bio").getValue().toString();
 
                     String userImage2 = snapshot.child("userImage").getValue().toString();
                     Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);

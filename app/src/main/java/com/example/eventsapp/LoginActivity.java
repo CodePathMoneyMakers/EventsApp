@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button signIn;
 
     private FirebaseAuth mAuth;
+    private FirebaseUser firebaseUser;
     private ProgressBar progressBar;
 
 
@@ -39,9 +40,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        /*if(mAuth.getCurrentUser().getUid() != null) {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(firebaseUser != null) {
             goMainActivity();
-        }*/
+        }
 
         //setSharedElementEnterTransition(new ChangeBounds());
 
@@ -130,7 +133,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-    /*private void goMainActivity() {
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-    }*/
+    private void goMainActivity() {
+        Intent intent = new Intent(LoginActivity.this, MainActivityTabs.class);
+        startActivity(intent);
+        finish();
+    }
 }

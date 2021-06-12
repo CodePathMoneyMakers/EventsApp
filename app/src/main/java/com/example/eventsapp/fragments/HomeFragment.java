@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.eventsapp.DetailsActivity;
 import com.example.eventsapp.Event;
 import com.example.eventsapp.EventsAdapter;
+import com.example.eventsapp.ForYouAdapter;
 import com.example.eventsapp.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -40,10 +42,17 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 
 import java.io.IOException;
 import java.util.List;
@@ -59,7 +68,9 @@ public class HomeFragment extends Fragment {
     private boolean state = true;
     FirebaseRecyclerOptions<Event> options;
     FirebaseRecyclerAdapter<Event, EventsAdapter> adapter;
-    DatabaseReference DataRef;
+    FirebaseRecyclerAdapter<Event, ForYouAdapter> adapter2;
+    DatabaseReference DataRef, rsvpRef;
+    ArrayList<String> checkEmpty;
 
     public static final String TAG = "HomeFragment";
     private TextView location1;
@@ -79,101 +90,59 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-        if (FirebaseAuth.getInstance() == null) {
+        if(FirebaseAuth.getInstance() == null){
             Log.e(getTag(), "instance null");
-        } else {
+        }else{
             mAuth = FirebaseAuth.getInstance();
         }
 
-        if (mAuth.getCurrentUser().getUid() == null) {
+        if(mAuth.getCurrentUser().getUid() == null){
             Toast.makeText(getContext(), "User ID cannot be null", Toast.LENGTH_SHORT).show();
-        } else {
+        }else{
             currentUserID = mAuth.getCurrentUser().getUid();
         }
 
-        DataRef = FirebaseDatabase.getInstance().getReference().child("Events");
+        DataRef =   FirebaseDatabase.getInstance().getReference().child("Events");
+        rsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
         recyclerView = view.findViewById(R.id.recylerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
+        horizontalView = view.findViewById(R.id.horizontalView);
+        emptyView = view.findViewById(R.id.empty_view);
+        horizontalView.setLayoutManager(new LinearLayoutManager(getContext()));
+        horizontalView.setHasFixedSize(true);
         inputSearch = view.findViewById(R.id.inputSearch);
         location1 = view.findViewById(R.id.Location);
+        checkEmpty = new ArrayList<>();
+
         LoadData("");
 
-        try{
-            FusedLocationProviderClient mFusedLocationProviderClient = new FusedLocationProviderClient(getContext());
-            Task lastLocation = mFusedLocationProviderClient.getLastLocation();
-            lastLocation.addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    // GPS location can be null if GPS is switched off
-                    if (location != null) {
-                        currentLat = location.getLatitude();
-                        currentLong = location.getLongitude();
-                        location1.setText(getRegionName(currentLat, currentLong));
-                        Log.i("HomeFragment", getRegionName(currentLat, currentLong));
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d("HomeFragment", "Error trying to get last GPS location");
-                    e.printStackTrace();
-                }
-            });
+       // LoadRsvpdEvents();
 
-        }catch (SecurityException | NullPointerException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
-        }
-
-//        Geocoder geoCoder = new Geocoder(getContext(), Locale.getDefault());
-//        try {
-//            List<Address> addresses = new List<Address>();
-//            addresses = geoCoder.getFromLocation(currentLat, currentLong, 1);
-//
-//            if (addresses != null && addresses.size() > 0)
-//            {
-//                location.setText(addresses.get(0).getLocality());
-//                Log.i("HomeFragment", String.valueOf(addresses.size()));
-//            }
-//
-//        }
-//        catch (IOException | SecurityException e1) {
-//            e1.printStackTrace();
-//        }
-
-//        Geocoder geocoder = new Geocoder(getContext());
-//
-//        try {
-//            List<Address>addresses = geocoder.getFromLocation(currentLat,currentLong,1);
-//            if (geocoder.isPresent()) {
-//                StringBuilder stringBuilder = new StringBuilder();
-//                if (addresses.size()>0) {
-//                    Address returnAddress = addresses.get(0);
-//
-//                    String localityString = returnAddress.getLocality();
-//                    String name = returnAddress.getFeatureName();
-//                    String subLocality = returnAddress.getSubLocality();
-//                    String country = returnAddress.getCountryName();
-//                    String region_code = returnAddress.getCountryCode();
-//                    String zipcode = returnAddress.getPostalCode();
-//                    String state = returnAddress.getAdminArea();
-//
-//                }
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-
-        TextView Home = view.findViewById(R.id.Home);
-        inputSearch.setOnSearchClickListener(new View.OnClickListener() {
+        rsvpRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                Home.setVisibility(View.INVISIBLE);
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if (snapshot.hasChild(currentUserID)){
+                    horizontalView.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.INVISIBLE);
+                    LoadRsvpdEvents();
+                }
+                else{
+                    horizontalView.setVisibility(View.INVISIBLE);
+                    emptyView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
             }
         });
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
 
         inputSearch.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
@@ -236,12 +205,57 @@ public class HomeFragment extends Fragment {
         return regioName;
     }
 
+    private void LoadRsvpdEvents() {
+        Query query = rsvpRef.orderByChild(currentUserID).equalTo(currentUserID);
+
+        options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
+        adapter2 = new FirebaseRecyclerAdapter<Event, ForYouAdapter>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull @NotNull ForYouAdapter forYouAdapter, int i, @NonNull @NotNull Event event) {
+                 String eventIds = getRef(i).getKey();
+                checkEmpty.add(eventIds);
+                Log.d(TAG, "CHecking if work: " + eventIds);
+                DataRef.child(eventIds).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String day = snapshot.child("eventDate").getValue().toString();
+                        String month = snapshot.child("eventMonth").getValue().toString();
+                        String fee = snapshot.child("eventFee").getValue().toString();
+                        String image = snapshot.child("eventImage").getValue().toString();
+                        String genre = snapshot.child("eventGenre").getValue().toString();
+                        String title = snapshot.child("eventTitle").getValue().toString();
+                        forYouAdapter.eventDay.setText(day);
+                        forYouAdapter.eventGenre.setText(genre);
+                        forYouAdapter.eventFee.setText(fee);
+                        forYouAdapter.eventTitle.setText(title);
+                        Picasso.get().load(image).into(forYouAdapter.eventImage);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public ForYouAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.for_you_layout, parent, false);
+                return new ForYouAdapter(v);
+            }
+        };
+
+        adapter2.startListening();
+        horizontalView.setAdapter(adapter2);
+        horizontalView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+    }
+
     public void LoadData(String data) {
         Query query = DataRef.orderByChild("eventTitle").startAt(data).endAt(data + "\uf8ff");
-        //
+
         options = new FirebaseRecyclerOptions.Builder<Event>().setQuery(query, Event.class).build();
         adapter = new FirebaseRecyclerAdapter<Event, EventsAdapter>(options) {
-
             @Override
             protected void onBindViewHolder(@NonNull EventsAdapter eventsAdapter, int i, @NonNull Event event) {
                 eventsAdapter.eventTitle.setText(event.getEventTitle());
