@@ -8,16 +8,19 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 
 import java.util.Date;
 
-public class ChatMessage {
+public class ChatMessage { // chat
 
     private String messageText;
     private String messageUser;
+    private String messageUserID;
     private long messageTime;
+
     //private String userImage;
 
-    public ChatMessage(String messageText, String messageUser) {
+    public ChatMessage(String messageText, String messageUser, String messageUserID) {
         this.messageText = messageText;
         this.messageUser = messageUser;
+        this.messageUserID = messageUserID;
         messageTime = new Date().getTime();         // Initialize to current time
         //this.userImage = userImage;
     }
@@ -31,6 +34,13 @@ public class ChatMessage {
 //    public void setUserImage(String userImage) {
 //        this.userImage = userImage;
 //    }
+
+    public String getMessageUserID(){
+        return this.messageUserID;
+    }
+    public void setMessageUserID(String messageUserID) {
+        this.messageUserID = messageUserID;
+    }
 
     public String getMessageText() {
         return messageText;
