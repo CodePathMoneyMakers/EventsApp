@@ -1,28 +1,21 @@
 package com.example.eventsapp.fragments;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,13 +27,6 @@ import com.example.eventsapp.ForYouAdapter;
 import com.example.eventsapp.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,15 +40,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 public class HomeFragment extends Fragment {
     SearchView inputSearch;
-    RecyclerView recyclerView;
+    RecyclerView recyclerView , horizontalView;
     FirebaseAuth mAuth;
     String currentUserID;
+    TextView emptyView;
+    ImageView Home;
     double currentLat;
     double currentLong;
     private boolean state = true;
@@ -104,7 +91,7 @@ public class HomeFragment extends Fragment {
 
         DataRef =   FirebaseDatabase.getInstance().getReference().child("Events");
         rsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
-        recyclerView = view.findViewById(R.id.recylerView);
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         horizontalView = view.findViewById(R.id.horizontalView);
@@ -113,12 +100,12 @@ public class HomeFragment extends Fragment {
         horizontalView.setHasFixedSize(true);
         inputSearch = view.findViewById(R.id.inputSearch);
         location1 = view.findViewById(R.id.Location);
+        Home = view.findViewById(R.id.home);
         checkEmpty = new ArrayList<>();
-
         LoadData("");
 
        // LoadRsvpdEvents();
-
+        location1.setText("Miami");
         rsvpRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
@@ -134,15 +121,18 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
+
         });
 
+        inputSearch.setOnSearchClickListener(new View.OnClickListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+            public void onClick(View v) {
+                Home.setVisibility(View.INVISIBLE);
             }
+        });
 
         inputSearch.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
@@ -166,28 +156,8 @@ public class HomeFragment extends Fragment {
                 return false;
             }
         });
-//        .addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                if(s.toString() != null){
-//                    LoadData(s.toString());
-//                }
-//                else{
-//                    LoadData(" ");
-//                }
-//            }
-//        });
     }
+
     private String getRegionName(double lati, double longi) {
         String regioName = "";
         Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());

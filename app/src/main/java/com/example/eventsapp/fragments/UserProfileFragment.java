@@ -46,8 +46,6 @@ import com.example.eventsapp.adapters.RSVPRecyclerAdapter;
 import com.example.eventsapp.models.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -93,6 +91,7 @@ public class UserProfileFragment extends Fragment  {
     DatabaseReference requestsRef;
     private ImageButton btnEdit, btnSettings;
     private EditText etBio;
+    public String retrieveUserName;
     private TextView numAttending, numCreated;
     private String fullName, email, age, bio, userImage, currentUserID, event;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
@@ -510,7 +509,12 @@ public class UserProfileFragment extends Fragment  {
                     numCreated.setText(String.valueOf(created));
                 }
                 else if(snapshot.exists()  && (snapshot.hasChild("userImage"))){
-                    String retrieveUserName = snapshot.child("bio").getValue().toString();
+                    try{
+                        String retrieveUserName = snapshot.child("bio").getValue().toString();
+                    }catch(NullPointerException e){
+                        e.printStackTrace();
+                    }
+
 
                     String userImage2 = snapshot.child("userImage").getValue().toString();
                     Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);
