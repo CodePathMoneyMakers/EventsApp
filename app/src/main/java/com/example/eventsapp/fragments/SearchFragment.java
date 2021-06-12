@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -47,8 +48,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -87,6 +90,8 @@ public class SearchFragment
     private static final float DEFAULT_ZOOM = 15f;
     MapView mapView;
     private GoogleMap mMap;
+    public String currentUserID;
+    private FirebaseAuth mAuth;
     TextView textView;
     EditText etLocationTitle;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -104,10 +109,7 @@ public class SearchFragment
     //private EventLocation eventPosition;
     //private ArrayList<EventLocation> eventLocations = new ArrayList<>();
 
-
-
-    public SearchFragment() {
-    }
+    public SearchFragment() {}
 
     @Nullable
     @Override
@@ -130,6 +132,8 @@ public class SearchFragment
         etLocationTitle = view.findViewById(R.id.etLocationTitle);
 
         EventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
+        mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
 
         geoApiContext = new GeoApiContext.Builder().apiKey(getString(R.string.google_maps_key)).build();
 
@@ -320,14 +324,28 @@ public class SearchFragment
                     for (DataSnapshot s : snapshot.getChildren()) {
                         event = s.getValue(Event.class);
                         LatLng location = new LatLng(event.latitude, event.longitude);
-
-                        if(event.getEventGenre().equals("Sports")){
-                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_sports_mappin1)));
-                        }else if(event.getEventGenre().equals("Music")){
-                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_music_mappin)));
-                        }else{
-                            mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_user_group)));
+                        if(event.eventPrivacy.equals("false")) {
+                            if (event.getEventGenre().equals("Sports")) {
+                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_sports_mappin1)));
+                            } else if (event.getEventGenre().equals("Music")) {
+                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_music_mappin)));
+                            } else {
+                                mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_user_group)));
+                            }
                         }
+//                        if(event.eventPrivacy.equals("true")) {
+//                            if (snapshot.child("Attendees").exists()) {
+//                                if (snapshot.child("Attendees").getValue().toString().contains(currentUserID)){
+//                                    if (event.getEventGenre().equals("Sports")) {
+//                                        mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_sports_mappin1)));
+//                                    } else if (event.getEventGenre().equals("Music")) {
+//                                        mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_music_mappin)));
+//                                    } else {
+//                                        mMap.addMarker(new MarkerOptions().position(location).title(event.getEventTitle()).icon(bitmapDescriptor(getContext(), R.drawable.ic_user_group)));
+//                                    }
+//                                }
+//                            }
+//                        }
 
                     }
                 } catch (NullPointerException e) {
@@ -341,6 +359,7 @@ public class SearchFragment
         });
 
         getDeviceLocation();
+
         //Disable Map Toolbar:
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -348,10 +367,13 @@ public class SearchFragment
         mMap.setPadding(0,220,20,0);
         mMap.setOnPolylineClickListener(this);
 
+
         init();
 
     }
-
+    public void moveCamera(LatLng location, int i) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, i));
+    }
     private void getMyLocation() {
         LatLng latLng = new LatLng(Double.parseDouble(String.valueOf(currentLat)), Double.parseDouble(String.valueOf(currentLong)));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);

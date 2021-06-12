@@ -1,15 +1,17 @@
 package com.example.eventsapp.fragments;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,13 +40,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+import java.util.List;
+import java.util.Locale;
+
 public class HomeFragment extends Fragment {
-    EditText inputSearch;
-    RecyclerView recyclerView, horizontalView;
-    TextView emptyView;
+    SearchView inputSearch;
+    RecyclerView recyclerView , horizontalView;
     FirebaseAuth mAuth;
     String currentUserID;
-
+    TextView emptyView;
+    ImageView Home;
+    double currentLat;
+    double currentLong;
+    private boolean state = true;
     FirebaseRecyclerOptions<Event> options;
     FirebaseRecyclerAdapter<Event, EventsAdapter> adapter;
     FirebaseRecyclerAdapter<Event, ForYouAdapter> adapter2;
@@ -52,6 +60,7 @@ public class HomeFragment extends Fragment {
     ArrayList<String> checkEmpty;
 
     public static final String TAG = "HomeFragment";
+    private TextView location1;
 
     public HomeFragment() {
     }
@@ -82,7 +91,7 @@ public class HomeFragment extends Fragment {
 
         DataRef =   FirebaseDatabase.getInstance().getReference().child("Events");
         rsvpRef = FirebaseDatabase.getInstance().getReference().child("RSVP");
-        recyclerView = view.findViewById(R.id.recylerView);
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         horizontalView = view.findViewById(R.id.horizontalView);
@@ -90,12 +99,13 @@ public class HomeFragment extends Fragment {
         horizontalView.setLayoutManager(new LinearLayoutManager(getContext()));
         horizontalView.setHasFixedSize(true);
         inputSearch = view.findViewById(R.id.inputSearch);
+        location1 = view.findViewById(R.id.Location);
+        Home = view.findViewById(R.id.home);
         checkEmpty = new ArrayList<>();
-
         LoadData("");
 
        // LoadRsvpdEvents();
-
+        location1.setText("Miami");
         rsvpRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
@@ -111,32 +121,58 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+
+        });
+
+        inputSearch.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Home.setVisibility(View.INVISIBLE);
             }
         });
 
-        inputSearch.addTextChangedListener(new TextWatcher() {
+        inputSearch.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(s.toString() != null){
-                    LoadData(s.toString());
-                }
-                else{
-                    LoadData(" ");
-                }
+            public boolean onClose() {
+                Home.setVisibility(View.VISIBLE);
+                LoadData("");
+                return false;
             }
         });
+
+        inputSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                LoadData(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                LoadData(newText);
+                return false;
+            }
+        });
+    }
+
+    private String getRegionName(double lati, double longi) {
+        String regioName = "";
+        Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = gcd.getFromLocation(lati, longi, 1);
+            if (addresses.isEmpty()) {
+                regioName = "Location unknown";
+            }
+            else if (addresses.size() > 0) {
+                regioName = addresses.get(0).getLocality();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return regioName;
     }
 
     private void LoadRsvpdEvents() {

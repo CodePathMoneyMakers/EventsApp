@@ -40,6 +40,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.eventsapp.MainActivity;
 import com.example.eventsapp.R;
@@ -147,6 +148,7 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
 
         tvDate = view.findViewById(R.id.tvDate);
         calendar_btn = view.findViewById(R.id.calender_logo);
@@ -317,13 +319,13 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
                         c.set(0, 0, 0, t1Hour, t1Minute);
 
                         if (counter % 2 == 0) {
-                            tvTime1.setText(DateFormat.format("hh:mm aa", c));
+                            tvTime.setText(DateFormat.format("hh:mm aa", c));
                             till.setText("till");
 
-                            eventTimeStart = tvTime.getText().toString().trim(); // saves event time start as a string
-                            eventTimeEnd = tvTime1.getText().toString().trim(); // saves event end time as a string
+                            eventTimeStart = tvTime1.getText().toString().trim(); // saves event time start as a string
+                            eventTimeEnd = tvTime.getText().toString().trim(); // saves event end time as a string
                         } else {
-                            tvTime.setText(DateFormat.format("hh:mm aa", c));
+                            tvTime1.setText(DateFormat.format("hh:mm aa", c));
                             from.setText("from");
                         }
 
@@ -426,8 +428,6 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         spinnerItems.add(new SpinnerItem("Music", R.drawable.ic_music));
         spinnerItems.add(new SpinnerItem("Sports", R.drawable.ic_sports));
         spinnerItems.add(new SpinnerItem("Social", R.drawable.ic_user_group));
-
-
     }
 
     private void CreateEvent() {
@@ -588,86 +588,10 @@ public class ComposeFragment<p> extends Fragment implements OnMapReadyCallback{
         mMap.setMyLocationEnabled(true);
     }
 
-    public static class OnSwipeTouchListener implements View.OnTouchListener {
-        private final GestureDetector gestureDetector;
-        Context context;
-        OnSwipeTouchListener(Context ctx, View mainView) {
-            gestureDetector = new GestureDetector(ctx, new GestureListener());
-            mainView.setOnTouchListener(this);
-            context = ctx;
-        }
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            return gestureDetector.onTouchEvent(event);
-        }
 
-        public class GestureListener extends
-                GestureDetector.SimpleOnGestureListener {
-            private static final int SWIPE_THRESHOLD = 100;
-            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
-            View view;
-            @Override
-            public boolean onDown(MotionEvent e) {
-                return true;
-            }
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                boolean result = false;
-                try {
-                    float diffY = e2.getY() - e1.getY();
-                    float diffX = e2.getX() - e1.getX();
-                    if (Math.abs(diffX) > Math.abs(diffY)) {
-                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                            if (diffX > 0) {
-                                onSwipeRight();
-                            } else {
-                                onSwipeLeft();
-                            }
-                            result = true;
-                        }
-                    }
-                    else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffY > 0) {
-                            onSwipeBottom();
-                        } else {
-                            onSwipeTop();
-                        }
-                        result = true;
-                    }
-                }
-                catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-                return result;
-            }
-        }
-        void onSwipeRight() {
-            //Toast.makeText(context, "Swiped Right", Toast.LENGTH_SHORT).show();
-            this.onSwipe.swipeRight();
-        }
-        boolean onSwipeLeft() {
-            //Toast.makeText(context, "Swiped Left", Toast.LENGTH_SHORT).show();
-            this.onSwipe.swipeLeft();
-            return true;
-        }
-        void onSwipeTop() {
-            //Toast.makeText(context, "Swiped Up", Toast.LENGTH_SHORT).show();
-            this.onSwipe.swipeTop();
-        }
-        void onSwipeBottom() {
 
-            //Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
-            this.onSwipe.swipeBottom();
-        }
-        interface onSwipeListener {
-            void swipeRight();
-            void swipeTop();
-            void swipeBottom();
-            void swipeLeft();
-        }
-        onSwipeListener onSwipe;
     }
-}
+
 
 
 

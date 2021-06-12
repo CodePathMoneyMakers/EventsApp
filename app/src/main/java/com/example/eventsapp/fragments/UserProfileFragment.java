@@ -1,12 +1,15 @@
-package com.example.eventsapp.fragments;
+ package com.example.eventsapp.fragments;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -32,6 +36,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.eventsapp.DetailsActivity;
 import com.example.eventsapp.Event;
 import com.example.eventsapp.EventsAdapter;
 import com.example.eventsapp.LoginActivity;
@@ -86,6 +91,7 @@ public class UserProfileFragment extends Fragment  {
     DatabaseReference requestsRef;
     private ImageButton btnEdit, btnSettings;
     private EditText etBio;
+    public String retrieveUserName;
     private TextView numAttending, numCreated;
     private String fullName, email, age, bio, userImage, currentUserID, event;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
@@ -143,9 +149,9 @@ public class UserProfileFragment extends Fragment  {
             public void onClick(View v) {
                 if(showingFirst){
                     ObjectAnimator rotate = ObjectAnimator.ofFloat(settings, "rotation", 0f, 180f);
-                    ObjectAnimator animateY = ObjectAnimator.ofFloat(logout, "y", 1330f);
-                    ObjectAnimator animateY2 = ObjectAnimator.ofFloat(edit, "y", 1200f);
-                    ObjectAnimator animateY3 = ObjectAnimator.ofFloat(rsvp, "y", 1070f);
+                    ObjectAnimator animateY = ObjectAnimator.ofFloat(logout, "y", 1950f);
+                    ObjectAnimator animateY2 = ObjectAnimator.ofFloat(edit, "y", 1750f);
+                    ObjectAnimator animateY3 = ObjectAnimator.ofFloat(rsvp, "y", 1550f);
                     rotate.setDuration(1000);
                     animateY.setDuration(500);
                     animateY2.setDuration(500);
@@ -156,9 +162,9 @@ public class UserProfileFragment extends Fragment  {
                     showingFirst = false;
                 }else{
                     ObjectAnimator rotate = ObjectAnimator.ofFloat(settings, "rotation", 180f, 0f);
-                    ObjectAnimator animateY = ObjectAnimator.ofFloat(logout, "y", 1265f);
-                    ObjectAnimator animateY2 = ObjectAnimator.ofFloat(edit, "y", 1265f);
-                    ObjectAnimator animateY3 = ObjectAnimator.ofFloat(rsvp, "y", 1265f);
+                    ObjectAnimator animateY = ObjectAnimator.ofFloat(logout, "y", 2270f);
+                    ObjectAnimator animateY2 = ObjectAnimator.ofFloat(edit, "y", 2270f);
+                    ObjectAnimator animateY3 = ObjectAnimator.ofFloat(rsvp, "y", 2270f);
                     rotate.setDuration(1000);
                     animateY.setDuration(500);
                     animateY2.setDuration(500);
@@ -276,6 +282,7 @@ public class UserProfileFragment extends Fragment  {
 //            }
 //        });
         RetrieveUserInfo();
+
         LoadData("");
         // storage = FirebaseStorage.getInstance();
         // storageReference = storage.getReference().child("Profile Images");
@@ -376,7 +383,7 @@ public class UserProfileFragment extends Fragment  {
     }
 
 
-    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
                 @Override
                 public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                     return false;
@@ -404,10 +411,10 @@ public class UserProfileFragment extends Fragment  {
                             break;
                         case ItemTouchHelper.RIGHT:
                             Toast.makeText(getContext(), "swiped right", Toast.LENGTH_SHORT).show();
-                            //rsvpRef.child(keyList.get(position)).child(idList.get(position)).setValue(idList.get(position));
+                            rsvpRef.child(eventList.get(position)).child(idList.get(position)).setValue(idList.get(position));
                             EventsRef.child(eventList.get(position)).child("Attendees").child(idList.get(position)).setValue(idList.get(position));
                             requestsRef.child(currentUserID).child(keyList.get(position)).removeValue();
-                            rsvpRef.child(eventList.get(position)).child(idList.get(position)).setValue(idList.get(position));
+                            rsvpRef.child(idList.get(position)).setValue(idList.get(position));
                             UsersRef.child(idList.get(position)).child("Attending").child(eventList.get(position)).setValue(eventList.get(position));
 
                             Log.d(TAG, "KeyList + " + keyList);
@@ -422,6 +429,22 @@ public class UserProfileFragment extends Fragment  {
                 }
             };
 
+ /*       DataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot: snapshot.getChildren()){
+                        if(String.valueOf(dataSnapshot.child("Attendees")) == currentUserID){
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+*/
         public void LoadData (String s){
             Query query = DataRef.orderByChild("userID").equalTo(currentUserID);
 
@@ -486,7 +509,12 @@ public class UserProfileFragment extends Fragment  {
                     numCreated.setText(String.valueOf(created));
                 }
                 else if(snapshot.exists()  && (snapshot.hasChild("userImage"))){
-                    String retrieveUserName = snapshot.child("bio").getValue().toString();
+                    try{
+                        String retrieveUserName = snapshot.child("bio").getValue().toString();
+                    }catch(NullPointerException e){
+                        e.printStackTrace();
+                    }
+
 
                     String userImage2 = snapshot.child("userImage").getValue().toString();
                     Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);

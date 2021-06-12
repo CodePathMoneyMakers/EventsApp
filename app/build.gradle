@@ -75,6 +75,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:2.3.5"
     implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
     implementation 'com.airbnb.android:lottie:3.4.0'
+    implementation 'com.ms-square:expandableTextView:0.1.4'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
