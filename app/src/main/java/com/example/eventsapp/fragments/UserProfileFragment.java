@@ -92,7 +92,7 @@ public class UserProfileFragment extends Fragment  {
     FirebaseRecyclerAdapter<Event, EventsAdapter> adapter;
     boolean isImageAdded = false;
     Query query;
-
+    String retrieveUserName;
     private ImageButton settings;
     String TAG = "UserProfileFragment";
     public StorageReference Storageref;
@@ -106,7 +106,7 @@ public class UserProfileFragment extends Fragment  {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -120,7 +120,6 @@ public class UserProfileFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
-        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragments_profile, container,false);
     }
 
@@ -407,8 +406,12 @@ public class UserProfileFragment extends Fragment  {
                     numAttending.setText(String.valueOf(value));
                     numCreated.setText(String.valueOf(created));
                 }
-                else if(snapshot.exists()  && (snapshot.hasChild("userImage"))){
-                    String retrieveUserName = snapshot.child("bio").getValue().toString();
+                else if(snapshot.exists() && (snapshot.hasChild("userImage"))){
+                    try{
+                        retrieveUserName = snapshot.child("bio").getValue().toString();
+                    }catch(NullPointerException e){
+                        e.printStackTrace();
+                    }
 
                     String userImage2 = snapshot.child("userImage").getValue().toString();
                     Picasso.get().load(userImage2).placeholder(R.drawable.ic_person).into(ivProfileImage);

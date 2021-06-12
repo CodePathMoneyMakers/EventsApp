@@ -94,8 +94,8 @@ public class SearchFragment
     public static final String TAG = "SearchFragment";
 //    private ImageButton location_btn;
     private DatabaseReference EventsRef;
-    private double currentLat = 0.0;
-    private double currentLong = 0.0;
+    public double currentLat = 0.0;
+    public double currentLong = 0.0;
 
     private GeoApiContext geoApiContext = null;
     private ArrayList<PolylineData> polylineData = new ArrayList<>();
@@ -105,10 +105,7 @@ public class SearchFragment
     //private EventLocation eventPosition;
     //private ArrayList<EventLocation> eventLocations = new ArrayList<>();
 
-
-
-    public SearchFragment() {
-    }
+    public SearchFragment() {}
 
     @Nullable
     @Override
@@ -354,7 +351,7 @@ public class SearchFragment
 
     }
 
-    private void getMyLocation() {
+    public void getMyLocation() {
         LatLng latLng = new LatLng(Double.parseDouble(String.valueOf(currentLat)), Double.parseDouble(String.valueOf(currentLong)));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
         mMap.animateCamera(cameraUpdate);

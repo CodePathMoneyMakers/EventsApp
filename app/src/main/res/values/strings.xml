@@ -56,4 +56,7 @@
     <string name="profilersvp_s">profilersvp\'s</string>
     <string name="readmore">Readmore</string>
     <string name="rsvp">RSVP</string>
+    <string name="home">Home</string>
+    <string name="Upcoming" />
+    <string name="upcoming">Upcoming</string>
 </resources>

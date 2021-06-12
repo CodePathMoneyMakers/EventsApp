@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private TextView banner, registerUser;
     private EditText editTextUsername, editTextAge, editTextEmail, editTextPassword;
     private ProgressBar progressBar;
+    String TAG = "RegisterActivity";
 
     Button btnRegister;
 
@@ -62,9 +64,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.banner:
+                Log.e(TAG, "onCLick");
                 startActivity(new Intent(this, MainActivity.class));
                 break;
             case R.id.btnRegister:
+                Log.e(TAG, "onCLick");
                 registerUser();
                 break;
 
