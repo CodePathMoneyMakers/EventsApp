@@ -1,5 +1,6 @@
 package com.example.eventsapp.adapters;
 
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +60,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         holder.show_message.setText(chat.getMessageText());
         holder.chat_user.setText(chat.getMessageUser());
+//        holder.chat_message_time.setText(chat.getMessageTime());
 
+        holder.chat_message_time.setText(DateFormat.format("h:mm a",
+                chat.getMessageTime()));
     }
 
     @Override
@@ -70,11 +74,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView show_message;
         public TextView chat_user;
+        public TextView chat_message_time;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             show_message = itemView.findViewById(R.id.show_message);
             chat_user = itemView.findViewById(R.id.chat_user);
+            chat_message_time = itemView.findViewById(R.id.chat_message_time);
         }
     }
 
