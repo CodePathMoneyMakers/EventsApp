@@ -10,6 +10,7 @@ Original App Design Project
 2. [Schema](#Schema)
 
 ## Overview
+<iframe width="560" height="315" src="https://www.youtube.com/embed/jfzH5217FNI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 ### Description
 This app allows the user to create and search for local events. (Ex: Yard sale, house party, meet and greet, hangout session)
 
